@@ -89,29 +89,13 @@
         <!-- Hidden until the script below decides this launch isn't headed for
              /welcome. A display:none element doesn't animate, so revealing it
              starts the draw at frame one rather than mid-stroke. -->
-        <svg id="boot-mark" width="96" height="96" viewBox="0 0 128 128" fill="none" role="img" aria-label="Wizardry logo" style="display:none;filter:drop-shadow(0 8px 24px hsl(var(--primary, 330 90% 62%) / 0.25));">
-          <!-- Wake: each line sweeps open from the centerline (x=64, also every
-               line's own midpoint), then scans slowly in and out on its own
-               loop. Both are scaleX about that centerline, split across the
-               wrapper and the path so they don't fight over one transform. -->
-          <g fill="hsl(var(--accent2, 150 30% 62%))">
-            <g style="transform-origin:64px 0;animation:armada-wake 6s ease-in-out 0.9s infinite;">
-              <path d="M62.6 30h2.8v68h-2.8z" style="transform-origin:64px 0;animation:armada-sweep 0.52s cubic-bezier(0.22,1,0.36,1) both;"></path>
-            </g>
-            <g style="transform-origin:64px 0;animation:armada-wake 6s ease-in-out 1.5s infinite;">
-              <path d="M30 62.6h68v2.8h-68z" style="transform-origin:64px 0;animation:armada-sweep 0.52s cubic-bezier(0.22,1,0.36,1) 0.07s both;"></path>
-            </g>
-            <g style="transform-origin:64px 0;animation:armada-wake 6s ease-in-out 2.1s infinite;">
-              <path d="M62.6 30h2.8v68h-2.8z" style="transform-origin:64px 0;animation:armada-sweep 0.52s cubic-bezier(0.22,1,0.36,1) 0.14s both;"></path>
-            </g>
-          </g>
-          <!-- Sail, drawn in three stacked copies: halo sheen, fill, and the
-               hairline trace on top (pathLength="1" normalizes the dash). -->
-          <path d="M64 10L114 64L64 118L14 64Z M64 30L94 64L64 98L34 64Z" fill-rule="evenodd" fill="hsl(var(--primary, 330 90% 62%))" style="opacity:0;filter:drop-shadow(0 0 10px hsl(var(--primary, 330 90% 62%) / 0.6));animation:armada-sheen 0.9s ease-in-out 0.64s both;"></path>
-          <path d="M64 10L114 64L64 118L14 64Z M64 30L94 64L64 98L34 64Z" fill-rule="evenodd" fill="hsl(var(--primary, 330 90% 62%))" style="animation:armada-ink 0.42s ease-out 0.4s both;"></path>
-          <path d="M64 10L114 64L64 118L14 64Z M64 30L94 64L64 98L34 64Z" pathLength="1" fill="none" stroke="hsl(var(--primary, 330 90% 62%))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0;stroke-dasharray:1;animation:armada-trace 0.78s cubic-bezier(0.65,0,0.35,1) 0.08s both;"></path>
-          <!-- Waterline caret, inked in last. -->
-          <path d="M64 54a10 10 0 1 0 0 20a10 10 0 1 0 0-20z" fill="hsl(var(--primary, 330 90% 62%))" fill-opacity="0.85" style="animation:armada-ink 0.32s ease-out 0.86s both;"></path>
+        <svg id="boot-mark" width="96" height="96" viewBox="0 0 128 128" fill="none" role="img" aria-label="Wizardry logo" style="display:none;filter:drop-shadow(0 8px 24px hsl(var(--primary, 40 68% 62%) / 0.25));">
+          <!-- The mark in three stacked copies: halo sheen, fill, and the hairline
+               trace on top (pathLength="1" normalizes the dash). The hat, face and
+               features are one path, so the trace draws the whole creature. -->
+          <path d="M64 59.5a26.5 26.5 0 1 1 0 53.0a26.5 26.5 0 1 1 0 -53.0Z M64.4 5.6c2.4 0 4.3 1.9 4.8 4.4L87 56.4H41L59.6 10c.5-2.5 2.4-4.4 4.8-4.4Z M64 45.4c23.2 0 42 4.4 42 9.8s-18.8 9.8-42 9.8-42-4.4-42-9.8 18.8-9.8 42-9.8Z M64.63 85.02A12.5 9.5 14 1 0 40.37 78.98A12.5 9.5 14 1 0 64.63 85.02Z M87.63 78.98A12.5 9.5 -14 1 0 63.37 85.02A12.5 9.5 -14 1 0 87.63 78.98Z M69.20 96.40A5.2 4.2 0 1 0 58.80 96.40A5.2 4.2 0 1 0 69.20 96.40Z M59.87 82.44A7.6 1.7 14 1 1 45.13 78.76A7.6 1.7 14 1 1 59.87 82.44Z M82.87 78.76A7.6 1.7 -14 1 1 68.13 82.44A7.6 1.7 -14 1 1 82.87 78.76Z" fill-rule="nonzero" fill="hsl(var(--primary, 40 68% 62%))" style="opacity:0;filter:drop-shadow(0 0 10px hsl(var(--primary, 40 68% 62%) / 0.6));animation:armada-sheen 0.9s ease-in-out 0.64s both;"></path>
+          <path d="M64 59.5a26.5 26.5 0 1 1 0 53.0a26.5 26.5 0 1 1 0 -53.0Z M64.4 5.6c2.4 0 4.3 1.9 4.8 4.4L87 56.4H41L59.6 10c.5-2.5 2.4-4.4 4.8-4.4Z M64 45.4c23.2 0 42 4.4 42 9.8s-18.8 9.8-42 9.8-42-4.4-42-9.8 18.8-9.8 42-9.8Z M64.63 85.02A12.5 9.5 14 1 0 40.37 78.98A12.5 9.5 14 1 0 64.63 85.02Z M87.63 78.98A12.5 9.5 -14 1 0 63.37 85.02A12.5 9.5 -14 1 0 87.63 78.98Z M69.20 96.40A5.2 4.2 0 1 0 58.80 96.40A5.2 4.2 0 1 0 69.20 96.40Z M59.87 82.44A7.6 1.7 14 1 1 45.13 78.76A7.6 1.7 14 1 1 59.87 82.44Z M82.87 78.76A7.6 1.7 -14 1 1 68.13 82.44A7.6 1.7 -14 1 1 82.87 78.76Z" fill-rule="nonzero" fill="hsl(var(--primary, 40 68% 62%))" style="animation:armada-ink 0.42s ease-out 0.4s both;"></path>
+          <path d="M64 59.5a26.5 26.5 0 1 1 0 53.0a26.5 26.5 0 1 1 0 -53.0Z M64.4 5.6c2.4 0 4.3 1.9 4.8 4.4L87 56.4H41L59.6 10c.5-2.5 2.4-4.4 4.8-4.4Z M64 45.4c23.2 0 42 4.4 42 9.8s-18.8 9.8-42 9.8-42-4.4-42-9.8 18.8-9.8 42-9.8Z M64.63 85.02A12.5 9.5 14 1 0 40.37 78.98A12.5 9.5 14 1 0 64.63 85.02Z M87.63 78.98A12.5 9.5 -14 1 0 63.37 85.02A12.5 9.5 -14 1 0 87.63 78.98Z M69.20 96.40A5.2 4.2 0 1 0 58.80 96.40A5.2 4.2 0 1 0 69.20 96.40Z M59.87 82.44A7.6 1.7 14 1 1 45.13 78.76A7.6 1.7 14 1 1 59.87 82.44Z M82.87 78.76A7.6 1.7 -14 1 1 68.13 82.44A7.6 1.7 -14 1 1 82.87 78.76Z" pathLength="1" fill="none" stroke="hsl(var(--primary, 40 68% 62%))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0;stroke-dasharray:1;animation:armada-trace 0.78s cubic-bezier(0.65,0,0.35,1) 0.08s both;"></path>
         </svg>
       </div>
     </div>

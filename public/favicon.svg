@@ -1,24 +1,20 @@
 <svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wizardry">
   <title>Wizardry</title>
-  <!--
-    Favicon-optimized mark. A dark rounded chip keeps the frameless sail/wave
-    mark legible against light browser tabs; flat fills, no glow (which muds at
-    16px). Same geometry as public/logo.svg, inset for breathing room.
-  -->
-  <defs>
-    <linearGradient id="armada-sail" x1="24" y1="8" x2="104" y2="93" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#fb4d96"/>
-      <stop offset="1" stop-color="#e0186f"/>
-    </linearGradient>
-  </defs>
-  <rect width="128" height="128" rx="28" fill="#18271c"/>
-  <g transform="translate(12.8 12.8) scale(0.8)">
-    <g fill="#19e6e6">
-      <path d="M62.6 30h2.8v68h-2.8z"/>
-      <path d="M30 62.6h68v2.8h-68z"/>
-      <path d="M62.6 30h2.8v68h-2.8z"/>
-    </g>
-    <path d="M64 10L114 64L64 118L14 64Z M64 30L94 64L64 98L34 64Z" fill-rule="evenodd" fill="url(#armada-sail)"/>
-    <path d="M64 54a10 10 0 1 0 0 20a10 10 0 1 0 0-20z" fill="url(#armada-sail)"/>
+  <!-- A dark rounded chip keeps the pale sloth legible on light browser tabs.
+       Flat fills only. Same geometry as public/logo.svg. -->
+  <rect width="128" height="128" rx="30" fill="#18271c"/>
+  <g transform="translate(10 10) scale(0.845)">
+    <circle cx="64" cy="86" r="26.5" fill="#e2ebdc"/>
+    <ellipse cx="52.5" cy="82" rx="12.5" ry="9.5" fill="#5d4530" transform="rotate(14 52.5 82)"/>
+    <ellipse cx="75.5" cy="82" rx="12.5" ry="9.5" fill="#5d4530" transform="rotate(-14 75.5 82)"/>
+    <path d="M48.2 81.6c2.2 2 6 2 8.2 0" stroke="#f8faf5" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+    <path d="M71.6 81.6c2.2 2 6 2 8.2 0" stroke="#f8faf5" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+    <ellipse cx="64" cy="96" rx="9" ry="7" fill="#f8faf5"/>
+    <path d="M64 92.6c2.2 0 4.2 1.6 4.6 3.6.5 2.4-1.6 4.6-4.6 4.6s-5.1-2.2-4.6-4.6c.4-2 2.4-3.6 4.6-3.6Z" fill="#18271c"/>
+    <path d="M64 100.8v2" stroke="#18271c" stroke-width="1.7" stroke-linecap="round"/>
+    <path d="M61.2 104c1.4 1.2 4.2 1.2 5.6 0" stroke="#18271c" stroke-width="1.7" stroke-linecap="round" fill="none"/>
+    <path d="M64 45.4c23.2 0 42 4.4 42 9.8s-18.8 9.8-42 9.8-42-4.4-42-9.8 18.8-9.8 42-9.8Z" fill="#ddab4e"/>
+    <path d="M64.4 5.6c2.4 0 4.3 1.9 4.8 4.4L87 56.4H41L59.6 10c.5-2.5 2.4-4.4 4.8-4.4Z" fill="#f4d79a"/>
+    <path d="M24 55.6c6.6 4.2 22.4 7 40 7s33.4-2.8 40-7v3.4c-4.6 4.6-21 7.6-40 7.6s-35.4-3-40-7.6Z" fill="#b8812b" opacity="0.5"/>
   </g>
 </svg>

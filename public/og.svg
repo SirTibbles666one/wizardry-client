@@ -1,30 +1,35 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wizardry">
   <title>Wizardry</title>
 
-  <!-- Flat violet-black sea. No gradients. -->
   <rect width="1200" height="630" fill="#18271c"/>
+  <!-- A soft honey wash behind the mark: one radial, no other gradients. -->
+  <defs>
+    <radialGradient id="wash" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ddab4e" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#ddab4e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="300" cy="315" r="290" fill="url(#wash)"/>
 
-  <!-- The Wizardry mark — flat fills, no glow. Same geometry as public/logo.svg. -->
-  <g transform="translate(112, 179) scale(2.0)">
-    <!-- three cyan wave lines -->
-    <g fill="#19e6e6">
-      <path d="M62.6 30h2.8v68h-2.8z"/>
-      <path d="M30 62.6h68v2.8h-68z"/>
-      <path d="M62.6 30h2.8v68h-2.8z"/>
-    </g>
-    <!-- the rose sail / advancing A -->
-    <path d="M64 10L114 64L64 118L14 64Z M64 30L94 64L64 98L34 64Z" fill-rule="evenodd" fill="#fb4d96"/>
-    <path d="M64 54a10 10 0 1 0 0 20a10 10 0 1 0 0-20z" fill="#fb4d96"/>
+  <g transform="translate(180 140) scale(2.5)">
+    <circle cx="64" cy="86" r="26.5" fill="#e2ebdc"/>
+    <ellipse cx="52.5" cy="82" rx="12.5" ry="9.5" fill="#5d4530" transform="rotate(14 52.5 82)"/>
+    <ellipse cx="75.5" cy="82" rx="12.5" ry="9.5" fill="#5d4530" transform="rotate(-14 75.5 82)"/>
+    <path d="M48.2 81.6c2.2 2 6 2 8.2 0" stroke="#f8faf5" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+    <path d="M71.6 81.6c2.2 2 6 2 8.2 0" stroke="#f8faf5" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+    <ellipse cx="64" cy="96" rx="9" ry="7" fill="#f8faf5"/>
+    <path d="M64 92.6c2.2 0 4.2 1.6 4.6 3.6.5 2.4-1.6 4.6-4.6 4.6s-5.1-2.2-4.6-4.6c.4-2 2.4-3.6 4.6-3.6Z" fill="#18271c"/>
+    <path d="M64 100.8v2" stroke="#18271c" stroke-width="1.7" stroke-linecap="round"/>
+    <path d="M61.2 104c1.4 1.2 4.2 1.2 5.6 0" stroke="#18271c" stroke-width="1.7" stroke-linecap="round" fill="none"/>
+    <path d="M64 45.4c23.2 0 42 4.4 42 9.8s-18.8 9.8-42 9.8-42-4.4-42-9.8 18.8-9.8 42-9.8Z" fill="#ddab4e"/>
+    <path d="M64.4 5.6c2.4 0 4.3 1.9 4.8 4.4L87 56.4H41L59.6 10c.5-2.5 2.4-4.4 4.8-4.4Z" fill="#f4d79a"/>
+    <path d="M24 55.6c6.6 4.2 22.4 7 40 7s33.4-2.8 40-7v3.4c-4.6 4.6-21 7.6-40 7.6s-35.4-3-40-7.6Z" fill="#b8812b" opacity="0.5"/>
   </g>
 
-  <!-- Monospace wordmark + terminal-style tagline. -->
   <g font-family="'JetBrains Mono','Courier New',monospace">
-    <text x="400" y="300" font-size="92" font-weight="700" letter-spacing="2" fill="#f1e7d2">armada</text>
-    <text x="402" y="356" font-size="26" letter-spacing="1" fill="#fb4d96">
-      <tspan fill="#19e6e6">$ </tspan>a sovereign harbor on the open relays
-    </text>
-    <text x="402" y="396" font-size="26" letter-spacing="1" fill="#f1e7d2" fill-opacity="0.55">
-      your keys. your fleet.<tspan fill="#fb4d96">_</tspan>
+    <text x="600" y="300" font-size="96" font-weight="700" letter-spacing="1" fill="#f8faf5">wizardry</text>
+    <text x="602" y="366" font-size="27" letter-spacing="1" fill="#f8faf5" fill-opacity="0.72">
+      <tspan fill="#ddab4e">$ </tspan>a private room on the open web<tspan fill="#ddab4e">_</tspan>
     </text>
   </g>
 </svg>

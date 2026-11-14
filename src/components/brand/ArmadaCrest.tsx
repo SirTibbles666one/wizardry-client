@@ -10,10 +10,18 @@ import { APP_NAME } from "@/lib/platform";
  * only the entrance), so `prefers-reduced-motion` lands on the finished mark.
  */
 
-export const SAIL =
-  "M64 10L114 64L64 118L14 64Z M64 30L94 64L64 98L34 64Z";
-export const CARET =
-  "M64 54a10 10 0 1 0 0 20a10 10 0 1 0 0-20z";
+/**
+ * The wizard sloth as one filled path: head, cone and brim add up (clockwise), the
+ * eye patches and nose are cut out (counter-clockwise), and the two lids are added
+ * back inside the cut-outs so the face reads as closed eyes rather than holes.
+ * `nonzero` is what makes that arithmetic work — `evenodd` would punch the overlaps.
+ */
+export const SLOTH =
+  "M64 59.5a26.5 26.5 0 1 1 0 53.0a26.5 26.5 0 1 1 0 -53.0Z M64.4 5.6c2.4 0 4.3 1.9 4.8 4.4L87 56.4H41L59.6 10c.5-2.5 2.4-4.4 4.8-4.4Z M64 45.4c23.2 0 42 4.4 42 9.8s-18.8 9.8-42 9.8-42-4.4-42-9.8 18.8-9.8 42-9.8Z M64.63 85.02A12.5 9.5 14 1 0 40.37 78.98A12.5 9.5 14 1 0 64.63 85.02Z M87.63 78.98A12.5 9.5 -14 1 0 63.37 85.02A12.5 9.5 -14 1 0 87.63 78.98Z M69.20 96.40A5.2 4.2 0 1 0 58.80 96.40A5.2 4.2 0 1 0 69.20 96.40Z M59.87 82.44A7.6 1.7 14 1 1 45.13 78.76A7.6 1.7 14 1 1 59.87 82.44Z M82.87 78.76A7.6 1.7 -14 1 1 68.13 82.44A7.6 1.7 -14 1 1 82.87 78.76Z";
+
+/** The nose on its own, for the wreck's waterline. */
+export const NOSE =
+  "M69.20 96.40A5.2 4.2 0 1 0 58.80 96.40A5.2 4.2 0 1 0 69.20 96.40Z";
 export const WAVES = [
   "M62.6 30h2.8v68h-2.8z",
   "M30 62.6h68v2.8h-68z",
@@ -108,7 +116,6 @@ function Waves({ loop }: { loop: boolean }) {
 export function ArmadaCrest({
   size = 132,
   className = "",
-  loop = false,
 }: {
   size?: number;
   className?: string;
@@ -125,14 +132,7 @@ export function ArmadaCrest({
       aria-label={intl.formatMessage({ id: "armadaCrest.logo", defaultMessage: "{app} logo" }, { app: APP_NAME })}
       className={`relative drop-shadow-[0_8px_24px_hsl(var(--primary)/0.25)] ${className}`}
     >
-      <Waves loop={loop} />
-      <DrawnPath d={SAIL} fillRule="evenodd" />
-      <path
-        d={CARET}
-        fill="hsl(var(--primary))"
-        fillOpacity={0.85}
-        className="animate-[armada-ink_0.32s_ease-out_0.86s_both]"
-      />
+      <DrawnPath d={SLOTH} fillRule="nonzero" />
     </svg>
   );
 }

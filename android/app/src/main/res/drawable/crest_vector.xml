@@ -1,101 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Static Armada mark as a vector, translated from ArmadaCrest.tsx / public/logo.svg
-  (128x128 viewport). Base for the animated splash icon (splash_logo_anim.xml),
-  animatable via the named groups/paths below:
-    - wave1..3Group : pivot at the mark's centerline, so each wave line can
-                      sweep open horizontally (scaleX)
-    - wave1..3      : the cyan wave lines (fade in with the sweep)
-    - sailTrace     : stroke-only copy of the sail, drawn by trimPathEnd — this
-                      is the "pen" that traces the outline, then fades out
-    - sail          : the rose sail's fill (floods in behind the trace)
-    - caret         : the waterline reflection (inks in last)
+  Static Wizardry mark as a vector: the wizard sloth, translated from
+  ArmadaCrest.tsx / public/logo.svg (128x128 box). Base for the animated splash icon
+  (splash_logo_anim.xml), animatable via the named groups/paths below:
+    - wave1..3Group : kept as animation targets, but empty — the crosshair they used to
+                      sweep is gone with the old mark
+    - sailTrace     : stroke-only copy of the mark, drawn by trimPathEnd — the "pen"
+    - sail          : the mark's fill (floods in behind the trace)
+    - caret         : the nose, inked in last
   Every animatable attribute rests at its *pre*-animation value here (alpha 0,
-  scaleX a sliver, trimPathEnd 0) because splash_logo_anim.xml always runs; the
-  final frame is the finished mark, which the splash holds until the WebView
-  paints.
-  Colors mirror the app's dark-theme tokens:
-    primary 330 90% 62% -> #F84D96 (rose), accent2 180 90% 55% -> #1AE8E8 (cyan).
+  scaleX a sliver, trimPathEnd 0) because splash_logo_anim.xml always runs; the final
+  frame is the finished mark, which the splash holds until the WebView paints.
+  Colour is the honey primary, dark-theme value: 40 68% 62% -> #DDAB4E.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="96dp"
     android:height="96dp"
     android:viewportWidth="192"
     android:viewportHeight="192">
 
-    <!-- The Android 12+ SplashScreen API masks windowSplashScreenAnimatedIcon
-         to a circle ~2/3 the icon canvas. The mark is authored in a 128x128
-         box that it nearly fills (the sail's tip and the bottom wave sit at the
-         frame edge), so this outer group insets it 32 on every side into a 192
-         viewport: the mark's ~120dp bounding circle then fits inside the ~128dp
-         visible circle instead of being cropped. All child coordinates/pivots
-         stay in the original 128 space. -->
+    <!-- The Android 12+ SplashScreen API masks windowSplashScreenAnimatedIcon to a
+         circle ~2/3 the icon canvas, so the mark is inset 32 into a 192 viewport: its
+         ~120dp bounding circle then fits inside the ~128dp visible circle instead of
+         being cropped. All child coordinates/pivots stay in the original 128 space. -->
     <group
         android:name="markGroup"
         android:translateX="32"
         android:translateY="32">
 
-    <!-- Three cyan wave lines. Each sweeps open from x=64, the mark's
-         centerline, which is also every line's own center. -->
-    <group
-        android:name="wave1Group"
-        android:pivotX="64"
-        android:pivotY="102.7"
-        android:scaleX="0.15">
-        <path
-            android:name="wave1"
-            android:pathData="M62.6,30 h2.8 v68 h-2.8 z"
-            android:fillColor="#1AE8E8"
-            android:fillAlpha="0" />
+    <group android:name="wave1Group" android:pivotX="64" android:pivotY="102.7" android:scaleX="0.15">
+        <path android:name="wave1" android:pathData="M0,0 h0.01 v0.01 z" android:fillColor="#DDAB4E" android:fillAlpha="0" />
     </group>
-    <group
-        android:name="wave2Group"
-        android:pivotX="64"
-        android:pivotY="114.1"
-        android:scaleX="0.15">
-        <path
-            android:name="wave2"
-            android:pathData="M30,62.6 h68 v2.8 h-68 z"
-            android:fillColor="#1AE8E8"
-            android:fillAlpha="0" />
+    <group android:name="wave2Group" android:pivotX="64" android:pivotY="114.1" android:scaleX="0.15">
+        <path android:name="wave2" android:pathData="M0,0 h0.01 v0.01 z" android:fillColor="#DDAB4E" android:fillAlpha="0" />
     </group>
-    <group
-        android:name="wave3Group"
-        android:pivotX="64"
-        android:pivotY="122.7"
-        android:scaleX="0.15">
-        <path
-            android:name="wave3"
-            android:pathData="M62.6,30 h2.8 v68 h-2.8 z"
-            android:fillColor="#1AE8E8"
-            android:fillAlpha="0" />
+    <group android:name="wave3Group" android:pivotX="64" android:pivotY="122.7" android:scaleX="0.15">
+        <path android:name="wave3" android:pathData="M0,0 h0.01 v0.01 z" android:fillColor="#DDAB4E" android:fillAlpha="0" />
     </group>
 
-    <!-- The rose sail's fill, flooding in behind the trace below it. -->
+    <!-- The mark's fill, flooding in behind the trace below it. -->
     <path
         android:name="sail"
-        android:pathData="M64,10 L114,64 L64,118 L14,64 z M64,30 L94,64 L64,98 L34,64 z"
-        android:fillType="evenOdd"
-        android:fillColor="#F84D96"
+        android:pathData="M64 59.5a26.5 26.5 0 1 1 0 53.0a26.5 26.5 0 1 1 0 -53.0Z M64.4 5.6c2.4 0 4.3 1.9 4.8 4.4L87 56.4H41L59.6 10c.5-2.5 2.4-4.4 4.8-4.4Z M64 45.4c23.2 0 42 4.4 42 9.8s-18.8 9.8-42 9.8-42-4.4-42-9.8 18.8-9.8 42-9.8Z M64.63 85.02A12.5 9.5 14 1 0 40.37 78.98A12.5 9.5 14 1 0 64.63 85.02Z M87.63 78.98A12.5 9.5 -14 1 0 63.37 85.02A12.5 9.5 -14 1 0 87.63 78.98Z M69.20 96.40A5.2 4.2 0 1 0 58.80 96.40A5.2 4.2 0 1 0 69.20 96.40Z M59.87 82.44A7.6 1.7 14 1 1 45.13 78.76A7.6 1.7 14 1 1 59.87 82.44Z M82.87 78.76A7.6 1.7 -14 1 1 68.13 82.44A7.6 1.7 -14 1 1 82.87 78.76Z"
+        android:fillType="nonZero"
+        android:fillColor="#DDAB4E"
         android:fillAlpha="0" />
-    <!-- The tracing pen: same outline, stroke only (trimPath* applies to the
-         stroke, so this copy must not carry a fill). -->
+    <!-- The tracing pen: same outline, stroke only (trimPath* applies to the stroke,
+         so this copy must not carry a fill). -->
     <path
         android:name="sailTrace"
-        android:pathData="M64,10 L114,64 L64,118 L14,64 z M64,30 L94,64 L64,98 L34,64 z"
-        android:fillType="evenOdd"
+        android:pathData="M64 59.5a26.5 26.5 0 1 1 0 53.0a26.5 26.5 0 1 1 0 -53.0Z M64.4 5.6c2.4 0 4.3 1.9 4.8 4.4L87 56.4H41L59.6 10c.5-2.5 2.4-4.4 4.8-4.4Z M64 45.4c23.2 0 42 4.4 42 9.8s-18.8 9.8-42 9.8-42-4.4-42-9.8 18.8-9.8 42-9.8Z M64.63 85.02A12.5 9.5 14 1 0 40.37 78.98A12.5 9.5 14 1 0 64.63 85.02Z M87.63 78.98A12.5 9.5 -14 1 0 63.37 85.02A12.5 9.5 -14 1 0 87.63 78.98Z M69.20 96.40A5.2 4.2 0 1 0 58.80 96.40A5.2 4.2 0 1 0 69.20 96.40Z M59.87 82.44A7.6 1.7 14 1 1 45.13 78.76A7.6 1.7 14 1 1 59.87 82.44Z M82.87 78.76A7.6 1.7 -14 1 1 68.13 82.44A7.6 1.7 -14 1 1 82.87 78.76Z"
+        android:fillType="nonZero"
         android:fillColor="#00000000"
-        android:strokeColor="#F84D96"
+        android:strokeColor="#DDAB4E"
         android:strokeWidth="2"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
         android:trimPathEnd="0" />
-    <!-- Waterline reflection, inked in last. -->
+    <!-- The nose, inked in last. -->
     <path
         android:name="caret"
-        android:pathData="M64,54 a10,10 0 1 0 0,20 a10,10 0 1 0 0,-20 z"
-        android:fillColor="#F84D96"
+        android:pathData="M69.20 96.40A5.2 4.2 0 1 0 58.80 96.40A5.2 4.2 0 1 0 69.20 96.40Z"
+        android:fillColor="#DDAB4E"
         android:fillAlpha="0" />
     </group>
 </vector>

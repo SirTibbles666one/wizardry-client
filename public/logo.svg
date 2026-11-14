@@ -1,29 +1,35 @@
-<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wizardry">
-  <title>Wizardry</title>
-  <!--
-    The Wizardry mark: a honey diamond with an open centre, a hairline cross and a
-    solid core. This SVG is the single source of truth for every raster app icon and
-    splash — scripts/gen-icons.mjs fans it out to public/, android/, ios/ and electron/.
-    Keep the path data in sync with the animated copies in
-    src/components/brand/ArmadaCrest.tsx and index.html's boot splash (all three share
-    these exact strings).
-  -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Wizardry">
   <defs>
-    <linearGradient id="wizardry-honey" x1="14" y1="10" x2="114" y2="118" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#f0c877"/>
-      <stop offset="1" stop-color="#d99f3f"/>
+    <linearGradient id="hat" x1="0.25" y1="0" x2="0.75" y2="1">
+      <stop offset="0" stop-color="#f4d79a"/>
+      <stop offset="0.6" stop-color="#ddab4e"/>
+      <stop offset="1" stop-color="#b8812b"/>
+    </linearGradient>
+    <linearGradient id="fur" x1="0.3" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#f8faf5"/>
+      <stop offset="1" stop-color="#d6e1cf"/>
     </linearGradient>
   </defs>
 
-  <!-- The hairline cross, under the diamond. -->
-  <g fill="#e4efe2" fill-opacity="0.34">
-    <path d="M62.6 30h2.8v68h-2.8z"/>
-    <path d="M30 62.6h68v2.8h-68z"/>
-  </g>
+  <!-- Head sits under the brim, centred on the cone. -->
+  <circle cx="64" cy="86" r="26.5" fill="url(#fur)"/>
+  <ellipse cx="52.5" cy="82" rx="12.5" ry="9.5" fill="#5d4530" transform="rotate(14 52.5 82)"/>
+  <ellipse cx="75.5" cy="82" rx="12.5" ry="9.5" fill="#5d4530" transform="rotate(-14 75.5 82)"/>
+  <!-- Closed eyes: one short stroke each, inside the patches. -->
+  <path d="M48.2 81.6c2.2 2 6 2 8.2 0" stroke="#f8faf5" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+  <path d="M71.6 81.6c2.2 2 6 2 8.2 0" stroke="#f8faf5" stroke-width="2.6" stroke-linecap="round" fill="none"/>
 
-  <!-- The diamond, open in the middle. -->
-  <path d="M64 10L114 64L64 118L14 64Z M64 30L94 64L64 98L34 64Z" fill="url(#wizardry-honey)" fill-rule="evenodd"/>
+  <!-- Muzzle: small, tucked between the patches. -->
+  <ellipse cx="64" cy="96" rx="9" ry="7" fill="#f8faf5" opacity="0.95"/>
+  <path d="M64 92.6c2.2 0 4.2 1.6 4.6 3.6.5 2.4-1.6 4.6-4.6 4.6s-5.1-2.2-4.6-4.6c.4-2 2.4-3.6 4.6-3.6Z" fill="#18271c"/>
+  <path d="M64 100.8v2" stroke="#18271c" stroke-width="1.7" stroke-linecap="round"/>
+  <path d="M61.2 104c1.4 1.2 4.2 1.2 5.6 0" stroke="#18271c" stroke-width="1.7" stroke-linecap="round" fill="none"/>
 
-  <!-- The core. -->
-  <path d="M64 54a10 10 0 1 0 0 20a10 10 0 1 0 0-20z" fill="url(#wizardry-honey)"/>
+  <!-- Hat: brim, then cone over it, both from the same gradient. -->
+  <path d="M64 50.6c-23.2 0-42 4.4-42 9.8s18.8 9.8 42 9.8 42-4.4 42-9.8-18.8-9.8-42-9.8Z" fill="url(#hat)"/>
+  <path d="M64.4 5.6c2.4 0 4.3 1.9 4.8 4.4L87 56.4H41L59.6 10c.5-2.5 2.4-4.4 4.8-4.4Z" fill="url(#hat)"/>
+  <!-- The brim's shading is the ellipse's own underside, drawn as a clipped arc so it
+       follows the brim instead of cutting across it. -->
+  <path d="M24 55.6c6.6 4.2 22.4 7 40 7s33.4-2.8 40-7v3.4c-4.6 4.6-21 7.6-40 7.6s-35.4-3-40-7.6Z"
+        fill="#b8812b" opacity="0.45"/>
 </svg>

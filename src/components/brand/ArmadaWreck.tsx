@@ -1,10 +1,10 @@
 import { useId, type CSSProperties } from "react";
 
-import { CARET, SAIL, WAVES } from "./ArmadaCrest";
+import { NOSE, SLOTH, WAVES } from "./ArmadaCrest";
 
 /**
  * The Armada mark struck from the heavens: the sky gathers, a bolt comes down
- * a pillar of light, and the sail is blown into shards that rain onto a
+ * a pillar of light, and the mark is blown into shards that rain onto a
  * burning sea. One-shot, then the wreck smoulders under the light.
  *
  * Every element's *static* style is its final resting state (keyframes supply
@@ -39,8 +39,8 @@ function anim(name: string, dur: number, delay: number, ease = "ease-out", tail 
 type Shard = { points: string; style: CSSProperties };
 
 /**
- * A jittered triangulation of the sail's bounding box. Each triangle is clipped
- * to the sail where it is drawn, so together they are exactly the mark.
+ * A jittered triangulation of the mark's bounding box. Each triangle is clipped
+ * to the mark where it is drawn, so together they are exactly the mark.
  */
 function buildShards(): Shard[] {
   const cols = [22, 43, 64, 85, 106];
@@ -144,7 +144,7 @@ const RAYS = [-34, -20, -9, 9, 20, 34].map((spread) => {
   return `64,${HEAVEN} ${64 + spread * 2.4 - w},112 ${64 + spread * 2.4 + w},112`;
 });
 
-/** The bolt: a jagged stroke from the top of the sky to the heart of the sail. */
+/** The bolt: a jagged stroke from the top of the sky to the heart of the mark. */
 const BOLT_STEPS = 16;
 const BOLT_POINTS = Array.from({ length: BOLT_STEPS + 1 }, (_, i) => {
   const t = i / BOLT_STEPS;
@@ -157,7 +157,7 @@ const BOLT_FORK = `M${FORK_FROM[0].toFixed(1)} ${FORK_FROM[1].toFixed(1)} l-12 1
 
 export function ArmadaWreck({ className = "" }: { className?: string }) {
   const uid = useId().replace(/[^a-zA-Z0-9]/g, "");
-  const sailClip = `wreck-sail-${uid}`;
+  const markClip = `wreck-mark-${uid}`;
   const leftClip = `wreck-left-${uid}`;
   const rightClip = `wreck-right-${uid}`;
   const pillarGrad = `wreck-pillar-${uid}`;
@@ -172,8 +172,8 @@ export function ArmadaWreck({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="-40 -72 208 200" fill="none" aria-hidden="true" overflow="visible" className={className}>
       <defs>
-        <clipPath id={sailClip}>
-          <path d={SAIL} />
+        <clipPath id={markClip}>
+          <path d={SLOTH} />
         </clipPath>
         <clipPath id={leftClip}>
           <rect x={-40} y={0} width={104} height={128} />
@@ -208,7 +208,7 @@ export function ArmadaWreck({ className = "" }: { className?: string }) {
         </filter>
       </defs>
 
-      {/* The heavens open: rays gather over the sail before the strike. */}
+      {/* The heavens open: rays gather over the mark before the strike. */}
       <g
         style={{
           opacity: 0.6,
@@ -302,8 +302,8 @@ export function ArmadaWreck({ className = "" }: { className?: string }) {
           ].join(", "),
         }}
       >
-        <path d={SAIL} />
-        <path d={CARET} fillOpacity={0.85} />
+        <path d={SLOTH} />
+        <path d={NOSE} fillOpacity={0.85} />
       </g>
 
       {/* Three drift groups bob the debris on the water at different phases. */}
@@ -323,13 +323,13 @@ export function ArmadaWreck({ className = "" }: { className?: string }) {
           >
             {SHARDS.filter((_, i) => i % 3 === group).map((shard, i) => (
               <g key={i} style={shard.style}>
-                <polygon points={shard.points} clipPath={`url(#${sailClip})`} />
+                <polygon points={shard.points} clipPath={`url(#${markClip})`} />
               </g>
             ))}
           </g>
         ))}
         <path
-          d={CARET}
+          d={NOSE}
           fillOpacity={0.85}
           style={{
             opacity: 0,
