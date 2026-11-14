@@ -5,7 +5,7 @@ import { createSailingWake } from "./sailingWake";
 import { coastRadius, islandsInSector, randomSource, sail, SECTOR_SIZE, type Island, type Vessel } from "./sailingWorld";
 import { onReducedMotionChange, reducedMotion } from "@/lib/reducedMotion";
 
-const SKY = 0x100b15;
+const SKY = 0x18271c;
 const ROSE = 0xfb4d96;
 
 function material(color: THREE.ColorRepresentation) {

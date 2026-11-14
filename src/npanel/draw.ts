@@ -11,7 +11,7 @@ import { drawEmojiMask } from "@/lib/avatarShape";
 const WIDTH = 1200;
 const HEIGHT = 630;
 
-const SEA = "#100b15";
+const SEA = "#18271c";
 const SAND = "#f1e7d2";
 const ROSE = "#fb4d96";
 const CYAN = "#19e6e6";

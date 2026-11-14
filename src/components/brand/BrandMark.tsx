@@ -4,13 +4,13 @@ import { APP_NAME } from "@/lib/platform";
 import type { ReactNode } from "react";
 
 /**
- * The Armada wordmark + terminal tagline, echoing `public/og.svg`. `lines` adds
+ * The Wizardry wordmark + terminal tagline, echoing `public/og.svg`. `lines` adds
  * muted `$` follow-ups (the caret moves to the last); `tagline` may be a node
  * (SyncGate's CSS typewriter).
  */
 export function BrandMark({
   align = "center",
-  tagline = <FormattedMessage id="brandMark.tagline" defaultMessage="a sovereign harbor on the open web" />,
+  tagline = <FormattedMessage id="brandMark.tagline" defaultMessage="a private room on the open web" />,
   lines = [],
 }: {
   align?: "center" | "left";

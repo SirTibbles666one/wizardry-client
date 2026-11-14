@@ -1,5 +1,5 @@
-<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Armada">
-  <title>Armada</title>
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wizardry">
+  <title>Wizardry</title>
   <!--
     Favicon-optimized mark. A dark rounded chip keeps the frameless sail/wave
     mark legible against light browser tabs; flat fills, no glow (which muds at
@@ -11,7 +11,7 @@
       <stop offset="1" stop-color="#e0186f"/>
     </linearGradient>
   </defs>
-  <rect width="128" height="128" rx="28" fill="#100b15"/>
+  <rect width="128" height="128" rx="28" fill="#18271c"/>
   <g transform="translate(12.8 12.8) scale(0.8)">
     <g fill="#19e6e6">
       <path d="M95.4 104.865H32.59c-1.18 0-2.14-.96-2.14-2.14s.96-2.14 2.14-2.14H95.4c1.18 0 2.14.96 2.14 2.14s-.96 2.14-2.14 2.14z"/>

@@ -84,17 +84,16 @@ export interface ThemeTokens {
 /** Build-time builtin themes; self-hosters can customize before building. */
 export const builtinThemes: Record<"light" | "dark", CoreThemeColors> = {
   light: {
-    // Light Corsair: violet parchment and ink, same rose-magenta primary as dark.
-    background: "260 30% 97%",
-    text: "260 30% 14%",
-    primary: "330 80% 52%",
+    // Light canopy: paper with a green cast, ink text, honey accent.
+    background: "120 22% 97%",
+    text: "136 24% 14%",
+    primary: "40 58% 42%",
   },
   dark: {
-    // Armada "Corsair": near-black violet sea, rose-magenta primary, cyan
-    // accent-2 wake, gilt-cream text.
-    background: "260 22% 9%",
-    text: "42 38% 90%",
-    primary: "330 90% 62%",
+    // Wizardry: canopy-green ground, honey accent, soft ink text.
+    background: "136 24% 12%",
+    text: "111 29% 91%",
+    primary: "40 68% 62%",
   },
 };
 
@@ -117,11 +116,11 @@ export interface ThemePreset {
 /** Named presets; selecting one sets `theme` to "custom" with the preset's colors. */
 export const themePresets: Record<string, ThemePreset> = {
   armada: {
-    label: "Armada",
-    emoji: "⚔️",
+    label: "Wizardry",
+    emoji: "🌿",
     featured: true,
-    // The default. Hacker-privateer on the virtual sea — cold violet-black water, electric rose blade, phosphor-cyan wake.
-    colors: { background: "260 22% 9%", text: "42 38% 90%", primary: "330 90% 62%" },
+    // The default. Canopy shade, honey highlight, ink on bark.
+    colors: { background: "136 24% 12%", text: "111 29% 91%", primary: "40 68% 62%" },
   },
   lantern: {
     label: "Lantern",

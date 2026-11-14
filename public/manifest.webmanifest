@@ -1,13 +1,13 @@
 {
-  "name": "Armada",
-  "short_name": "Armada",
-  "description": "The open-source, encrypted Discord alternative. Unbannable communities with channels, voice, and DMs — no host required. Your keys, your fleet.",
+  "name": "Wizardry",
+  "short_name": "Wizardry",
+  "description": "A private chat for friends: channels, voice and DMs, end to end encrypted.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#100b15",
-  "theme_color": "#100b15",
+  "background_color": "#18271c",
+  "theme_color": "#18271c",
   "icons": [
     {
       "src": "/logo-192.png",

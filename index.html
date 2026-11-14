@@ -20,7 +20,6 @@
            clickjacking defense is the host's: armada-stack adds
            frame-ancestors 'none' to the header for a policy that names none. -->
     <meta http-equiv="content-security-policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval' https://www.youtube.com; worker-src 'self' blob:; child-src 'self' blob:; style-src 'self' 'unsafe-inline'; frame-src 'self' https://www.youtube-nocookie.com https://open.spotify.com https://platform.twitter.com https://www.instagram.com https://streamable.com https://odysee.com https://*.iframe.diy; object-src 'none'; font-src 'self' https: data:; base-uri 'self'; manifest-src 'self'; connect-src 'self' blob: https: wss:; img-src 'self' data: blob: https:; media-src 'self' blob: https:" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="256x256" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
@@ -28,8 +27,8 @@
     <!-- YouTube requires an HTTP Referer for embedded playback. The browser
          supplies this deployment's own origin, including on self-hosts. -->
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <meta name="theme-color" content="#100b15" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#18271c" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f4f8f2" media="(prefers-color-scheme: light)" />
     <!-- Standalone/home-screen behavior comes from manifest.webmanifest alone
          (display: standalone). Deliberately NO legacy apple-mobile-web-app-*
          meta tags: with apple-mobile-web-app-capable + black-translucent
@@ -41,11 +40,11 @@
          apple-mobile-web-app-capable was also tried as a fix for iOS Web Push
          being unavailable in the installed PWA (window.Notification undefined);
          it made no difference on iOS 26.2.1, so it stays out. -->
-    <title>Armada</title>
+    <title>Wizardry</title>
     <!-- Stamped per build (armada-build-stamp Vite plugin); lets a device's
          running bundle be identified when debugging stale-PWA issues. -->
     <meta name="build" content="__BUILD_STAMP__" />
-    <meta name="description" content="The open-source, encrypted Discord alternative. Communities with channels, voice and DMs that need no host." />
+    <meta name="description" content="A private chat for friends: channels, voice and DMs, end to end encrypted." />
 
     <!-- Open Graph / social. og:image/twitter:image MUST be absolute URLs —
          most crawlers (X, Discord, Slack, iMessage) do not resolve relative
@@ -55,17 +54,17 @@
          origin is only as good as that origin, and when it can't be fetched
          the preview degrades to the platform's generic placeholder icon. -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Armada" />
-    <meta property="og:description" content="The open-source, encrypted Discord alternative. Communities with channels, voice and DMs that need no host." />
+    <meta property="og:title" content="Wizardry" />
+    <meta property="og:description" content="A private chat for friends: channels, voice and DMs, end to end encrypted." />
     <meta property="og:image" content="__PUBLIC_ORIGIN__/og.png" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:url" content="__PUBLIC_ORIGIN__" />
-    <meta property="og:site_name" content="Armada" />
+    <meta property="og:site_name" content="Wizardry" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Armada" />
-    <meta name="twitter:description" content="The open-source, encrypted Discord alternative. Communities with channels, voice and DMs that need no host." />
+    <meta name="twitter:title" content="Wizardry" />
+    <meta name="twitter:description" content="A private chat for friends: channels, voice and DMs, end to end encrypted." />
     <meta name="twitter:image" content="__PUBLIC_ORIGIN__/og.png" />
 
     <!-- Marks home-screen (standalone PWA) launches on <html> before first
@@ -74,10 +73,10 @@
     <script src="/standalone.js"></script>
     <script src="/theme.js"></script>
     <!-- Without JavaScript the splash would cover the page forever. -->
-    <noscript><style>#root { display: none !important; } body { background: #100b15 !important; }</style></noscript>
+    <noscript><style>#root { display: none !important; } body { background: #18271c !important; }</style></noscript>
   </head>
   <body>
-    <!-- Static boot splash: the same animated Armada crest as BootSplash.tsx,
+    <!-- Static boot splash: the same animated Wizardry crest as BootSplash.tsx,
          inlined so it paints on the very first frame — before the JS bundle
          parses, the provider tree mounts, and the first lazy route chunk loads.
          Without it, an APK cold start (logged in) showed a blank themed
@@ -90,7 +89,7 @@
         <!-- Hidden until the script below decides this launch isn't headed for
              /welcome. A display:none element doesn't animate, so revealing it
              starts the draw at frame one rather than mid-stroke. -->
-        <svg id="boot-mark" width="96" height="96" viewBox="0 0 128 128" fill="none" role="img" aria-label="Armada logo" style="display:none;filter:drop-shadow(0 8px 24px hsl(var(--primary, 330 90% 62%) / 0.25));">
+        <svg id="boot-mark" width="96" height="96" viewBox="0 0 128 128" fill="none" role="img" aria-label="Wizardry logo" style="display:none;filter:drop-shadow(0 8px 24px hsl(var(--primary, 330 90% 62%) / 0.25));">
           <!-- Wake: each line sweeps open from the centerline (x=64, also every
                line's own midpoint), then scans slowly in and out on its own
                loop. Both are scaleX about that centerline, split across the
@@ -118,7 +117,7 @@
     </div>
     <noscript>
       <div style="max-width:32rem;margin:6rem auto;padding:0 1.5rem;text-align:center;font:16px/1.5 system-ui,sans-serif;color:#ece8f2;">
-        <p>Armada needs JavaScript to run in a browser.</p>
+        <p>Wizardry needs JavaScript to run in a browser.</p>
         <p style="margin-top:1.5rem;">
           <a href="https://pkg.soapbox.pub/deb/soapbox.pub/buzz.armada.app" style="display:inline-block;padding:.75rem 1.25rem;border-radius:.5rem;background:#f472b6;color:#100b15;font-weight:600;text-decoration:none;">Download Armada</a>
         </p>

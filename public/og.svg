@@ -1,10 +1,10 @@
-<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Armada">
-  <title>Armada</title>
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wizardry">
+  <title>Wizardry</title>
 
   <!-- Flat violet-black sea. No gradients. -->
-  <rect width="1200" height="630" fill="#100b15"/>
+  <rect width="1200" height="630" fill="#18271c"/>
 
-  <!-- The Armada mark — flat fills, no glow. Same geometry as public/logo.svg. -->
+  <!-- The Wizardry mark — flat fills, no glow. Same geometry as public/logo.svg. -->
   <g transform="translate(112, 179) scale(2.0)">
     <!-- three cyan wave lines -->
     <g fill="#19e6e6">

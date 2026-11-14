@@ -37,7 +37,7 @@ const CLOSER_LABEL = defineMessage({
   defaultMessage: "a gaming community's #general, with reactions, an inline reply and a thread",
 });
 
-/** Native and desktop users already have the app, so "get armada" is hidden. */
+/** Native and desktop users already have the app, so "get wizardry" is hidden. */
 const INSTALLED_APP = isNativeRuntime() || isDesktop();
 
 /** Memoized: the parent re-renders on login dialog open/close, which would re-render the whole deck. */
@@ -75,7 +75,7 @@ export const LandingPage = memo(function LandingPage({
               className="inline-flex h-10 items-center gap-2 px-3 font-mono text-sm lowercase tracking-tight text-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             >
               <HardDriveDownload className="size-4 shrink-0 text-[hsl(var(--accent2,180_90%_55%))]" />
-              <FormattedMessage id="landingPage.getArmada" defaultMessage="get armada" />
+              <FormattedMessage id="landingPage.getArmada" defaultMessage="get wizardry" />
             </Link>
           </div>
         )}
@@ -99,7 +99,7 @@ export const LandingPage = memo(function LandingPage({
               onClick={scrollToStatement}
               className="group mt-5 flex w-full flex-col items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
-              <FormattedMessage id="landingPage.howItWorks" defaultMessage="How does Armada work?" />
+              <FormattedMessage id="landingPage.howItWorks" defaultMessage="How does Wizardry work?" />
               {/* U+2193 is in WGL4, so every system font has a glyph (and not `font-mono`). */}
               <span
                 aria-hidden="true"
@@ -240,7 +240,7 @@ export const LandingPage = memo(function LandingPage({
               rel="noreferrer"
               className="transition-colors hover:text-foreground"
             >
-              <FormattedMessage id="landingPage.moreAbout" defaultMessage="more about armada" />
+              <FormattedMessage id="landingPage.moreAbout" defaultMessage="more about wizardry" />
             </a>
             <a
               href="https://gitworkshop.dev/soapbox.pub/relay.ngit.dev/armada"

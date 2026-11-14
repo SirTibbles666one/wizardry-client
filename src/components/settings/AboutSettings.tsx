@@ -44,7 +44,7 @@ export function AboutSettings() {
               <path d="M64 4.225l-39.97 88.5h17.13l2.31-5.2 2.76-6.22-2.22-1.43-1.42-12.84h9.99l4.89-11.01L64 41.335l11.42 25.7h9.99l-1.43 12.84-2.22 1.43 2.77 6.22 2.31 5.2h17.13z" fill="currentColor" />
             </svg>
           </span>
-          <div className="font-mono text-lg font-bold lowercase tracking-tight">armada</div>
+          <div className="font-mono text-lg font-bold lowercase tracking-tight">wizardry</div>
           <div className="text-xs text-muted-foreground">
             <FormattedMessage id="aboutSettings.tagline" defaultMessage="Private communities that need no host." />
           </div>
