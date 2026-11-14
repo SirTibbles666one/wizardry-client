@@ -41,7 +41,7 @@ export function AboutSettings() {
         <div className="flex flex-col items-center gap-2 pt-2 pb-1 text-center">
           <span className="flex size-16 items-center justify-center clip-corner-lg bg-chrome neon-text">
             <svg width="36" height="36" viewBox="0 0 128 128" fill="none" aria-hidden>
-              <path d="M64 4.225l-39.97 88.5h17.13l2.31-5.2 2.76-6.22-2.22-1.43-1.42-12.84h9.99l4.89-11.01L64 41.335l11.42 25.7h9.99l-1.43 12.84-2.22 1.43 2.77 6.22 2.31 5.2h17.13z" fill="currentColor" />
+              <path d="M64 10L114 64L64 118L14 64Z M64 30L94 64L64 98L34 64Z" fill-rule="evenodd" fill="currentColor" />
             </svg>
           </span>
           <div className="font-mono text-lg font-bold lowercase tracking-tight">wizardry</div>

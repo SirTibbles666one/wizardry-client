@@ -2,7 +2,7 @@ import { useIntl } from "@/i18n";
 import { APP_NAME } from "@/lib/platform";
 
 /**
- * The Armada mark, animated as a one-shot ~1.1s draw. Path strings are shared
+ * The Wizardry mark, animated as a one-shot ~1.1s draw. Path strings are shared
  * verbatim with `public/logo.svg`, `index.html`'s boot splash and
  * `android/.../drawable/crest_vector.xml` — keep them in sync.
  *
@@ -11,13 +11,12 @@ import { APP_NAME } from "@/lib/platform";
  */
 
 export const SAIL =
-  "M64 4.225l-39.97 88.5h17.13l2.31-5.2 2.76-6.22-2.22-1.43-1.42-12.84h9.99l4.89-11.01L64 41.335l11.42 25.7h9.99l-1.43 12.84-2.22 1.43 2.77 6.22 2.31 5.2h17.13z";
+  "M64 10L114 64L64 118L14 64Z M64 30L94 64L64 98L34 64Z";
 export const CARET =
-  "M76.84 79.165c-.15 0-.31-.05-.44-.15l-12.41-9.65-12.41 9.65c-.31.24-.76.19-1-.13a.706.706 0 0 1 .13-1l12.85-9.99c.26-.2.62-.2.88 0l12.85 9.99a.715.715 0 0 1-.43 1.28z";
+  "M64 54a10 10 0 1 0 0 20a10 10 0 1 0 0-20z";
 export const WAVES = [
-  "M95.4 104.865H32.59c-1.18 0-2.14-.96-2.14-2.14s.96-2.14 2.14-2.14H95.4c1.18 0 2.14.96 2.14 2.14s-.96 2.14-2.14 2.14z",
-  "M83.98 115.565H44.01a1.43 1.43 0 1 1 0-2.86h39.97a1.43 1.43 0 1 1 0 2.86z",
-  "M73.99 123.775H54.01a1.071 1.071 0 0 1 0-2.14h19.98a1.071 1.071 0 0 1 0 2.14z",
+  "M62.6 30h2.8v68h-2.8z",
+  "M30 62.6h68v2.8h-68z",
 ];
 
 // Eases must appear as literals in the `animate-[…]` classes (Tailwind only
@@ -127,7 +126,7 @@ export function ArmadaCrest({
       className={`relative drop-shadow-[0_8px_24px_hsl(var(--primary)/0.25)] ${className}`}
     >
       <Waves loop={loop} />
-      <DrawnPath d={SAIL} />
+      <DrawnPath d={SAIL} fillRule="evenodd" />
       <path
         d={CARET}
         fill="hsl(var(--primary))"
