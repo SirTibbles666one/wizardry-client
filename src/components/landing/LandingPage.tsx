@@ -119,7 +119,7 @@ export const LandingPage = memo(function LandingPage({
             <FormattedMessage id="landingPage.statementOwners" defaultMessage="Chat apps belong to whoever runs the servers." />
           </p>
           <p className="text-balance font-mono text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-            <FormattedMessage id="landingPage.statementSpread" defaultMessage="Armada is spread across free public servers." />
+            <FormattedMessage id="landingPage.statementSpread" defaultMessage="Wizardry is spread across free public servers." />
           </p>
 
           <ul className="mt-14 flex flex-wrap items-center justify-center gap-x-6 gap-y-2.5 font-mono text-xs text-muted-foreground/70">

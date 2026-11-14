@@ -79,7 +79,7 @@ export const PitchToy = memo(function PitchToy() {
     <div className="flex w-full flex-col items-center">
       <h2 className="text-center font-mono text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
         <span className="sr-only">
-          <FormattedMessage id="pitchToy.headingFull" defaultMessage="Armada is a group chat for your communities." />
+          <FormattedMessage id="pitchToy.headingFull" defaultMessage="Wizardry is a group chat for your communities." />
         </span>
         <span aria-hidden="true">
           <FormattedMessage id="pitchToy.headingPrefix" defaultMessage="Armada is a group chat for your" />
