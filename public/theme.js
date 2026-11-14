@@ -107,7 +107,7 @@
       "--muted-foreground": mutedFg,
       "--accent": sec,
       "--accent-foreground": text,
-      "--accent2": dark ? "180 90% 55%" : "190 85% 40%",
+      "--accent2": dark ? "150 30% 62%" : "155 34% 33%",
       "--destructive": dark ? "0 72% 51%" : "0 84.2% 60.2%",
       "--destructive-foreground": dark ? "0 0% 95%" : "210 40% 98%",
       "--success": dark ? "142 60% 35%" : "142 72% 29%",

@@ -182,8 +182,10 @@ export function deriveTokensFromCore(
   const warning = dark ? "43 96% 56%" : "32 95% 36%";
   const warningFg = dark ? "26 83% 14%" : "48 100% 96%";
 
-  // Phosphor-cyan counter-accent, fixed so it stays cold against warm primaries.
-  const accent2 = dark ? "180 90% 55%" : "190 85% 40%";
+  // Sage counter-accent. It has to stay cooler than the honey primary, but
+  // Wizardry is canopy green and ink, not phosphor — so this is the same hue
+  // family as the ground, lifted until it reads as light rather than as neon.
+  const accent2 = dark ? "150 30% 62%" : "155 34% 33%";
 
   // Chrome planes (top bar, rails, sidebars). Dark: composite black/30, /40 and
   // white/10 over the background. Light: a black overlay looks muddy, so darken

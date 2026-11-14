@@ -5,7 +5,7 @@
     "wss://relay.dreamith.to",
     "wss://relay.primal.net"
   ],
-  "id": "armada",
+  "id": "wizardry",
   "servers": [
     "https://blossom.ditto.pub",
     "https://blossom.dreamith.to",
@@ -14,7 +14,7 @@
   "fallback": "/index.html",
   "publishRelayList": false,
   "publishServerList": false,
-  "title": "Armada",
-  "description": "A sovereign harbor on the open relays — private communities, channels, and voice. Your keys, your fleet.",
-  "source": "https://gitworkshop.dev/soapbox.pub/relay.ngit.dev/armada"
+  "title": "Wizardry",
+  "description": "A private room on the open web: encrypted channels, voice and DMs.",
+  "source": "https://github.com/SirTibbles666one/wizardry-client"
 }
