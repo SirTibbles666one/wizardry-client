@@ -45,7 +45,7 @@
         android:scaleX="0.15">
         <path
             android:name="wave1"
-            android:pathData="M95.4,104.865 H32.59 c-1.18,0 -2.14,-0.96 -2.14,-2.14 s0.96,-2.14 2.14,-2.14 H95.4 c1.18,0 2.14,0.96 2.14,2.14 s-0.96,2.14 -2.14,2.14 z"
+            android:pathData="M62.6,30 h2.8 v68 h-2.8 z"
             android:fillColor="#1AE8E8"
             android:fillAlpha="0" />
     </group>
@@ -56,7 +56,7 @@
         android:scaleX="0.15">
         <path
             android:name="wave2"
-            android:pathData="M83.98,115.565 H44.01 a1.43,1.43 0 1 1 0,-2.86 h39.97 a1.43,1.43 0 1 1 0,2.86 z"
+            android:pathData="M30,62.6 h68 v2.8 h-68 z"
             android:fillColor="#1AE8E8"
             android:fillAlpha="0" />
     </group>
@@ -67,7 +67,7 @@
         android:scaleX="0.15">
         <path
             android:name="wave3"
-            android:pathData="M73.99,123.775 H54.01 a1.071,1.071 0 0 1 0,-2.14 h19.98 a1.071,1.071 0 0 1 0,2.14 z"
+            android:pathData="M62.6,30 h2.8 v68 h-2.8 z"
             android:fillColor="#1AE8E8"
             android:fillAlpha="0" />
     </group>
@@ -75,14 +75,16 @@
     <!-- The rose sail's fill, flooding in behind the trace below it. -->
     <path
         android:name="sail"
-        android:pathData="M64,4.225 l-39.97,88.5 h17.13 l2.31,-5.2 2.76,-6.22 -2.22,-1.43 -1.42,-12.84 h9.99 l4.89,-11.01 L64,41.335 l11.42,25.7 h9.99 l-1.43,12.84 -2.22,1.43 2.77,6.22 2.31,5.2 h17.13 z"
+        android:pathData="M64,10 L114,64 L64,118 L14,64 z M64,30 L94,64 L64,98 L34,64 z"
+        android:fillType="evenOdd"
         android:fillColor="#F84D96"
         android:fillAlpha="0" />
     <!-- The tracing pen: same outline, stroke only (trimPath* applies to the
          stroke, so this copy must not carry a fill). -->
     <path
         android:name="sailTrace"
-        android:pathData="M64,4.225 l-39.97,88.5 h17.13 l2.31,-5.2 2.76,-6.22 -2.22,-1.43 -1.42,-12.84 h9.99 l4.89,-11.01 L64,41.335 l11.42,25.7 h9.99 l-1.43,12.84 -2.22,1.43 2.77,6.22 2.31,5.2 h17.13 z"
+        android:pathData="M64,10 L114,64 L64,118 L14,64 z M64,30 L94,64 L64,98 L34,64 z"
+        android:fillType="evenOdd"
         android:fillColor="#00000000"
         android:strokeColor="#F84D96"
         android:strokeWidth="2"
@@ -92,7 +94,7 @@
     <!-- Waterline reflection, inked in last. -->
     <path
         android:name="caret"
-        android:pathData="M76.84,79.165 c-0.15,0 -0.31,-0.05 -0.44,-0.15 l-12.41,-9.65 -12.41,9.65 c-0.31,0.24 -0.76,0.19 -1,-0.13 a0.706,0.706 0 0 1 0.13,-1 l12.85,-9.99 c0.26,-0.2 0.62,-0.2 0.88,0 l12.85,9.99 a0.715,0.715 0 0 1 -0.43,1.28 z"
+        android:pathData="M64,54 a10,10 0 1 0 0,20 a10,10 0 1 0 0,-20 z"
         android:fillColor="#F84D96"
         android:fillAlpha="0" />
     </group>
