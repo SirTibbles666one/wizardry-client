@@ -45,6 +45,8 @@ export const CONFIG_NAMES = [
   "BLOCKLIST_AUTHORS",
   // NIP-13 proof-of-work bits on published events until the user picks their own. Unset = 0 (off).
   "POW_DIFFICULTY",
+  // Origin of the Wizardry account server (src/account/). Set = an email and password are required; unset = key-only login.
+  "ACCOUNT_SERVER",
 ] as const;
 
 export type ConfigName = (typeof CONFIG_NAMES)[number];
