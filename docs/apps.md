@@ -86,16 +86,45 @@ Nothing needs these until you publish, and nothing in the repository uses them y
 - **Without a store:** the signed APK can be shared directly, or through Zapstore or an F-Droid
   repository, both of which the upstream scripts already know how to feed.
 
+## Desktop
+
+The desktop app (`electron/`) is Wizardry too: product name, window, tray and update messages,
+the Linux desktop entry, and the id `xyz.slothlee.wizardry` on Linux and Windows. It keeps its
+data in its own folder, apart from an installed Armada.
+
+```sh
+cd electron && npm ci
+npm run dist:linux     # AppImage and .deb, in electron/release/
+npm run dist:win       # Windows installer (needs wine on Linux)
+```
+
+Unsigned builds run, with a warning: Windows SmartScreen says "unknown publisher", and macOS
+refuses to open the app without a right-click. Removing those warnings needs a Windows
+code-signing certificate and an Apple Developer ID, both paid and both later.
+
+Still upstream's inside, on purpose: the `app://armada` origin, internal message names and the
+screen-share helper's file name. Nobody sees them, and renaming them only makes merges harder.
+
+## Updates and the downloads page
+
+Upstream's apps update themselves, and its `/downloads` page lists builds, from releases signed
+by Armada's key. A Wizardry build that trusted that key would replace itself with Armada. So the
+default is now **no trusted signer**: nothing self-updates, `/downloads` redirects home, and the
+landing page and Settings › About no longer link to Armada's store listings.
+
+To turn it back on with your own builds: make a Nostr key used only for releases, publish
+releases with it (`docs/releases.md`), and build with `RELEASE_AUTHORS=<that key's hex pubkey>`.
+
 ## Not done yet
 
-- **Desktop** still installs and names itself Armada (`electron/`: product name, ids, the Linux
-  desktop entry, Flatpak files), and its updater trusts Soapbox's release key, so it would offer
-  Armada's updates. It needs its own id, your own release key, and Windows/macOS signing
-  certificates if you want those systems not to warn.
+- **Flatpak** files (`electron/flatpak/`) still carry Armada's id and name.
+- **macOS and Windows signing**, as above.
+- The package maintainer is written as `Wizardry <SirTibbles666one@users.noreply.github.com>`
+  (GitHub's no-reply form). Change it in `electron/package.json` and `electron-builder.yml` if you
+  want a contact address there.
+- The spell-check dictionaries are still fetched from `armada.buzz`.
 - **iOS** still carries Soapbox's team id and bundle id (`ios/`, and
   `public/.well-known/apple-app-site-association`). It cannot be signed without your Apple team,
   so it changes when that account exists.
-- **Downloads page and updater feed** (`RELEASE_APP_ID`, `RELEASE_AUTHORS`) still point at
-  Armada's releases.
-- The Android build itself has not been run since this change: the machine that made it has no
-  Android SDK. The first `assembleRelease` on yours is the test.
+- Neither the Android nor the desktop build has been run since these changes: the machine that
+  made them has no Android SDK and did not package Electron. The first build on yours is the test.

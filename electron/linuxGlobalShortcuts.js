@@ -452,7 +452,7 @@ class LinuxGlobalShortcutsPortal {
 
   async bindSession(sessionHandle, shortcutId, preferredTrigger, token) {
     const properties = {
-      description: new Variant("s", "Hold to talk in Armada"),
+      description: new Variant("s", "Hold to talk in Wizardry"),
     };
     if (preferredTrigger) {
       properties.preferred_trigger = new Variant("s", preferredTrigger);

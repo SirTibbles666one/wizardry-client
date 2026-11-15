@@ -15,7 +15,7 @@ const {
 
 describe("Linux StatusNotifierItem", () => {
   it("uses a Flatpak-owned application subname", () => {
-    expect(SERVICE_NAME).toBe("buzz.armada.app.StatusNotifierItem");
+    expect(SERVICE_NAME).toBe("xyz.slothlee.wizardry.StatusNotifierItem");
   });
 
   it("exposes the configured SNI contract on each service instance", () => {

@@ -89,7 +89,7 @@ describe("the generated entry", () => {
   it("carries the window-association fields", () => {
     const entry = buildDesktopEntry({ appImagePath: "/opt/Armada.AppImage", version: "1.2.3" });
     expect(entry.startsWith("[Desktop Entry]\n")).toBe(true);
-    expect(entry).toContain("Name=Armada");
+    expect(entry).toContain("Name=Wizardry");
     // The whole point: WM_CLASS is app.setDesktopName() minus .desktop, so the
     // shell can only name the window "Armada" if these match.
     expect(entry).toContain(`StartupWMClass=${DESKTOP_ID}`);
@@ -141,7 +141,7 @@ describe("installing", () => {
     const result = await run(box, { renderIcon: (size) => Buffer.from(`png-${size}`) });
 
     expect(result.reason).toBe("written");
-    expect(readFileSync(box.entryFile, "utf8")).toContain("Name=Armada");
+    expect(readFileSync(box.entryFile, "utf8")).toContain("Name=Wizardry");
     for (const size of ICON_SIZES) {
       const icon = join(box.dataHome, "icons", "hicolor", `${size}x${size}`, "apps", `${DESKTOP_ID}.png`);
       expect(readFileSync(icon, "utf8")).toBe(`png-${size}`);
@@ -186,7 +186,7 @@ describe("installing", () => {
 describe("standing down", () => {
   it("leaves a system-wide entry (deb) alone", async () => {
     const box = sandbox();
-    writeFileSync(join(box.dataDirs, "applications", DESKTOP_FILE), "[Desktop Entry]\nName=Armada\n");
+    writeFileSync(join(box.dataDirs, "applications", DESKTOP_FILE), "[Desktop Entry]\nName=Wizardry\n");
     expect(await run(box)).toEqual({ integrated: false, reason: "system-entry" });
     expect(() => readFileSync(box.entryFile)).toThrow();
   });
@@ -203,7 +203,7 @@ describe("standing down", () => {
     const box = sandbox();
     writeFileSync(
       join(box.dataHome, "applications", "appimagekit_9f3-Armada.desktop"),
-      `[Desktop Entry]\nName=Armada\nExec="${box.appImage}" %U\n`,
+      `[Desktop Entry]\nName=Wizardry\nExec="${box.appImage}" %U\n`,
     );
     expect(await run(box)).toEqual({ integrated: false, reason: "foreign-entry" });
     expect(() => readFileSync(box.entryFile)).toThrow();

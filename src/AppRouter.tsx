@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate, useParams, type Location } from "react-router-dom";
+import { DOWNLOADS_AVAILABLE } from "@/lib/releases";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { useNotificationNavigation } from "@/hooks/useNotificationNavigation";
@@ -356,7 +357,7 @@ function AppRoutes() {
             <Route path="/gift/:from" element={<GiftPage />} />
             <Route path="/changelog" element={<ChangelogPage />} />
             {/* Also a real directory on the hosted deployment (installers). */}
-            <Route path="/downloads" element={<DownloadsPage />} />
+            <Route path="/downloads" element={DOWNLOADS_AVAILABLE ? <DownloadsPage /> : <Navigate to="/" replace />} />
             <Route path="/privacy" element={<PrivacyPolicyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/support" element={<SupportPage />} />

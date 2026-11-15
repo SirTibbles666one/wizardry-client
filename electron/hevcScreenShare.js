@@ -293,7 +293,7 @@ async function detectHevcCapability({
   }
   const accessible = nodes.filter((device) => isAccessibleDevice(device, fsImpl));
   if (accessible.length === 0) {
-    return unavailable("Armada cannot read and write any VA-API render device under /dev/dri.", {
+    return unavailable("Wizardry cannot read and write any VA-API render device under /dev/dri.", {
       helperPath,
       ffmpegPath,
     });
