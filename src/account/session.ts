@@ -12,6 +12,7 @@ import { useSyncExternalStore } from "react";
 import { accountServerUrl, type OpenedSession } from "./client";
 
 const STORAGE_KEY = "wizardry:account";
+const KEY_ONLY_KEY = "wizardry:account-key-only";
 
 interface Persisted {
   token: string;
@@ -75,7 +76,36 @@ export function accountReady(state: AccountState | null): boolean {
 
 export function setAccountSession(session: OpenedSession): void {
   unlocked = session;
+  // Signing in with an account answers the question the key-only choice was avoiding.
+  try {
+    localStorage.removeItem(KEY_ONLY_KEY);
+  } catch {
+    // Storage refused: nothing persisted to clear either.
+  }
   write({ token: session.token, needsKey: session.vault === null && !session.keyLinked });
+}
+
+/**
+ * True when this device asked to sign in with a key and keep the account gate out of the way.
+ *
+ * The gate is otherwise the only front door, and it has no way through for someone who already has
+ * a key and no account — which would lock out every existing key-only user the day accounts ship.
+ */
+export function useKeyInstead(): boolean {
+  try {
+    return localStorage.getItem(KEY_ONLY_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+/** Remember that choice. The next account sign-in clears it again. */
+export function skipAccountGate(): void {
+  try {
+    localStorage.setItem(KEY_ONLY_KEY, "1");
+  } catch {
+    // Storage refused (private mode): the choice lasts until the tab closes.
+  }
 }
 
 /** The key is stored or linked: nothing is owed any more. */

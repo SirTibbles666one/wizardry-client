@@ -34,7 +34,7 @@ import { withConnectPerms } from "@/lib/nostrConnectPerms";
 import { toast } from '@/hooks/useToast';
 import { writeClipboardText } from '@/lib/clipboard';
 import { common, FormattedMessage, t, useIntl, type IntlShape } from '@/i18n';
-import { accountReady, accountsEnabled, useAccountState } from '@/account/session';
+import { accountReady, accountsEnabled, skipAccountGate, useAccountState, useKeyInstead } from '@/account/session';
 import { AccountGate } from '@/components/account/AccountGate';
 
 interface LoginScreenProps {
@@ -615,8 +615,18 @@ const KeyLoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, 
  */
 const LoginScreen: React.FC<LoginScreenProps> = (props) => {
   const account = useAccountState();
-  if (!accountsEnabled() || accountReady(account)) return <KeyLoginScreen {...props} />;
-  return <AccountGate isOpen={props.isOpen} onClose={props.onClose} onLogin={props.onLogin} />;
+  if (!accountsEnabled() || accountReady(account) || useKeyInstead()) return <KeyLoginScreen {...props} />;
+  return (
+    <AccountGate
+      isOpen={props.isOpen}
+      onClose={props.onClose}
+      onLogin={props.onLogin}
+      onUseKey={() => {
+        skipAccountGate();
+        props.onClose();
+      }}
+    />
+  );
 };
 
 export default LoginScreen;

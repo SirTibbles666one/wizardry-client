@@ -29,6 +29,8 @@ interface AccountGateProps {
   onLogin: () => void;
   /** Shown under the form when the gate may not be dismissed, e.g. a way to log out. */
   footer?: React.ReactNode;
+  /** Offered on the sign-in step: go on with a key and no account. Absent when not allowed. */
+  onUseKey?: () => void;
 }
 
 type Step = "signin" | "signup" | "confirm" | "forgot" | "reset";
@@ -38,7 +40,7 @@ type Step = "signin" | "signup" | "confirm" | "forgot" | "reset";
  * key, which is opened on this device and logged in; or it holds none yet, and
  * the caller moves on to choosing one.
  */
-export function AccountGate({ isOpen, onClose, onLogin, footer }: AccountGateProps) {
+export function AccountGate({ isOpen, onClose, onLogin, footer, onUseKey }: AccountGateProps) {
   const intl = useIntl();
   const login = useLoginActions();
   const { logins } = useNostrLogin();
@@ -307,6 +309,14 @@ export function AccountGate({ isOpen, onClose, onLogin, footer }: AccountGatePro
               <button type="button" className={linkClass} onClick={() => go("forgot")}>
                 <FormattedMessage id="accountGate.toForgot" defaultMessage="Forgot password" />
               </button>
+              {onUseKey && (
+                <button type="button" className={linkClass} onClick={onUseKey}>
+                  <FormattedMessage
+                    id="accountGate.useKeyInstead"
+                    defaultMessage="Use a key instead, without an account"
+                  />
+                </button>
+              )}
             </>
           )}
           {step === "signup" && (
