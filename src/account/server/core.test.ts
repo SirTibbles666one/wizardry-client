@@ -2,7 +2,7 @@ import net from "node:net";
 
 import { bytesToHex } from "@noble/hashes/utils.js";
 import { finalizeEvent, generateSecretKey, getPublicKey } from "nostr-tools/pure";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { AccountError, createAccountClient, type EventTemplate } from "../client";
 import { createAccountServer, memoryStore, type AccountStore, type Mail } from "./core";
@@ -10,6 +10,15 @@ import { buildMessage, smtpMailer } from "./mail";
 import { sqliteStore } from "./sqliteStore";
 
 const URL_ = "https://accounts.example";
+
+/**
+ * These tests stretch real passwords, because the thing under test is what a
+ * person waits for: scrypt at 2^16 costs about a second per derivation, and the
+ * recovery path derives several. The default five-second limit expires on a
+ * loaded machine while the logic is perfectly correct, so the budget is set here
+ * rather than sprinkled over each test.
+ */
+vi.setConfig({ testTimeout: 120_000 });
 const EMAIL = "Tibs@Example.com";
 const PASSWORD = "a long enough passphrase";
 
