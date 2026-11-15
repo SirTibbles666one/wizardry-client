@@ -26,6 +26,11 @@ electron/db.cjs
 # Built from src/lib/desktopUpdate.ts by vite.config.electron-update.ts
 # (npm run build:electron-update).
 electron/updateFeed.cjs
+# Built from src/account/server by vite.config.account-server.ts
+# (npm run build:account-server).
+server/account-server.mjs
+# The account server's database, when run from the repo.
+accounts.db*
 # Chromium profile for `npm run electron:dev` (its own, so a dev build never
 # writes an installed Armada's armada.db).
 electron/.dev-profile/
