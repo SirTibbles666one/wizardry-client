@@ -1,0 +1,36 @@
+# Wizardry account server. Installed by install.sh; settings in /etc/wizardry-accounts/env.
+[Unit]
+Description=Wizardry account server
+Documentation=https://github.com/SirTibbles666one/wizardry-client/blob/master/docs/accounts.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=wizardry-accounts
+Group=wizardry-accounts
+EnvironmentFile=/etc/wizardry-accounts/env
+WorkingDirectory=/var/lib/wizardry-accounts
+ExecStart=/usr/bin/env node /opt/wizardry-accounts/account-server.mjs
+Restart=on-failure
+RestartSec=3
+
+# The service can write its own state directory and nothing else.
+StateDirectory=wizardry-accounts
+StateDirectoryMode=0700
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+CapabilityBoundingSet=
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target
