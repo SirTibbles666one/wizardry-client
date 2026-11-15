@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name" translatable="false">Armada</string>
-    <string name="title_activity_main" translatable="false">Armada</string>
-    <string name="package_name" translatable="false">buzz.armada.app</string>
-    <string name="custom_url_scheme" translatable="false">buzz.armada.app</string>
+    <string name="app_name" translatable="false">Wizardry</string>
+    <string name="title_activity_main" translatable="false">Wizardry</string>
+    <string name="package_name" translatable="false">xyz.slothlee.wizardry</string>
+    <string name="custom_url_scheme" translatable="false">xyz.slothlee.wizardry</string>
 
     <!-- Notification texts: the same English as `notificationMessages` in
          src/lib/notificationPreview.ts; each values-<lang> carries the rest. -->
@@ -48,7 +48,7 @@
     <string name="notif_connected">Connected for instant notifications</string>
 
     <string name="channel_service_name">Background connection</string>
-    <string name="channel_service_description">Keeps Armada connected for instant notifications</string>
+    <string name="channel_service_description">Keeps Wizardry connected for instant notifications</string>
     <string name="channel_messages_name">Notifications</string>
     <string name="channel_messages_description">Mentions, replies, reactions and direct messages</string>
     <string name="channel_calls_name">Incoming calls</string>

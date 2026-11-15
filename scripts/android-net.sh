@@ -19,7 +19,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-PKG="buzz.armada.app.profile"
+PKG="xyz.slothlee.wizardry.profile"
 SCENARIO="cold"
 SECS=180
 REPEAT=1

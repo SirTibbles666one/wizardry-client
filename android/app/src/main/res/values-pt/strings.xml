@@ -40,7 +40,7 @@
     <string name="notif_not_sent">⚠️ Não enviada: %1$s</string>
     <string name="notif_connected">Conectado para notificações instantâneas</string>
     <string name="channel_service_name">Conexão em segundo plano</string>
-    <string name="channel_service_description">Mantém o Armada conectado para notificações instantâneas</string>
+    <string name="channel_service_description">Mantém o Wizardry conectado para notificações instantâneas</string>
     <string name="channel_messages_name">Notificações</string>
     <string name="channel_messages_description">Menções, respostas, reações e mensagens diretas</string>
     <string name="channel_calls_name">Chamadas recebidas</string>

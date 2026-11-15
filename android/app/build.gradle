@@ -17,7 +17,13 @@ android {
     // packaging the libs unstripped. The CI image installs the same version.
     ndkVersion = rootProject.ext.ndkVersion
     defaultConfig {
-        applicationId "buzz.armada.app"
+        // Wizardry's own install identity. The code's package (`namespace` above)
+        // stays upstream's so merges from Armada keep applying; only what
+        // Android and a store see is ours. See docs/apps.md.
+        applicationId "xyz.slothlee.wizardry"
+        // The site whose links open in the app (App Links). `wizardryWebHost`
+        // in android/gradle.properties; the placeholder never matches anything.
+        manifestPlaceholders = [webHost: (project.findProperty("wizardryWebHost") ?: "wizardry.invalid")]
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

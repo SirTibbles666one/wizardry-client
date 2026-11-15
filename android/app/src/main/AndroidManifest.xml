@@ -26,16 +26,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- Verified App Links: open https://armada.buzz links (invites,
-                 shared channels) directly in the app. Verified against
-                 https://armada.buzz/.well-known/assetlinks.json (shipped in
-                 client/public/), which must list the APK signing cert's
-                 SHA-256 fingerprint. -->
+            <!-- Verified App Links: open the Wizardry site's links (invites,
+                 shared channels) directly in the app. The host is
+                 `wizardryWebHost` in android/gradle.properties; Android checks
+                 it against https://<host>/.well-known/assetlinks.json (shipped
+                 in public/), which must list the APK signing cert's SHA-256
+                 fingerprint: scripts/android-signing.sh writes that file. -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="armada.buzz" />
+                <data android:scheme="https" android:host="${webHost}" />
             </intent-filter>
 
             <!-- Share target: receive text/links/files from other apps' share

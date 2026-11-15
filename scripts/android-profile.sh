@@ -6,7 +6,7 @@
 #   scripts/android-profile.sh --scenario all --minutes 10 --perfetto 60
 #
 # The profiling APK (`-ParmadaProfile=true`, `VITE_PROFILE=1`) installs as
-# buzz.armada.app.profile, BESIDE the real app — a debug-signed build can't
+# xyz.slothlee.wizardry.profile, BESIDE the real app — a debug-signed build can't
 # replace a release install without wiping it. Open it once, log in and turn
 # background notifications on; while measuring, keep the real app's
 # notifications off (or force-stop it) so the two services don't share the
@@ -31,7 +31,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-PKG="buzz.armada.app.profile"
+PKG="xyz.slothlee.wizardry.profile"
 SVC="$PKG/buzz.armada.app.NotificationRelayService"
 SCENARIO=""
 MINUTES=10
