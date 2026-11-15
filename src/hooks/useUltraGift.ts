@@ -12,7 +12,7 @@ import { giftUrl } from "@/lib/ultraGift";
 
 /** The message a gift is sent as; the link alone on its last line, so it renders as a card. */
 export function giftMessage(url: string): string {
-  return `${t({ id: "ultraGift.message", defaultMessage: "I got you Armada Ultra! 🎁" })}\n${url}`;
+  return `${t({ id: "ultraGift.message", defaultMessage: "I got you Wizardry Ultra! 🎁" })}\n${url}`;
 }
 
 /**

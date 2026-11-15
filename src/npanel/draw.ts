@@ -113,7 +113,7 @@ export async function drawInvite(): Promise<Blob> {
 
   ctx.globalAlpha = 0.55;
   ctx.fillStyle = SAND;
-  const line = "on armada. open the link to see where.";
+  const line = "on wizardry. open the link to see where.";
   ctx.fillText(line, 402, 392);
   ctx.globalAlpha = 1;
   ctx.fillStyle = ROSE;
@@ -160,7 +160,7 @@ const GIFT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="128" height="12
 <rect x="182" y="112" width="36" height="42" rx="13" fill="url(#ribbon)"/>
 </svg>`;
 
-/** An Armada Ultra gift: the wrapped box beside who it is from, on an aurora sea. */
+/** A Wizardry Ultra gift: the wrapped box beside who it is from, on an aurora sea. */
 export async function drawGift(picture: string | undefined, shape: string | undefined, name: string): Promise<Blob> {
   const { canvas, ctx } = sea();
 
@@ -207,13 +207,14 @@ export async function drawGift(picture: string | undefined, shape: string | unde
   // npanel draws text only in a colour, so the gradient is laid over it.
   const title = new OffscreenCanvas(WIDTH, HEIGHT);
   const tctx = title.getContext("2d")!;
-  tctx.font = `bold 118px ${MONO}`;
+  // Eight monospaced letters across the 540px beside the box: 104px is the largest that leaves a margin.
+  tctx.font = `bold 104px ${MONO}`;
   tctx.textBaseline = "alphabetic";
   tctx.fillStyle = SAND;
-  tctx.fillText("armada", left, 318);
+  tctx.fillText("wizardry", left, 318);
   tctx.fillText("ultra", left, 440);
   tctx.globalCompositeOperation = "source-in";
-  const shimmer = tctx.createLinearGradient(left, 220, left + 460, 450);
+  const shimmer = tctx.createLinearGradient(left, 220, left + 520, 450);
   shimmer.addColorStop(0, ROSE);
   shimmer.addColorStop(0.5, PURPLE);
   shimmer.addColorStop(1, CYAN);
@@ -249,10 +250,10 @@ async function lockup(ctx: OffscreenCanvasRenderingContext2D): Promise<void> {
   ctx.font = `bold 30px ${MONO}`;
   ctx.textBaseline = "middle";
   const right = WIDTH - 40;
-  const width = ctx.measureText("armada").width;
+  const width = ctx.measureText("wizardry").width;
   if (mark) ctx.drawImage(mark, right - width - 52, HEIGHT - 40 - 44);
   ctx.fillStyle = SAND;
-  ctx.fillText("armada", right - width, HEIGHT - 40 - 22);
+  ctx.fillText("wizardry", right - width, HEIGHT - 40 - 22);
 }
 
 function sea(): { canvas: OffscreenCanvas; ctx: OffscreenCanvasRenderingContext2D } {

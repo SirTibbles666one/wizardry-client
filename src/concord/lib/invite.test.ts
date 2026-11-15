@@ -54,7 +54,7 @@ describe("fragment codec (CORD-05 §3)", () => {
 
   it("round-trips dictionary ids, wss-implied literals, and verbatim literals", () => {
     const token = mintToken();
-    const relays = ["wss://relay.ditto.pub", "wss://armada.example.com", "ws://192.168.1.5:5577"];
+    const relays = ["wss://relay.ditto.pub", "wss://wizardry.example.com", "ws://192.168.1.5:5577"];
     const decoded = decodeFragment(encodeFragment(token, relays));
     expect(decoded.relays).toEqual(relays);
     expect(bytesToHex(decoded.token)).toBe(bytesToHex(token));
@@ -167,7 +167,7 @@ describe("invite links", () => {
   it("builds and parses a full URL and the bare naddr#fragment form", () => {
     const link = mintLinkSigner();
     const token = mintToken();
-    const url = buildInviteUrl("https://armada.example.com", link.pk, token, ["wss://a.example"]);
+    const url = buildInviteUrl("https://wizardry.example.com", link.pk, token, ["wss://a.example"]);
     expect(url).toContain("/invite/naddr1");
     expect(url).toContain("#");
 
@@ -183,7 +183,7 @@ describe("invite links", () => {
   });
 
   it("returns undefined for unrecognized invites and garbage (so classifiers fall through)", () => {
-    expect(parseInviteLink("https://armada.example.com/invite#sometokenpayload_here123")).toBeUndefined();
+    expect(parseInviteLink("https://wizardry.example.com/invite#sometokenpayload_here123")).toBeUndefined();
     expect(parseInviteLink("wss://relay.example.com")).toBeUndefined();
     expect(parseInviteLink("hello world")).toBeUndefined();
   });

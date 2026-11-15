@@ -26,7 +26,7 @@ async function offline(page: Page) {
   });
 }
 
-/** A one-channel community owned by an Armada Ultra viewer named Sophia. */
+/** A one-channel community owned by an Wizardry Ultra viewer named Sophia. */
 async function bootChannel(page: Page) {
   const me = makePerson("Sophia", "", 286);
   const ana = makePerson("ana", "", 20);

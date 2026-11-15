@@ -63,7 +63,7 @@ export function GiftUltraDialog({ open, onOpenChange }: { open: boolean; onOpenC
           <GiftStage />
           <GiftBox className="relative size-28" />
           <DialogTitle className="relative mt-5 text-2xl font-black tracking-tight">
-            <FormattedMessage id="giftUltra.dialogTitle" defaultMessage="Gift Armada Ultra" />
+            <FormattedMessage id="giftUltra.dialogTitle" defaultMessage="Gift Wizardry Ultra" />
           </DialogTitle>
           <DialogDescription className="relative mt-1 text-sm text-foreground/70">
             <FormattedMessage id="giftUltra.dialogBody" defaultMessage="Anyone with your link can claim it." />

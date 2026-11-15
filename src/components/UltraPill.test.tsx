@@ -50,6 +50,6 @@ describe('UltraPill', () => {
   it('is a plain label when not interactive', () => {
     render(<UltraPill force interactive={false} />);
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
-    expect(screen.getByTitle('Armada Ultra member')).toHaveTextContent('Ultra');
+    expect(screen.getByTitle('Wizardry Ultra member')).toHaveTextContent('Ultra');
   });
 });

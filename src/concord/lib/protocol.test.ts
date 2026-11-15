@@ -98,7 +98,7 @@ describe("Concord end to end", () => {
       creator_npub: owner.pubkey,
     };
     const bundleEvent = await buildBundleEvent(bundle, token, link.sk);
-    const url = buildInviteUrl("https://armada.example.com", link.pk, token, ownerCommunity.relays);
+    const url = buildInviteUrl("https://wizardry.example.com", link.pk, token, ownerCommunity.relays);
 
     // ── 3. Alice + Mallory follow the link and join.
     const parsedLink = parseInviteLink(url)!;
@@ -346,7 +346,7 @@ describe("Concord end to end", () => {
     // The addressable coordinate (33301, link_signer, d=""); the newest event at
     // it wins. A refresh replaces it (CORD-05 §2).
     const coordinate: NostrEvent[] = [await buildBundleEvent(bundleAtEpoch(e0), token, link.sk)];
-    const url = buildInviteUrl("https://armada.example.com", link.pk, token, e0.relays);
+    const url = buildInviteUrl("https://wizardry.example.com", link.pk, token, e0.relays);
 
     // ── 2. The owner Refounds to epoch 1 (ban/convert): newEpoch = rootEpoch+1,
     // a fresh root + a fresh control pair (CORD-06 §3). The link is NOT

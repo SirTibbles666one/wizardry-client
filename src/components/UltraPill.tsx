@@ -22,13 +22,13 @@ interface UltraPillProps {
   interactive?: boolean;
 }
 
-/** "Ultra" pill beside a byline when the profile carries Armada Ultra; opens a details popover like `ProxyPill`. */
+/** "Ultra" pill beside a byline when the profile carries Wizardry Ultra; opens a details popover like `ProxyPill`. */
 export function UltraPill({ metadata, force, className, labelClassName, interactive = true }: UltraPillProps) {
   const intl = useIntl();
   const [open, setOpen] = useState(false);
   if (!force && !readUltra(metadata)) return null;
 
-  const title = intl.formatMessage({ id: 'ultraPill.title', defaultMessage: 'Armada Ultra member' });
+  const title = intl.formatMessage({ id: 'ultraPill.title', defaultMessage: 'Wizardry Ultra member' });
   const body = (
     <>
       <Gem className="size-3" aria-hidden />
@@ -65,7 +65,7 @@ function UltraPillDetails({ onNavigate }: { onNavigate: () => void }) {
 
   return (
     <p>
-      <FormattedMessage id="ultraPill.description" defaultMessage="Armada Ultra member. All the premium perks, for $0.00." />
+      <FormattedMessage id="ultraPill.description" defaultMessage="Wizardry Ultra member. All the premium perks, for $0.00." />
       {loggedIn && (
         <>
           {' '}

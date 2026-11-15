@@ -4,7 +4,7 @@ const RIBBON = "bg-gradient-to-b from-amber-100 via-amber-300 to-amber-500";
 const WRAP = "bg-gradient-to-br from-primary via-fuchsia-500 to-accent2";
 
 /**
- * A wrapped Armada Ultra gift, drawn in CSS so it scales to any size: sized by
+ * A wrapped Wizardry Ultra gift, drawn in CSS so it scales to any size: sized by
  * the caller (`className="size-40"`). `open` throws the lid off and lets the
  * light out; `shaking` rattles it just before.
  */

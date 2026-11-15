@@ -76,7 +76,7 @@ describe.skipIf(typeof URLPattern === "undefined")("routes", () => {
 describe("profile", () => {
   it("previews an npub, escaping what its author wrote", async () => {
     const preview = await run(`/${npub}`);
-    expect(preview?.title).toBe("Ana <b> on Armada");
+    expect(preview?.title).toBe("Ana <b> on Wizardry");
     expect(preview?.description).toBe("Sails far. <script>x</script>");
     expect(preview?.body).toContain("<h1>Ana &lt;b&gt;</h1>");
     expect(preview?.body).toContain("<p>Sails<br>\nfar.</p>");
@@ -91,7 +91,7 @@ describe("profile", () => {
     vi.stubGlobal("fetch", fetch);
     const preview = await run("/soapbox.pub");
     expect(fetch.mock.calls[0][0]).toBe("https://soapbox.pub/.well-known/nostr.json?name=_");
-    expect(preview?.title).toBe("Ana <b> on Armada");
+    expect(preview?.title).toBe("Ana <b> on Wizardry");
   });
 
   it("refuses a NIP-05 answer that isn't a pubkey", async () => {
@@ -107,7 +107,7 @@ describe("profile", () => {
 describe("invite", () => {
   it("previews a Concord invite without knowing its community", async () => {
     const preview = await run(`/invite/${bundleNaddr(pubkey)}`);
-    expect(preview?.title).toBe("You're invited to a community on Armada");
+    expect(preview?.title).toBe("You're invited to a community on Wizardry");
     expect(preview?.twitter).toBe("summary_large_image");
   });
 
@@ -120,15 +120,15 @@ describe("invite", () => {
 describe("gift", () => {
   it("previews an Ultra gift from its giver", async () => {
     const preview = await run(`/gift/${npub}`);
-    expect(preview?.title).toBe("Ana <b> gifted you Armada Ultra");
-    expect(preview?.body).toContain("<h1>Ana &lt;b&gt; gifted you Armada Ultra</h1>");
+    expect(preview?.title).toBe("Ana <b> gifted you Wizardry Ultra");
+    expect(preview?.body).toContain("<h1>Ana &lt;b&gt; gifted you Wizardry Ultra</h1>");
     expect(preview?.twitter).toBe("summary_large_image");
     expect(drawGift).toHaveBeenCalledWith("https://example.com/a.png", "⭐", "Ana <b>");
   });
 
   it("still previews a gift from someone with no profile, by their npub", async () => {
     const preview = await run(`/gift/${npub}`, []);
-    expect(preview?.title).toBe(`${npub.slice(0, 12)}…${npub.slice(-6)} gifted you Armada Ultra`);
+    expect(preview?.title).toBe(`${npub.slice(0, 12)}…${npub.slice(-6)} gifted you Wizardry Ultra`);
   });
 
   it("never looks a gift up by NIP-05", async () => {

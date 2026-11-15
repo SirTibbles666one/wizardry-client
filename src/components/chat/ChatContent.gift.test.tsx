@@ -47,7 +47,7 @@ function renderContent(content: string) {
 
 describe("ChatContent gift links", () => {
   it("cards a gift link alone on its line, naming the gifter", () => {
-    const { container } = renderContent(`I got you Armada Ultra! 🎁\n${GIFT}`);
+    const { container } = renderContent(`I got you Wizardry Ultra! 🎁\n${GIFT}`);
     const card = container.querySelector("[data-testid=gift-card]");
     expect(card?.getAttribute("data-from")).toBe(GIFTER);
     expect(container.querySelector("[data-testid=link-card]")).toBeNull();

@@ -49,9 +49,9 @@ describe("BLOSSOM_SERVERS", () => {
   });
 
   it("prefers the first of a deployment's servers", async () => {
-    const { APP_BLOSSOM_SERVERS, PREFERRED_BLOSSOM_SERVER } = await load("armada.example.com, https://blossom.ditto.pub");
-    expect(APP_BLOSSOM_SERVERS).toEqual(["https://armada.example.com/", "https://blossom.ditto.pub/"]);
-    expect(PREFERRED_BLOSSOM_SERVER).toBe("https://armada.example.com/");
+    const { APP_BLOSSOM_SERVERS, PREFERRED_BLOSSOM_SERVER } = await load("wizardry.example.com, https://blossom.ditto.pub");
+    expect(APP_BLOSSOM_SERVERS).toEqual(["https://wizardry.example.com/", "https://blossom.ditto.pub/"]);
+    expect(PREFERRED_BLOSSOM_SERVER).toBe("https://wizardry.example.com/");
   });
 });
 

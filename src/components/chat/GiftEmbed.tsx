@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 const TITLE_STYLE = nameStyleCss("aurora");
 
-/** Card for an Armada Ultra gift link; opening it lands on the in-app gift page. */
+/** Card for an Wizardry Ultra gift link; opening it lands on the in-app gift page. */
 export function GiftEmbed({ from, className }: { from: string; className?: string }) {
   const navigate = useStableNavigate();
   const { user } = useCurrentUser();
@@ -32,7 +32,7 @@ export function GiftEmbed({ from, className }: { from: string; className?: strin
               ? <FormattedMessage id="giftEmbed.fromYou" defaultMessage="A gift from you" />
               : <FormattedMessage id="giftEmbed.from" defaultMessage="A gift from {name}" values={{ name }} />}
           </div>
-          <div className="truncate text-xl font-black tracking-tight" style={TITLE_STYLE}>Armada Ultra</div>
+          <div className="truncate text-xl font-black tracking-tight" style={TITLE_STYLE}>Wizardry Ultra</div>
           {path && (
             <Button
               size="sm"

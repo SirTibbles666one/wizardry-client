@@ -54,7 +54,7 @@ const PROCESSING_MS = 1600;
 
 type Step = "pitch" | "checkout" | "processing";
 
-/** Settings › Armada Ultra: a free "subscription" whose perks everyone can see. */
+/** Settings › Wizardry Ultra: a free "subscription" whose perks everyone can see. */
 export function UltraSettings() {
   const intl = useIntl();
   const { pubkey, metadata, imeta, ultra } = useMyUltra();
@@ -177,7 +177,7 @@ function UltraPitch({ self, onContinue }: { self: UltraSelf; onContinue: () => v
     <>
       <UltraHero>
         <HeroGem />
-        <h3 className={cn("text-4xl font-black tracking-tight drop-shadow-[0_0_20px_hsl(var(--primary)/0.45)]", ULTRA_NAME_CLASS)} style={HERO_TITLE_STYLE}>Armada Ultra</h3>
+        <h3 className={cn("text-4xl font-black tracking-tight drop-shadow-[0_0_20px_hsl(var(--primary)/0.45)]", ULTRA_NAME_CLASS)} style={HERO_TITLE_STYLE}>Wizardry Ultra</h3>
         <p className="text-sm text-muted-foreground">
           <FormattedMessage id="ultraSettings.tagline" defaultMessage="Everything Wizardry already does, plus some shiny extras, for the low price of nothing." />
         </p>
@@ -255,7 +255,7 @@ function UltraCheckout({ processing, onPay, onBack }: { processing: boolean; onP
         title={intl.formatMessage({ id: "ultraSettings.orderTitle", defaultMessage: "Your order" })}
         footer={intl.formatMessage({ id: "ultraSettings.orderFooter", defaultMessage: "Cancel anytime. You'll get every cent back." })}
       >
-        {line(intl.formatMessage({ id: "ultraSettings.orderItem", defaultMessage: "Armada Ultra, forever" }), zero)}
+        {line(intl.formatMessage({ id: "ultraSettings.orderItem", defaultMessage: "Wizardry Ultra, forever" }), zero)}
         {line(intl.formatMessage({ id: "ultraSettings.orderFees", defaultMessage: "Hidden fees" }), intl.formatMessage({ id: "ultraSettings.orderFeesValue", defaultMessage: "None, we checked" }))}
         {line(intl.formatMessage({ id: "ultraSettings.orderPayment", defaultMessage: "Payment method" }), intl.formatMessage({ id: "ultraSettings.orderPaymentValue", defaultMessage: "Not needed" }))}
         {line(intl.formatMessage({ id: "ultraSettings.orderTotal", defaultMessage: "Total" }), zero, true)}

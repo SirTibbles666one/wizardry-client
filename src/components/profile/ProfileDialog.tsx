@@ -440,7 +440,7 @@ function ProfileView({ pubkey, onClose }: { pubkey: string; onClose: () => void 
                               <>
                                 <DropdownMenuItem onSelect={() => giftUltra(pubkey)}>
                                   <Gift className="size-4 mr-2" />
-                                  <FormattedMessage id="profileDialog.giftUltra" defaultMessage="Gift Armada Ultra" />
+                                  <FormattedMessage id="profileDialog.giftUltra" defaultMessage="Gift Wizardry Ultra" />
                                 </DropdownMenuItem>
                                 {moderation.actions.length > 0 && <DropdownMenuSeparator />}
                               </>

@@ -59,7 +59,7 @@ type Look = Omit<UltraProfile, "since">;
 const GRADIENT_CTA = "relative overflow-hidden bg-gradient-to-r from-primary via-fuchsia-500 to-accent2 font-semibold text-white shadow-xl shadow-primary/40 hover:brightness-110";
 
 /**
- * Landing page for an Armada Ultra gift, `/gift/<npub>`: a wrapped box to open,
+ * Landing page for an Wizardry Ultra gift, `/gift/<npub>`: a wrapped box to open,
  * then a studio to pick a look (and a photo) before claiming. Works signed out,
  * so a gift doubles as an invite: the recipient joins here and claims in place.
  */
@@ -248,7 +248,7 @@ function GiftBody({ gifter }: { gifter: string }) {
               className={cn("pb-1 text-5xl font-black tracking-tight drop-shadow-[0_0_24px_hsl(var(--primary)/0.5)] md:text-7xl", ULTRA_NAME_CLASS)}
               style={nameStyleCss("aurora")}
             >
-              Armada Ultra
+              Wizardry Ultra
             </h1>
             <p className="text-base text-foreground/80">
               {claimed ? (

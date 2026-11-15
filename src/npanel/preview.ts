@@ -9,7 +9,7 @@
  *
  * Three kinds of page: a person (`UserPage`), drawn as their avatar over the
  * Armada mark; a Concord invite (CORD-05), drawn as an invitation; and an
- * Armada Ultra gift (`GiftPage`), drawn as a wrapped box from its giver. An
+ * Wizardry Ultra gift (`GiftPage`), drawn as a wrapped box from its giver. An
  * invite's community is sealed under the token in the link's `#fragment`,
  * which never reaches a server, so its card names nothing about it.
  */
@@ -131,7 +131,7 @@ function profile(event: NostrEvent, url: URL): Preview {
   const nip05 = field("nip05");
   const website = sanitizeUrl(field("website"));
   const picture = sanitizeImageSrc(field("picture"));
-  const appName = config("APP_NAME") || "Armada";
+  const appName = config("APP_NAME") || "Wizardry";
 
   // The avatar is in the drawn image; the article names no other host, so
   // the page loads nothing an author chose.
@@ -173,7 +173,7 @@ function invite(segment: string, url: URL): Preview | null {
   } catch {
     return null;
   }
-  const appName = config("APP_NAME") || "Armada";
+  const appName = config("APP_NAME") || "Wizardry";
   const title = `You're invited to a community on ${appName}`;
   const description = "An end-to-end encrypted community. Its name and members are sealed in the link itself — open it to see where it leads.";
   return {
@@ -192,7 +192,7 @@ function invite(segment: string, url: URL): Preview | null {
  */
 function gift(pubkey: string, event: NostrEvent | undefined, url: URL): Preview {
   const { fields, field, name } = person(pubkey, event?.content);
-  const appName = config("APP_NAME") || "Armada";
+  const appName = config("APP_NAME") || "Wizardry";
   const title = `${name} gifted you ${appName} Ultra`;
   const description = "Open the gift to claim a shimmering name, a glowing avatar, profile effects and exclusive themes. Free, forever.";
   return {

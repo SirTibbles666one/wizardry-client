@@ -88,8 +88,8 @@ describe("RELAYS", () => {
   });
 
   it("is every relay default when set, with no helper relays", async () => {
-    const relays = await load("wss://armada.example.com/, relay.ditto.pub");
-    const own = ["wss://armada.example.com", "wss://relay.ditto.pub"];
+    const relays = await load("wss://wizardry.example.com/, relay.ditto.pub");
+    const own = ["wss://wizardry.example.com", "wss://relay.ditto.pub"];
     expect(relays.APP_RELAYS).toEqual(own);
     expect(relays.SEARCH_RELAYS).toEqual(own);
     expect(relays.COMMUNITY_RELAYS).toEqual(own);
@@ -101,7 +101,7 @@ describe("RELAYS", () => {
   });
 
   it("leaves the stock set itself alone, for the invite codec", async () => {
-    const { STOCK_RELAYS } = await load("wss://armada.example.com");
+    const { STOCK_RELAYS } = await load("wss://wizardry.example.com");
     expect(STOCK_RELAYS).toContain("wss://jskitty.com/nostr");
   });
 });

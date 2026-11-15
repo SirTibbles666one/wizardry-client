@@ -4,7 +4,7 @@ import { tryNpubEncode } from "@/lib/safeNip19";
 import { shareOrigin } from "@/lib/shareOrigin";
 
 /**
- * An Armada Ultra gift: `/gift/<gifter's npub>`. Ultra is free and lives in the
+ * A Wizardry Ultra gift: `/gift/<gifter's npub>`. Ultra is free and lives in the
  * recipient's own kind 0, so the link carries no secret; it only names who sent
  * it. Redeeming is the recipient's explicit press, like getting Ultra directly.
  */

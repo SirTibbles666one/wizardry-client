@@ -658,7 +658,7 @@ export function VoiceDeviceSettings() {
           <p className="text-xs text-destructive">
             <FormattedMessage
               id="voiceDeviceSettings.invalidServer"
-              defaultMessage="Not a valid server address. Enter a host like armada.example.com (https only)."
+              defaultMessage="Not a valid server address. Enter a host like wizardry.example.com (https only)."
             />
           </p>
         ) : checkingServer ? (

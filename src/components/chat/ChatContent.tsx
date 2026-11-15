@@ -179,7 +179,7 @@ export type ContentToken =
   | { type: "file-embed"; url: string; encryption?: ImetaEncryption; mime?: string; name?: string; size?: number; thumbnail?: string; fallbacks?: string[] }
   | { type: "link-embed"; url: string }
   | { type: "invite-embed"; url: string }
-  /** An Armada Ultra gift link alone on its line. */
+  /** A Wizardry Ultra gift link alone on its line. */
   | { type: "gift-embed"; url: string; from: string }
   | { type: "buzz-invite-embed"; url: string }
   | { type: "group-invite-embed"; url: string; group: GroupAddress }

@@ -352,7 +352,7 @@ function AppRoutes() {
             <Route path="/c/:communityId/:channelId/t/:threadRoot/m/:messageId" element={<RequireAuth><ConcordPage /></RequireAuth>} />
             {/* Concord invites carry an naddr (CORD-05); Buzz invite codes never do. */}
             <Route path="/invite/:naddr" element={<InviteRoute />} />
-            {/* Armada Ultra gifts; signed out too, so a gift doubles as an invite. */}
+            {/* Wizardry Ultra gifts; signed out too, so a gift doubles as an invite. */}
             <Route path="/gift/:from" element={<GiftPage />} />
             <Route path="/changelog" element={<ChangelogPage />} />
             {/* Also a real directory on the hosted deployment (installers). */}

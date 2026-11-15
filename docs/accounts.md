@@ -157,9 +157,15 @@ Next: the wording that still assumes there is no account ("There's no Wizardry a
 
 The mark, the copy and the hosted site say Wizardry. Still Armada underneath:
 
-- **Defaults:** `APP_NAME` falls back to "Armada" in `src/lib/platform.ts`, and the desktop shell
-  hard-codes it in window and tray titles. `APP_ID` is `armada` — changing that one moves where
-  settings are stored, so it needs a decision before anyone has data, not after.
+- **Done:** the app's default name, the copy in all eight languages, "Wizardry Ultra", and the
+  link-preview cards (titles and the drawn wordmark).
+- **Defaults:** the desktop shell hard-codes "Armada" in window, tray and update messages, and its
+  package is still `armada-desktop`; those change together with the app identity below. `APP_ID`
+  is `armada` — changing that one moves where settings are stored, so it needs a decision before
+  anyone has data, not after.
+- **Downloads:** `/downloads` and the no-JavaScript page offer Soapbox's packages, which install
+  Armada, not Wizardry (no account step, their branding). Until we publish our own builds, either
+  hide the page or say plainly that the apps are upstream's.
 - **App identity:** Android/iOS/desktop are still `buzz.armada.app`, signed and associated with
   Soapbox's team and `armada.buzz`. Shipping apps needs our own id, signing keys, and
   `assetlinks.json` / `apple-app-site-association` on our domain.

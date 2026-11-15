@@ -81,7 +81,7 @@ function Punchline() {
       <TooltipContent className="z-[260] max-w-64 text-left text-xs leading-snug">
         <FormattedMessage
           id="accountStandingDialog.punchlineExplanation"
-          defaultMessage="There's no Wizardry account to ban: your identity is a key only you hold. A community can remove you from itself, but nobody can remove you from Wizardry."
+          defaultMessage="Your identity is a key only you hold, not an account we control. A community can remove you from itself, but nobody can take your key or your identity away."
         />
       </TooltipContent>
     </Tooltip>

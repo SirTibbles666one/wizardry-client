@@ -6,7 +6,7 @@ import { useHiddenFlair } from "@/lib/reducedMotion";
 export const DONATION_BITCOIN = "bc1q9cx35adpm73aq2fw40ye6ts8hfxqzjr5unwg0n";
 export const DONATION_MONERO = "45JDCLrjJ4bgVUSbbs2yjy9m5Mf4VLPW8fG7jw9sq5u69rXZZopQogZNeyYkMBnXpkaip4p4QwaaJNhdTotPa9g44DBCzdK";
 
-/** The kind-0 field that carries Armada Ultra, so every client can draw it. */
+/** The kind-0 field that carries Wizardry Ultra, so every client can draw it. */
 export const ULTRA_FIELD = "armada_ultra";
 
 export const NAME_STYLES = {
