@@ -142,12 +142,12 @@ configureLowMemory({ commandLine: app.commandLine, on: activeLowMemoryMode });
 
 // Keep Linux's desktop-file identity stable in both the AppImage and Flatpak.
 // Electron must receive this before ready so notifications and tray hosts can
-// associate the process with buzz.armada.app.desktop. It is also the window's
+// associate the process with xyz.slothlee.wizardry.desktop. It is also the window's
 // WM_CLASS, i.e. the entry a dock looks for when it wants a name and an icon
 // for this process — desktopIntegration.js installs that entry for the
 // AppImage, which is otherwise the one packaging that has none.
 if (process.platform === "linux") {
-  app.setDesktopName("buzz.armada.app.desktop");
+  app.setDesktopName("xyz.slothlee.wizardry.desktop");
 }
 
 // Windows' analog of the desktop-file identity: the AppUserModelID. A renderer
@@ -158,7 +158,7 @@ if (process.platform === "linux") {
 // appId, so this must be that same string, and — like setDesktopName — must be
 // set before `ready` so the first toast is already associated.
 if (process.platform === "win32") {
-  app.setAppUserModelId("buzz.armada.app");
+  app.setAppUserModelId("xyz.slothlee.wizardry");
 }
 
 // The web bundle that shipped inside the asar. This is the floor: a fresh
@@ -576,7 +576,7 @@ function createWindow({ show = !startHidden || !closeToTraySupported } = {}) {
     show,
     backgroundColor: BACKGROUND,
     autoHideMenuBar: true,
-    title: "Armada",
+    title: "Wizardry",
     icon: ICON,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
@@ -736,7 +736,7 @@ function trayImage() {
 
 function trayMenuEntries() {
   return [
-    { id: 1, label: "Show Armada", activate: showWindow },
+    { id: 1, label: "Show Wizardry", activate: showWindow },
     autoUpdatesSupported() || webUpdatesSupported()
       ? {
           id: 2,
@@ -824,7 +824,7 @@ async function createTray({ statusNotifier = false } = {}) {
     try {
       tray = await createLinuxStatusNotifier({
         image,
-        tooltip: "Armada",
+        tooltip: "Wizardry",
         getMenuEntries: trayMenuEntries,
         onActivate: guardTrayCallback(toggleWindowFromTray),
         onContextMenu: guardTrayCallback((x, y) => {
@@ -861,7 +861,7 @@ async function createTray({ statusNotifier = false } = {}) {
       tray.setImage(trayImage().resize({ width: 22, height: 22 }));
     });
   }
-  tray.setToolTip("Armada");
+  tray.setToolTip("Wizardry");
   tray.setContextMenu(buildTrayContextMenu());
   tray.on("click", toggleWindowFromTray);
   return true;
@@ -1059,7 +1059,7 @@ async function checkForDesktopUpdates(manual = false) {
       await showUpdateMessage({
         type: "error",
         title: "Update check failed",
-        message: "Armada could not check for updates.",
+        message: "Wizardry could not check for updates.",
         detail: "Check your connection and try again.",
       });
     }
@@ -1115,7 +1115,7 @@ function announceWebUpdate() {
   }
 }
 
-const DOWNLOADS_URL = "https://armada.buzz/downloads";
+const DOWNLOADS_URL = "https://github.com/SirTibbles666one/wizardry-client/releases";
 
 /** The web track's outcome, for a build with no shell updater. */
 async function reportWebUpdate(result, manual) {
@@ -1124,7 +1124,7 @@ async function reportWebUpdate(result, manual) {
     if (manual) {
       const { response } = await showUpdateMessage({
         type: "info",
-        title: "Armada update available",
+        title: "Wizardry update available",
         message: "This update needs a newer version of the Armada app.",
         detail: "Install the latest Armada to keep getting updates.",
         buttons: ["Open Downloads", "Later"],
@@ -1136,7 +1136,7 @@ async function reportWebUpdate(result, manual) {
     } else if (!shellUpdateAnnounced && Notification.isSupported()) {
       shellUpdateAnnounced = true;
       const notification = new Notification({
-        title: "Armada update available",
+        title: "Wizardry update available",
         body: "This update needs a newer version of the Armada app. Click to download it.",
       });
       notification.on("click", () => void openExternalUrl(DOWNLOADS_URL));
@@ -1149,14 +1149,14 @@ async function reportWebUpdate(result, manual) {
     await showUpdateMessage({
       type: "error",
       title: "Update check failed",
-      message: "Armada could not check for updates.",
+      message: "Wizardry could not check for updates.",
       detail: "Check your connection and try again.",
     });
     return;
   }
   await showUpdateMessage({
     type: "info",
-    title: "Armada is up to date",
+    title: "Wizardry is up to date",
     message: "You are running the newest available version.",
   });
 }
@@ -1195,7 +1195,7 @@ function installElectronUpdater() {
     if (!wasManual) return;
     await showUpdateMessage({
       type: "info",
-      title: "Armada is up to date",
+      title: "Wizardry is up to date",
       message: `You are running Armada ${app.getVersion()}, the newest available version.`,
     });
   });
@@ -1208,7 +1208,7 @@ function installElectronUpdater() {
     await showUpdateMessage({
       type: "error",
       title: "Update check failed",
-      message: "Armada could not check for updates.",
+      message: "Wizardry could not check for updates.",
       detail: "Check your connection and try again.",
     });
   });
@@ -1225,8 +1225,8 @@ function installElectronUpdater() {
     }
     const { response } = await showUpdateMessage({
       type: "info",
-      title: "Armada update ready",
-      message: `Armada ${info.version} has been downloaded.`,
+      title: "Wizardry update ready",
+      message: `Wizardry ${info.version} has been downloaded.`,
       detail: "Restart Armada to install it now, or choose Later to install when you quit.",
       buttons: ["Restart and install", "Later"],
       defaultId: 0,
@@ -1255,7 +1255,7 @@ function setUnreadBadge(count) {
   }
 
   if (tray) {
-    tray.setToolTip(n > 0 ? `Armada (${n} unread)` : "Armada");
+    tray.setToolTip(n > 0 ? `Wizardry (${n} unread)` : "Wizardry");
   }
 
   if (mainWindow && process.platform === "win32") {
@@ -1418,7 +1418,7 @@ const linuxAudioMatchers = new Map();
 function linuxAudioWorkerProcess() {
   if (linuxAudioWorker) return linuxAudioWorker;
   const worker = utilityProcess.fork(path.join(__dirname, "linuxAudioWorker.js"), [], {
-    serviceName: "Armada PipeWire Audio",
+    serviceName: "Wizardry PipeWire Audio",
   });
   worker.on("message", ({ id, ok, value, error }) => {
     const pending = linuxAudioPending.get(id);

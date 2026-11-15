@@ -12,7 +12,7 @@ const ITEM_INTERFACE = "org.kde.StatusNotifierItem";
 const ITEM_PATH = "/StatusNotifierItem";
 const MENU_INTERFACE = "com.canonical.dbusmenu";
 const MENU_PATH = "/MenuBar";
-const SERVICE_NAME = "buzz.armada.app.StatusNotifierItem";
+const SERVICE_NAME = "xyz.slothlee.wizardry.StatusNotifierItem";
 const WATCHER_INTERFACE = "org.kde.StatusNotifierWatcher";
 const WATCHER_PATH = "/StatusNotifierWatcher";
 
@@ -47,8 +47,8 @@ class ArmadaStatusNotifierItem extends Interface {
   }
 
   get Category() { return "Communications"; }
-  get Id() { return "armada"; }
-  get Title() { return "Armada"; }
+  get Id() { return "wizardry"; }
+  get Title() { return "Wizardry"; }
   get Status() { return "Active"; }
   get WindowId() { return 0; }
   get IconThemePath() { return ""; }

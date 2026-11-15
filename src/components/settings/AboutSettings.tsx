@@ -1,3 +1,4 @@
+import { DOWNLOADS_AVAILABLE } from "@/lib/releases";
 import { Download, FileText, LifeBuoy, Mail, ScrollText, Shield } from "lucide-react";
 import { useContext } from "react";
 
@@ -54,7 +55,7 @@ export function AboutSettings() {
       <SettingsGroup id="about">
         <SettingsRow label={intl.formatMessage({ id: "aboutSettings.version", defaultMessage: "Version" })} value={<span className="tabular-nums">{appVersionLabel()}</span>} />
         <SettingsRow icon={ScrollText} tone="primary" label={intl.formatMessage({ id: "aboutSettings.whatsNew", defaultMessage: "What's new" })} to="/changelog" />
-        <SettingsRow icon={Download} tone="accent2" label={intl.formatMessage({ id: "aboutSettings.getTheApps", defaultMessage: "Get the apps" })} to="/downloads" />
+        {DOWNLOADS_AVAILABLE && <SettingsRow icon={Download} tone="accent2" label={intl.formatMessage({ id: "aboutSettings.getTheApps", defaultMessage: "Get the apps" })} to="/downloads" />}
       </SettingsGroup>
 
       <SettingsGroup>

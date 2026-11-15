@@ -61,7 +61,7 @@ function assetEvent(secretKey: Uint8Array, version: string, spec: AssetSpec, cre
     created_at: createdAt,
     content: "",
     tags: [
-      ["i", "buzz.armada.app"],
+      ["i", "xyz.slothlee.wizardry"],
       ["m", spec.m ?? "application/octet-stream"],
       ...(x ? [["x", x]] : []),
       ["version", version],
@@ -80,7 +80,7 @@ function published(
   {
     version,
     channel = "main",
-    appId = "buzz.armada.app",
+    appId = "xyz.slothlee.wizardry",
     createdAt = 1_700_000_000,
     assets = allAssets(version),
   }: { version: string; channel?: string; appId?: string; createdAt?: number; assets?: AssetSpec[] },

@@ -7,10 +7,10 @@
 #
 # Built in CI on version tags; see ../.ngit/act/workflows/release.yml.
 
-appId: buzz.armada.app
-productName: Armada
-executableName: armada
-copyright: Copyright © 2026 Soapbox Technology LLC
+appId: xyz.slothlee.wizardry
+productName: Wizardry
+executableName: wizardry
+copyright: Copyright © 2026 Soapbox Technology LLC and Wizardry contributors
 
 directories:
   # Installers are written here. (The bundled web build lives in ./dist, so the
@@ -109,7 +109,7 @@ asarUnpack:
 publish:
   provider: generic
   publishAutoUpdate: false
-  url: https://armada.buzz/downloads/desktop
+  url: https://github.com/SirTibbles666one/wizardry-client/releases
 
 # Flipped right before signing. Without them ELECTRON_RUN_AS_NODE, NODE_OPTIONS
 # or --inspect run arbitrary code as this signed binary, under its macOS TCC
@@ -126,7 +126,7 @@ electronFuses:
 # ── Linux ─────────────────────────────────────────────────────────────────────
 linux:
   category: Network
-  maintainer: Soapbox <contact@soapbox.pub>
+  maintainer: Wizardry <SirTibbles666one@users.noreply.github.com>
   # Preserve Armada's clipped-corner tile instead of letting launchers wrap
   # the plain square logo in their generic application background.
   icon: build/linux-icon.png
@@ -142,7 +142,7 @@ linux:
     - deb
   desktop:
     entry:
-      Name: Armada
+      Name: Wizardry
       Comment: Sovereign encrypted communities and chat
       Categories: Network;Chat;InstantMessaging;
 
