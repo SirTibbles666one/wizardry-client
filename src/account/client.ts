@@ -10,6 +10,7 @@ import {
   KEY_PROOF_KIND,
   normalizeEmail,
   type AccountErrorCode,
+  type AccountStatus,
   type KdfParams,
   type PreloginResponse,
   type RecoveryBundle,
@@ -119,6 +120,23 @@ export function createAccountClient(options: AccountClientOptions = {}) {
       const email = mustEmail(emailInput);
       const { authKey, vaultKey } = await keysFor(email, password);
       return open(await call<SessionResponse>("login", { email, authKey }), vaultKey, authKey);
+    },
+
+    /** What the signed-in account holds: a stored key, a recovery copy, a linked key. */
+    async status(token: string): Promise<AccountStatus> {
+      return call<AccountStatus>("session/status", {}, token);
+    },
+
+    /**
+     * Reopen the account with the password alone, for someone already signed in:
+     * the vault key lives in memory only, so a settings change after a reload
+     * has to ask for the password again. No address is needed or sent.
+     */
+    async unlock(token: string, password: string): Promise<OpenedSession> {
+      const { salt, kdf } = await call<PreloginResponse>("session/salt", {}, token);
+      const { authKey, vaultKey } = await deriveKeys(password, salt, kdf);
+      const answer = await call<Omit<SessionResponse, "token">>("session/unlock", { authKey }, token);
+      return open({ ...answer, token }, vaultKey, authKey);
     },
 
     async signOut(token: string): Promise<void> {

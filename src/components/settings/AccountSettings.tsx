@@ -2,6 +2,7 @@ import { useNostrLogin } from "@nostrify/react/login";
 import { ShieldAlert, ShieldCheck, Trash2 } from "lucide-react";
 import { lazy, Suspense, useState } from "react";
 
+import { AccountServerSettings } from "@/components/account/AccountServerSettings";
 import { LoginArea } from "@/components/auth/LoginArea";
 import { AccountStandingDialog } from "@/components/settings/AccountStandingDialog";
 import { KeyBackupSettings } from "@/components/settings/KeyBackupSettings";
@@ -53,6 +54,8 @@ export function AccountSettings() {
           <KeyBackupSettings nsec={activeLogin.data.nsec} pubkey={activeLogin.pubkey} />
         </SettingsGroup>
       )}
+
+      <AccountServerSettings />
 
       {user && <SyncSettings />}
 

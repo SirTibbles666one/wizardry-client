@@ -319,3 +319,26 @@ describe("account mail", () => {
     await new Promise((resolve) => fake.close(resolve));
   });
 });
+
+describe("account settings calls", () => {
+  it("reopens a signed-in account with the password alone, and reports what it holds", async () => {
+    const w = world();
+    const session = await w.account();
+    expect(await w.client.status(session.token)).toEqual({ hasVault: false, hasRecovery: false, keyLinked: false });
+    const sk = bytesToHex(generateSecretKey());
+    await w.client.storeKey(session, { sk });
+    expect(await w.client.status(session.token)).toEqual({ hasVault: true, hasRecovery: true, keyLinked: false });
+
+    const reopened = await w.client.unlock(session.token, PASSWORD);
+    expect(reopened.contents).toEqual({ sk });
+    expect(reopened.token).toBe(session.token);
+    expect(await codeOf(w.client.unlock(session.token, "not the password"))).toBe("invalid_credentials");
+    expect(await codeOf(w.client.unlock("ab".repeat(32), PASSWORD))).toBe("unauthorized");
+
+    // A new recovery code replaces the old one.
+    const first = await w.client.storeKey(reopened, { sk });
+    await w.client.startRecovery(EMAIL);
+    const recovered = await w.client.recover(EMAIL, w.lastCode(), first, "after a new recovery code");
+    expect(recovered.session.contents).toEqual({ sk });
+  });
+});

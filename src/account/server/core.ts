@@ -372,6 +372,27 @@ export function createAccountServer(deps: AccountDeps) {
       return { ...sessionResponse(account) };
     },
 
+    /** What the account holds, for a settings page. Says nothing a sign-in did not. */
+    "session/status"(request) {
+      const account = session(request);
+      return { hasVault: account.vault !== null, hasRecovery: account.recoveryVerifier !== null, keyLinked: account.keyLinked };
+    },
+
+    /** The salt to stretch the password with again, for someone already signed in (no address needed). */
+    "session/salt"(request) {
+      const account = session(request);
+      return { salt: account.salt, kdf: KDF_V1 };
+    },
+
+    /** Signed in already and the password given again: hand back the vault so the device can reopen it. */
+    "session/unlock"(request) {
+      const account = session(request);
+      limit(`unlock:${account.emailHash}`, 10, 600_000);
+      const authKey = hexField(request.body, "authKey", KEY_BYTES);
+      if (!equalHex(account.verifier, verifierOf(account.verifierSalt, authKey))) return refuse(401, "invalid_credentials");
+      return { vault: account.vault, hasRecovery: account.recoveryVerifier !== null, keyLinked: account.keyLinked };
+    },
+
     logout({ bearer }) {
       if (isHex(bearer, 32)) store.deleteToken(tokenHashOf(bearer));
       return { ok: true };

@@ -35,6 +35,7 @@ export const SETTINGS_PAGE_PARENT: Partial<Record<SettingsPageId, SettingsPageId
  */
 const SECTION_PAGE: Record<string, SettingsPageId> = {
   keys: "account",
+  "email-account": "account",
   sync: "account",
   standing: "account",
   danger: "account",

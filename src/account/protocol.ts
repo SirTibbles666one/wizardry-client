@@ -66,6 +66,13 @@ export interface SessionResponse {
   keyLinked: boolean;
 }
 
+/** What an account holds, without opening anything. */
+export interface AccountStatus {
+  hasVault: boolean;
+  hasRecovery: boolean;
+  keyLinked: boolean;
+}
+
 export interface RecoveryOpenResponse {
   salt: string;
   vault: string;

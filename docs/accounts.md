@@ -70,6 +70,8 @@ All `POST /v1/<route>`, JSON. Errors are `{ "error": "<code>" }`.
 | `login` | email, authKey | Session, plus the vault if there is one. |
 | `vault/put` | session | Stores vault + recovery bundle together, or clears both. |
 | `key/link`, `key/unlink` | session, signed proof | Adds or removes the public key's hash. |
+| `session/status` | session | Whether a vault, a recovery copy and a linked key exist. |
+| `session/salt`, `session/unlock` | session, authKey | Checks the password again and returns the vault, for one settings action. |
 | `password/change` | session, old authKey | New verifier and re-sealed vault in one request. |
 | `recover/start` | email | Mails a code if the account exists; same answer either way. |
 | `recover/salt`, `recover/open`, `recover/reset` | codes | The recovery flow above. |
@@ -116,6 +118,10 @@ reports a plain-http server as unreachable.
   and its recovery code shown (the dialog will not close until the code is copied or downloaded);
   any kind of key is linked by a signed proof. Someone logged in with a key but no account is
   asked for one and can only log out instead. The last logout ends the server session.
+- **Settings › Account** has an "Email account" group (`AccountServerSettings`): whether a key is
+  stored, store it, make a new recovery code, change the password, remove the stored key, delete
+  the email account. Each action asks for the password, which is checked by `session/unlock`
+  (ten tries per ten minutes) and reopens the vault for that one action.
 - **`session.ts`** keeps the token on disk and the unlocked vault key in memory only, so a reload
   mid-setup asks for the password again rather than storing the key unprotected.
 
@@ -126,19 +132,17 @@ SQLite store, the mailer against a local SMTP server, and the screens above agai
 rules. The whole sign-up was also run in a browser against the built server, ending with a
 confirmed account, a stored vault and recovery copy, one key hash, and no address at rest.
 
-Not built yet: Settings › Account (change password, new recovery code, remove the stored key,
-delete the account), and everything under "The plan" from step 2 on.
+Not built yet: everything under "The plan" from step 2 on.
 
 # The plan
 
 ## 1. Accounts in the app
 
 Done: the gate, sign-up with an emailed code, sign-in on a new device, the recovery-code screen,
-forgotten password (with and without the recovery code), and sign-out, in all eight languages.
+forgotten password (with and without the recovery code), sign-out, and Settings › Account, in all
+eight languages.
 
-Next: **Settings › Account** — change password, show whether a key and a recovery code are stored,
-make a new recovery code, remove the stored key, delete the account. Then the wording that still
-assumes there is no account ("There's no Wizardry account to ban…").
+Next: the wording that still assumes there is no account ("There's no Wizardry account to ban…").
 
 ## 2. Deployment
 
