@@ -246,7 +246,7 @@ export function RelayBootstrapForm({
             >
               <FormattedMessage
                 id="relayBootstrapForm.relayHelp"
-                defaultMessage="A relay is a server that stores your account's data. If you've used Armada or another Nostr app before, enter a relay you used. It looks like <mono>wss://relay.example.com</mono>. Not sure? You can skip this; Armada still works with its built-in relays."
+                defaultMessage="A relay is a server that stores your account's data. If you've used Wizardry or another Nostr app before, enter a relay you used. It looks like <mono>wss://relay.example.com</mono>. Not sure? You can skip this; Wizardry still works with its built-in relays."
                 values={{ mono: (chunks) => <span className="font-mono text-foreground">{chunks}</span> }}
               />
             </PopoverContent>
@@ -272,7 +272,7 @@ export function RelayBootstrapForm({
         <div className="clip-corner-lg bg-secondary/50 p-3 text-xs leading-relaxed text-muted-foreground">
           <FormattedMessage
             id="relayBootstrapForm.notFound"
-            defaultMessage="We didn't find a saved setup on that relay. You can start fresh here. Armada will remember <b>{relay}</b> as your account's home so your servers and settings follow you to your other devices. Nothing is saved until you confirm."
+            defaultMessage="We didn't find a saved setup on that relay. You can start fresh here. Wizardry will remember <b>{relay}</b> as your account's home so your servers and settings follow you to your other devices. Nothing is saved until you confirm."
             values={{ relay: checkedRelay, b: (chunks) => <strong>{chunks}</strong> }}
           />
         </div>
@@ -348,7 +348,7 @@ export function RelayBootstrapForm({
           <p className="text-center text-xs text-muted-foreground">
             <FormattedMessage
               id="relayBootstrapForm.skipHelp"
-              defaultMessage="Armada keeps working with its default relays. You can set up your own anytime in Settings."
+              defaultMessage="Wizardry keeps working with its default relays. You can set up your own anytime in Settings."
             />
           </p>
         </div>

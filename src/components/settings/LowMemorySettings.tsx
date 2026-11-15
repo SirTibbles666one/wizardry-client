@@ -33,7 +33,7 @@ export function LowMemorySettings() {
       label={intl.formatMessage({ id: "lowMemorySettings.label", defaultMessage: "Low memory mode" })}
       description={
         state.restartRequired
-          ? intl.formatMessage({ id: "lowMemorySettings.restart", defaultMessage: "Takes effect when Armada restarts." })
+          ? intl.formatMessage({ id: "lowMemorySettings.restart", defaultMessage: "Takes effect when Wizardry restarts." })
           : intl.formatMessage({ id: "lowMemorySettings.description", defaultMessage: "Uses less memory, but the app runs a little slower." })
       }
     >

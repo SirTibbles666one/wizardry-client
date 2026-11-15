@@ -103,7 +103,7 @@ export async function exportNsec(nsec: string): Promise<ExportResult> {
         directory: Directory.Documents,
         encoding: Encoding.UTF8,
       });
-      return { status: "saved", location: t({ id: "credentialManager.iosLocation", defaultMessage: "the Armada folder in Files ({filename})" }, { filename: KEY_FILENAME }) };
+      return { status: "saved", location: t({ id: "credentialManager.iosLocation", defaultMessage: "the Wizardry folder in Files ({filename})" }, { filename: KEY_FILENAME }) };
     } catch {
       return { status: "failed" };
     }

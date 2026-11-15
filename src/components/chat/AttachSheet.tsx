@@ -568,10 +568,10 @@ function RecentMediaGrid({ expanded, selected, onToggle, onPreview, onResetSelec
           {access === "denied" ? (
             <FormattedMessage
               id="attachSheet.accessDenied"
-              defaultMessage="Photo access is turned off for Armada. Turn it on in settings to see your recent photos here."
+              defaultMessage="Photo access is turned off for Wizardry. Turn it on in settings to see your recent photos here."
             />
           ) : (
-            <FormattedMessage id="attachSheet.accessPrompt" defaultMessage="Let Armada show your recent photos and videos here." />
+            <FormattedMessage id="attachSheet.accessPrompt" defaultMessage="Let Wizardry show your recent photos and videos here." />
           )}
         </p>
         <Button
@@ -594,7 +594,7 @@ function RecentMediaGrid({ expanded, selected, onToggle, onPreview, onResetSelec
       {access === "limited" && (
         <div className="flex shrink-0 items-center gap-3 px-4 pb-2">
           <p className="flex-1 text-[13px] leading-snug text-muted-foreground">
-            <FormattedMessage id="attachSheet.limitedAccess" defaultMessage="Armada can only see the photos and videos you chose." />
+            <FormattedMessage id="attachSheet.limitedAccess" defaultMessage="Wizardry can only see the photos and videos you chose." />
           </p>
           <Button size="sm" variant="secondary" className="h-8 shrink-0 clip-corner-lg px-4 touch:h-11" onClick={() => void ask()}>
             <FormattedMessage id="attachSheet.manage" defaultMessage="Manage" />

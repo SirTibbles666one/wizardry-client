@@ -471,7 +471,7 @@ export function DmCallProvider({ children }: { children: React.ReactNode }) {
             description: t({
               id: "dmCallProvider.noAnswerDescription",
               defaultMessage:
-                "The call may not have rung for them. Calls only ring for people who follow you or have messaged you, and only while Armada is running for them.",
+                "The call may not have rung for them. Calls only ring for people who follow you or have messaged you, and only while Wizardry is running for them.",
             }),
           });
         }

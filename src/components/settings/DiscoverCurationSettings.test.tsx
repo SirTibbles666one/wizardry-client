@@ -43,10 +43,10 @@ const NPUB = "npub10qdp2fc9ta6vraczxrcs8prqnv69fru2k6s2dj48gqjcylulmtjsg9arpj";
 const HEX = "b".repeat(64);
 
 describe("DiscoverCurationSettings", () => {
-  it("lists the Armada Developers as the default curators", () => {
+  it("lists the Wizardry Developers as the default curators", () => {
     render(<DiscoverCurationSettings />);
-    expect(screen.getByText("Armada Developers")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Add Armada Developers" })).not.toBeInTheDocument();
+    expect(screen.getByText("Wizardry Developers")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Add Wizardry Developers" })).not.toBeInTheDocument();
   });
 
   it("adds curators to the list, once each", () => {
@@ -68,7 +68,7 @@ describe("DiscoverCurationSettings", () => {
     expect(h.config.discoverCuration).toBe("none");
     rerender(<DiscoverCurationSettings />);
     expect(screen.getByText(/No curators/)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Add Armada Developers" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add Wizardry Developers" }));
     expect(h.config.discoverCuration).toBe("armada-developers");
   });
 

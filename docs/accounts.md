@@ -104,35 +104,41 @@ node server/account-server.mjs
 | `ACCOUNT_MEMBER_TOKEN` | Shared secret for `member/check`. Unset disables it. |
 | `HOST`, `PORT` | Default `127.0.0.1:8787`; put TLS in front with the reverse proxy. |
 
-The client turns accounts on when its `ACCOUNT_SERVER` setting names the server's origin.
+The client turns accounts on when its `ACCOUNT_SERVER` setting names the server's origin. That
+origin must be `https://`: the page's Content-Security-Policy allows nothing else, and the screen
+reports a plain-http server as unreachable.
+
+## In the app
+
+- **`LoginScreen`** shows the email-and-password step (`AccountGate`) first. An account that holds
+  a key is opened and logged in there; one that holds none goes on to the usual key screen.
+- **`AccountKeySync`** runs for anyone signed in. A fresh account's `nsec` is locked into the vault
+  and its recovery code shown (the dialog will not close until the code is copied or downloaded);
+  any kind of key is linked by a signed proof. Someone logged in with a key but no account is
+  asked for one and can only log out instead. The last logout ends the server session.
+- **`session.ts`** keeps the token on disk and the unlocked vault key in memory only, so a reload
+  mid-setup asks for the password again rather than storing the key unprotected.
 
 ## Status
 
-Built and tested (`src/account/**/*.test.ts`): the protocol, the client-side cryptography, the API
-client, the server rules, the SQLite store, and the mailer against a local SMTP server. The bundle
-has been started and called over HTTP.
+Built and tested: the protocol, the client-side cryptography, the API client, the server rules, the
+SQLite store, the mailer against a local SMTP server, and the screens above against the real server
+rules. The whole sign-up was also run in a browser against the built server, ending with a
+confirmed account, a stored vault and recovery copy, one key hash, and no address at rest.
 
-Not built yet — see the plan below.
+Not built yet: Settings › Account (change password, new recovery code, remove the stored key,
+delete the account), and everything under "The plan" from step 2 on.
 
 # The plan
 
-## 1. Accounts in the app (next)
+## 1. Accounts in the app
 
-1. **The gate.** With `ACCOUNT_SERVER` set, the first screen is email + password: *Sign in*,
-   *Create account*, *Forgot password*. Key-only login moves behind the account, as "use a key I
-   already have".
-2. **Sign-up.** Email and password → six-digit code → choose: make me a key (default), paste my
-   `nsec`, or connect an extension or signer → **recovery code screen** that will not continue until
-   the code is copied or downloaded, and says what losing it costs.
-3. **Sign-in on a new device.** Email + password → the vault opens on the device → the existing
-   login is created from it. No key ever typed.
-4. **Settings › Account.** Change password, show whether a key and a recovery code are stored,
-   make a new recovery code, remove the stored key, delete the account.
-5. **Sign-out** ends the server session as well as the local login.
-6. All of it translated into the eight languages, as the repo requires.
+Done: the gate, sign-up with an emailed code, sign-in on a new device, the recovery-code screen,
+forgotten password (with and without the recovery code), and sign-out, in all eight languages.
 
-Then: Android and iOS keep the unlocked key in the platform's secure storage as they do today; the
-account password is asked for again only when the vault must be re-sealed.
+Next: **Settings › Account** — change password, show whether a key and a recovery code are stored,
+make a new recovery code, remove the stored key, delete the account. Then the wording that still
+assumes there is no account ("There's no Wizardry account to ban…").
 
 ## 2. Deployment
 

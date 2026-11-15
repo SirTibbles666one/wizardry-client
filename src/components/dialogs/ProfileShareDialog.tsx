@@ -70,8 +70,8 @@ export function ProfileShareDialog({ open, onOpenChange }: ProfileShareDialogPro
   const share = () => {
     if (!url) return;
     void nativeShare({
-      title: t({ id: "profileShareDialog.shareTitle", defaultMessage: "{name} on Armada" }, { name: displayName }),
-      text: t({ id: "profileShareDialog.shareText", defaultMessage: "Find me on Armada" }),
+      title: t({ id: "profileShareDialog.shareTitle", defaultMessage: "{name} on Wizardry" }, { name: displayName }),
+      text: t({ id: "profileShareDialog.shareText", defaultMessage: "Find me on Wizardry" }),
       url,
     });
   };
@@ -98,7 +98,7 @@ export function ProfileShareDialog({ open, onOpenChange }: ProfileShareDialogPro
           <p className="text-sm text-muted-foreground">
             <FormattedMessage
               id="profileShareDialog.intro"
-              defaultMessage="Scan or share this link to open <hl>{name}</hl> in Armada."
+              defaultMessage="Scan or share this link to open <hl>{name}</hl> in Wizardry."
               values={{ name: displayName, hl: (chunks) => <span className="text-foreground">{chunks}</span> }}
             />
           </p>

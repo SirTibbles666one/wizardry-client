@@ -121,7 +121,7 @@ export async function assertNotDissolved(
 
 export class BlockedCommunityError extends Error {
   constructor() {
-    super(t({ id: "useCommunityActions.blocked", defaultMessage: "This community is unavailable in Armada." }));
+    super(t({ id: "useCommunityActions.blocked", defaultMessage: "This community is unavailable in Wizardry." }));
     this.name = "BlockedCommunityError";
   }
 }
@@ -167,7 +167,7 @@ function toastJoinAbandoned(name: string): void {
     title: t({ id: "useCommunityActions.joinAbandoned.title", defaultMessage: "Couldn't join {name}" }, { name }),
     description: t({
       id: "useCommunityActions.joinAbandoned.description",
-      defaultMessage: "Armada stopped retrying. Ask for a new invite to try again.",
+      defaultMessage: "Wizardry stopped retrying. Ask for a new invite to try again.",
     }),
     variant: "destructive",
   });
@@ -724,7 +724,7 @@ export function useCommunityActions() {
                   : t({ id: "useCommunityActions.joinFailed.unfinished", defaultMessage: "Couldn't finish joining {name}" }, { name }),
           description: rejected
             ? (e instanceof Error ? e.message : t({ id: "useCommunityActions.inviteDidntWork", defaultMessage: "The invite didn't work." }))
-            : t({ id: "useCommunityActions.willRetry", defaultMessage: "Armada will try again the next time it starts." }),
+            : t({ id: "useCommunityActions.willRetry", defaultMessage: "Wizardry will try again the next time it starts." }),
           ...(rejected ? { variant: "destructive" as const } : {}),
         });
       });

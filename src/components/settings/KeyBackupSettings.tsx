@@ -96,7 +96,7 @@ export function KeyBackupSettings({ nsec, pubkey }: KeyBackupSettingsProps) {
     try {
       if (Capacitor.isNativePlatform()) {
         await share({
-          title: t({ id: "keyBackupSettings.shareTitle", defaultMessage: "Armada secret key" }),
+          title: t({ id: "keyBackupSettings.shareTitle", defaultMessage: "Wizardry secret key" }),
           text: nsec,
           dialogTitle: t({ id: "keyBackupSettings.shareDialogTitle", defaultMessage: "Back up your secret key" }),
         });

@@ -54,10 +54,10 @@ const m = defineMessages({
   turnOn: { id: "meshPage.turnOn", defaultMessage: "Turn on mesh chat" },
   noDevices: {
     id: "meshPage.noDevices",
-    defaultMessage: "No nearby devices yet. Armada or bitchat devices in Bluetooth range appear here.",
+    defaultMessage: "No nearby devices yet. Wizardry or bitchat devices in Bluetooth range appear here.",
   },
   starting: { id: "meshPage.starting", defaultMessage: "Starting Bluetooth mesh…" },
-  androidOnly: { id: "meshPage.androidOnly", defaultMessage: "Mesh chat runs on the Armada Android app." },
+  androidOnly: { id: "meshPage.androidOnly", defaultMessage: "Mesh chat runs on the Wizardry Android app." },
   hideNearby: { id: "meshPage.hideNearby", defaultMessage: "Hide nearby" },
 });
 
@@ -799,7 +799,7 @@ function UnavailableState() {
         <p className="text-xs text-muted-foreground/70">
           <FormattedMessage
             id="meshPage.unavailable.description"
-            defaultMessage="Nearby Bluetooth chat runs on the Armada Android app, which talks to other devices directly over Bluetooth."
+            defaultMessage="Nearby Bluetooth chat runs on the Wizardry Android app, which talks to other devices directly over Bluetooth."
           />
         </p>
       </div>
@@ -822,7 +822,7 @@ function DisabledState({ onEnable }: { onEnable: () => void }) {
         <p className="text-xs text-muted-foreground/70">
           <FormattedMessage
             id="meshPage.disabled.description"
-            defaultMessage="Chat with nearby Armada and bitchat devices over Bluetooth, without the internet. Turning it on asks for Bluetooth permission and keeps a background connection (with a persistent notification) while active."
+            defaultMessage="Chat with nearby Wizardry and bitchat devices over Bluetooth, without the internet. Turning it on asks for Bluetooth permission and keeps a background connection (with a persistent notification) while active."
           />
         </p>
         <Button className="mt-2 clip-corner-lg" onClick={onEnable}>
@@ -844,7 +844,7 @@ function EmptyBroadcast() {
       <p className="text-xs text-muted-foreground/60 mt-1">
         <FormattedMessage
           id="meshPage.emptyBroadcast.description"
-          defaultMessage="Messages appear when another Armada or bitchat device is in range."
+          defaultMessage="Messages appear when another Wizardry or bitchat device is in range."
         />
       </p>
     </div>

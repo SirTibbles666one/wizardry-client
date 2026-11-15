@@ -179,7 +179,7 @@ function UltraPitch({ self, onContinue }: { self: UltraSelf; onContinue: () => v
         <HeroGem />
         <h3 className={cn("text-4xl font-black tracking-tight drop-shadow-[0_0_20px_hsl(var(--primary)/0.45)]", ULTRA_NAME_CLASS)} style={HERO_TITLE_STYLE}>Armada Ultra</h3>
         <p className="text-sm text-muted-foreground">
-          <FormattedMessage id="ultraSettings.tagline" defaultMessage="Everything Armada already does, plus some shiny extras, for the low price of nothing." />
+          <FormattedMessage id="ultraSettings.tagline" defaultMessage="Everything Wizardry already does, plus some shiny extras, for the low price of nothing." />
         </p>
         <GiftUltraButton size="default" className="mt-1" />
       </UltraHero>
@@ -193,7 +193,7 @@ function UltraPitch({ self, onContinue }: { self: UltraSelf; onContinue: () => v
             wide
             art={<UltraMessage self={self} name="aurora" frame="glow" />}
             title={intl.formatMessage({ id: "ultraSettings.feature.badge", defaultMessage: "The Ultra badge" })}
-            body={intl.formatMessage({ id: "ultraSettings.feature.badgeBody", defaultMessage: "Shown next to your name to everyone on Armada, so they know you paid $0.00 for it." })}
+            body={intl.formatMessage({ id: "ultraSettings.feature.badgeBody", defaultMessage: "Shown next to your name to everyone on Wizardry, so they know you paid $0.00 for it." })}
           />
           <FeatureCard
             art={<NameStylesIllustration self={self} />}
@@ -487,7 +487,7 @@ function DonationFooter() {
       <p className="px-4 pt-4 text-center text-xs text-muted-foreground/70">
         <FormattedMessage
           id="ultraSettings.donateLine"
-          defaultMessage="Armada is free and runs on donations. <link>Chip in</link> if you like."
+          defaultMessage="Wizardry is free and runs on donations. <link>Chip in</link> if you like."
           values={{
             link: (chunks: ReactNode) => (
               <button type="button" onClick={() => setOpen(true)} className="underline underline-offset-2 hover:text-foreground">
@@ -501,7 +501,7 @@ function DonationFooter() {
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>
-              <FormattedMessage id="ultraSettings.donateTitle" defaultMessage="Support Armada" />
+              <FormattedMessage id="ultraSettings.donateTitle" defaultMessage="Support Wizardry" />
             </DialogTitle>
             <DialogDescription>
               <FormattedMessage id="ultraSettings.donateBody" defaultMessage="Totally optional. Ultra stays free either way." />

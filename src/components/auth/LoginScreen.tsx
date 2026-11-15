@@ -34,6 +34,8 @@ import { withConnectPerms } from "@/lib/nostrConnectPerms";
 import { toast } from '@/hooks/useToast';
 import { writeClipboardText } from '@/lib/clipboard';
 import { common, FormattedMessage, t, useIntl, type IntlShape } from '@/i18n';
+import { accountReady, accountsEnabled, useAccountState } from '@/account/session';
+import { AccountGate } from '@/components/account/AccountGate';
 
 interface LoginScreenProps {
   isOpen: boolean;
@@ -82,7 +84,7 @@ const connectStatusLabel = (intl: IntlShape, status: NostrConnectStatus | null):
  * nsec or bunker:// URI. Driven by `isOpen` (not conditionally mounted) so the
  * handshake effects can abort cleanly on close.
  */
-const LoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, onSignupClick }) => {
+const KeyLoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, onSignupClick }) => {
   // On the APK the WebView origin is unreachable from the signer's browser, so
   // use the public deployment; its verified App Link reopens the app (#44).
   const callbackOrigin = shareOrigin();
@@ -389,7 +391,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, onS
           </h1>
           {joinMode && (
             <p className="text-sm leading-relaxed text-muted-foreground">
-              <FormattedMessage id="loginScreen.joinDescription" defaultMessage="Create a new account, or log in with a key you already have." />
+              {accountsEnabled() ? (
+                <FormattedMessage id="loginScreen.chooseKeyDescription" defaultMessage="You're signed in. Now choose your key: make a new one, or use one you already have. It will be locked to your account." />
+              ) : (
+                <FormattedMessage id="loginScreen.joinDescription" defaultMessage="Create a new account, or log in with a key you already have." />
+              )}
             </p>
           )}
         </div>
@@ -600,6 +606,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, onS
     </WizardShell>,
     document.body,
   );
+};
+
+/**
+ * With an account server configured, the email-and-password step comes first;
+ * the key screen follows only for an account that has no key yet. Without one,
+ * this is the key screen and nothing else.
+ */
+const LoginScreen: React.FC<LoginScreenProps> = (props) => {
+  const account = useAccountState();
+  if (!accountsEnabled() || accountReady(account)) return <KeyLoginScreen {...props} />;
+  return <AccountGate isOpen={props.isOpen} onClose={props.onClose} onLogin={props.onLogin} />;
 };
 
 export default LoginScreen;

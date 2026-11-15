@@ -54,7 +54,7 @@ const descriptions = defineMessages({
   notificationAvatars: { id: "storageSettings.notificationAvatarsDescription", defaultMessage: "Profile pictures shown on notifications." },
   webCache: { id: "storageSettings.webCacheDescription", defaultMessage: "Pictures and pages the app loaded recently, including profile pictures." },
   callRecordings: { id: "storageSettings.callRecordingsDescription", defaultMessage: "Recordings that were never saved, for example after a crash." },
-  legacy: { id: "storageSettings.legacyDescription", defaultMessage: "Storage an earlier version of Armada left behind." },
+  legacy: { id: "storageSettings.legacyDescription", defaultMessage: "Storage an earlier version of Wizardry left behind." },
 });
 
 /** Names for the pieces of settings and sync state worth naming; any other shows its key group. */
@@ -147,7 +147,7 @@ export function StorageSettings() {
         id="storage"
         footer={report?.quotaBytes !== undefined
           ? intl.formatMessage(
-            { id: "storageSettings.quota", defaultMessage: "This browser lets Armada use up to {quota}." },
+            { id: "storageSettings.quota", defaultMessage: "This browser lets Wizardry use up to {quota}." },
             { quota: formatSize(intl, report.quotaBytes) },
           )
           : undefined}
@@ -163,7 +163,7 @@ export function StorageSettings() {
       <SettingsGroup
         id="storage-caches"
         title={intl.formatMessage({ id: "storageSettings.cachesTitle", defaultMessage: "Caches" })}
-        footer={intl.formatMessage({ id: "storageSettings.cachesFooter", defaultMessage: "Clearing a cache only frees space. Armada downloads what it needs again." })}
+        footer={intl.formatMessage({ id: "storageSettings.cachesFooter", defaultMessage: "Clearing a cache only frees space. Wizardry downloads what it needs again." })}
       >
         {caches.map((row) => (
           <CacheRow

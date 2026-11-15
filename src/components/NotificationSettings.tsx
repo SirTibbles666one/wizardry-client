@@ -65,8 +65,8 @@ export function NotificationSettings() {
         {native.enabled && <BatteryOptimizationWarning />}
         <NotificationToggles
           title={intl.formatMessage({ id: "notificationSettings.background", defaultMessage: "Background notifications" })}
-          description={intl.formatMessage({ id: "notificationSettings.notifiedWhenClosed", defaultMessage: "Get notified even when Armada is closed." })}
-          info={intl.formatMessage({ id: "notificationSettings.backgroundInfo", defaultMessage: "Armada stays connected in the background to notify you, without Google services." })}
+          description={intl.formatMessage({ id: "notificationSettings.notifiedWhenClosed", defaultMessage: "Get notified even when Wizardry is closed." })}
+          info={intl.formatMessage({ id: "notificationSettings.backgroundInfo", defaultMessage: "Wizardry stays connected in the background to notify you, without Google services." })}
           enabled={native.enabled}
           busy={native.busy}
           blocked={false}
@@ -138,11 +138,11 @@ function NativeNotificationHealthPanel({
             <div className="min-w-0 flex-1 space-y-2">
               <p className="text-xs">
                 {appBlocked
-                  ? <FormattedMessage id="notificationSettings.health.appBlocked" defaultMessage="Android is blocking Armada notifications at the app level." />
+                  ? <FormattedMessage id="notificationSettings.health.appBlocked" defaultMessage="Android is blocking Wizardry notifications at the app level." />
                   : messagesBlocked
-                    ? <FormattedMessage id="notificationSettings.health.messagesBlocked" defaultMessage="Android's Armada message channel is turned off." />
+                    ? <FormattedMessage id="notificationSettings.health.messagesBlocked" defaultMessage="Android's Wizardry message channel is turned off." />
                     : messagesQuiet
-                      ? <FormattedMessage id="notificationSettings.health.messagesQuiet" defaultMessage="Android's Armada message channel is below high priority, so alerts may be silent or have no banner." />
+                      ? <FormattedMessage id="notificationSettings.health.messagesQuiet" defaultMessage="Android's Wizardry message channel is below high priority, so alerts may be silent or have no banner." />
                     : serviceBlocked
                       ? <FormattedMessage id="notificationSettings.health.serviceBlocked" defaultMessage="The background-service notification channel is turned off. Android cannot run the background connection without it." />
                       : stopped
@@ -152,7 +152,7 @@ function NativeNotificationHealthPanel({
                           : disconnected
                             ? <FormattedMessage id="notificationSettings.health.disconnected" defaultMessage="The service is running, but none of its relay connections are open." />
                             : signerUnavailable
-                              ? <FormattedMessage id="notificationSettings.health.signerUnavailable" defaultMessage="The background signer is unavailable, so encrypted DMs and relay authentication can fail while Armada is closed." />
+                              ? <FormattedMessage id="notificationSettings.health.signerUnavailable" defaultMessage="The background signer is unavailable, so encrypted DMs and relay authentication can fail while Wizardry is closed." />
                               : callsBlocked
                                 ? <FormattedMessage id="notificationSettings.health.callsBlocked" defaultMessage="Android's incoming-call notification channel is turned off." />
                                 : <FormattedMessage id="notificationSettings.health.callsQuiet" defaultMessage="Android's incoming-call channel is below high priority, so calls may not ring." />}
@@ -288,11 +288,11 @@ function NotificationSoundSettings() {
     <SettingsGroup title={intl.formatMessage({ id: "notificationSettings.sound", defaultMessage: "Sound" })}>
       <SettingsRow
         label={intl.formatMessage({ id: "notificationSettings.notificationSound", defaultMessage: "Notification sound" })}
-        description={intl.formatMessage({ id: "notificationSettings.notificationSoundDescription", defaultMessage: "Plays for new activity while Armada is open." })}
+        description={intl.formatMessage({ id: "notificationSettings.notificationSoundDescription", defaultMessage: "Plays for new activity while Wizardry is open." })}
         info={(
           <FormattedMessage
             id="notificationSettings.soundInfo"
-            defaultMessage="Background push and Android use the sound selected by your device. Browsers may require one interaction with Armada before allowing in-page audio. Sounds are CC0 or CC BY-SA; see the <link>sound credits</link>."
+            defaultMessage="Background push and Android use the sound selected by your device. Browsers may require one interaction with Wizardry before allowing in-page audio. Sounds are CC0 or CC BY-SA; see the <link>sound credits</link>."
             values={{
               link: (chunks) => (
                 <a
@@ -471,18 +471,18 @@ function WebPushSettings() {
       title={intl.formatMessage({ id: "notificationSettings.enablePush", defaultMessage: "Enable push notifications" })}
       description={!ready
         ? intl.formatMessage({ id: "notificationSettings.preparing", defaultMessage: "Preparing secure background notifications…" })
-        : intl.formatMessage({ id: "notificationSettings.notifiedWhenClosed", defaultMessage: "Get notified even when Armada is closed." })}
+        : intl.formatMessage({ id: "notificationSettings.notifiedWhenClosed", defaultMessage: "Get notified even when Wizardry is closed." })}
       info={!ready || hasNappPush()
         ? undefined
         : hasIosPush()
           // No Notification Service Extension yet, so the lock screen shows the gateway's fixed text.
-          ? intl.formatMessage({ id: "notificationSettings.iosPushInfo", defaultMessage: "Notifications don't name the sender or quote the message. Armada decrypts it when you open it." })
-          : intl.formatMessage({ id: "notificationSettings.webPushInfo", defaultMessage: "Armada repairs expired browser subscriptions whenever you return." })}
+          ? intl.formatMessage({ id: "notificationSettings.iosPushInfo", defaultMessage: "Notifications don't name the sender or quote the message. Wizardry decrypts it when you open it." })
+          : intl.formatMessage({ id: "notificationSettings.webPushInfo", defaultMessage: "Wizardry repairs expired browser subscriptions whenever you return." })}
       enabled={enabled}
       busy={busy}
       blocked={permission === "denied"}
       blockedMessage={isIOS()
-        ? intl.formatMessage({ id: "notificationSettings.blockedIos", defaultMessage: "Notifications are blocked. Allow Armada in iPhone Settings → Notifications." })
+        ? intl.formatMessage({ id: "notificationSettings.blockedIos", defaultMessage: "Notifications are blocked. Allow Wizardry in iPhone Settings → Notifications." })
         : intl.formatMessage({ id: "notificationSettings.blockedBrowser", defaultMessage: "Notifications are blocked in your browser settings." })}
       prefs={prefs}
       onToggle={(v) => (v ? enable() : disable())}
@@ -505,7 +505,7 @@ function IosNotificationHintText({ reason }: { reason?: WebPushUnavailableReason
   if (reason === "native-runtime") {
     return (
       <p className="text-sm text-muted-foreground">
-        <FormattedMessage id="notificationSettings.ios.nativeRuntime" defaultMessage="This version of the Armada app can’t receive background notifications. Update to a newer build to turn them on." />
+        <FormattedMessage id="notificationSettings.ios.nativeRuntime" defaultMessage="This version of the Wizardry app can’t receive background notifications. Update to a newer build to turn them on." />
       </p>
     );
   }
@@ -513,7 +513,7 @@ function IosNotificationHintText({ reason }: { reason?: WebPushUnavailableReason
   if (reason === "gateway") {
     return (
       <p className="text-sm text-muted-foreground">
-        <FormattedMessage id="notificationSettings.ios.gateway" defaultMessage="This build of Armada has no background push service configured. Your iPhone is not the problem; whoever built or deployed it needs to configure a push gateway." />
+        <FormattedMessage id="notificationSettings.ios.gateway" defaultMessage="This build of Wizardry has no background push service configured. Your iPhone is not the problem; whoever built or deployed it needs to configure a push gateway." />
       </p>
     );
   }
@@ -521,13 +521,13 @@ function IosNotificationHintText({ reason }: { reason?: WebPushUnavailableReason
   // Every iOS browser's Web Push is WebKit's (useNostrPush refuses it).
   return (
     <p className="text-sm text-muted-foreground">
-      <FormattedMessage id="notificationSettings.ios.webkit" defaultMessage="Background notifications aren't available in the iPhone and iPad web app: iOS makes every push show a notification, so Armada would announce each sync. They're available in the Android and desktop apps." />
+      <FormattedMessage id="notificationSettings.ios.webkit" defaultMessage="Background notifications aren't available in the iPhone and iPad web app: iOS makes every push show a notification, so Wizardry would announce each sync. They're available in the Android and desktop apps." />
     </p>
   );
 }
 
 /**
- * Foreground-only notifications while Armada is open, where Web Push is
+ * Foreground-only notifications while Wizardry is open, where Web Push is
  * unavailable (e.g. Brave, or Electron, which has the Push API but no push
  * service). The desktop shell keeps sockets alive in the tray.
  */
@@ -543,7 +543,7 @@ function ForegroundOnlySettings() {
     return (
       <NoticeGroup>
         {desktop
-          ? <FormattedMessage id="notificationSettings.desktopUnsupported" defaultMessage="This version of Armada can't show notifications." />
+          ? <FormattedMessage id="notificationSettings.desktopUnsupported" defaultMessage="This version of Wizardry can't show notifications." />
           : <FormattedMessage id="notificationSettings.browserUnsupported" defaultMessage="This browser doesn't support notifications. Use Chrome, Firefox, or the Android app." />}
       </NoticeGroup>
     );
@@ -551,23 +551,23 @@ function ForegroundOnlySettings() {
 
   return (
     <NotificationToggles
-      title={intl.formatMessage({ id: "notificationSettings.foreground", defaultMessage: "Notifications while Armada is open" })}
+      title={intl.formatMessage({ id: "notificationSettings.foreground", defaultMessage: "Notifications while Wizardry is open" })}
       description={desktop
         ? intl.formatMessage({ id: "notificationSettings.foregroundDesktop", defaultMessage: "Including when minimized to the tray." })
-        : intl.formatMessage({ id: "notificationSettings.foregroundBrowser", defaultMessage: "This browser can't notify you while Armada is closed." })}
+        : intl.formatMessage({ id: "notificationSettings.foregroundBrowser", defaultMessage: "This browser can't notify you while Wizardry is closed." })}
       info={desktop
-        ? intl.formatMessage({ id: "notificationSettings.foregroundDesktopInfo", defaultMessage: "Armada shows a system notification for new messages while it's running, including when it's minimized to the tray." })
-        : intl.formatMessage({ id: "notificationSettings.foregroundBrowserInfo", defaultMessage: "This browser doesn't support background push, so you'll get a system notification for new messages only while Armada is open and you're not looking at the conversation. For notifications when Armada is closed, use a browser that supports Web Push (Chrome, Firefox, or Brave with Google push services enabled), or the Android app." })}
+        ? intl.formatMessage({ id: "notificationSettings.foregroundDesktopInfo", defaultMessage: "Wizardry shows a system notification for new messages while it's running, including when it's minimized to the tray." })
+        : intl.formatMessage({ id: "notificationSettings.foregroundBrowserInfo", defaultMessage: "This browser doesn't support background push, so you'll get a system notification for new messages only while Wizardry is open and you're not looking at the conversation. For notifications when Wizardry is closed, use a browser that supports Web Push (Chrome, Firefox, or Brave with Google push services enabled), or the Android app." })}
       enabled={enabled}
       busy={false}
       blocked={blocked}
       blockedMessage={desktop
-        ? intl.formatMessage({ id: "notificationSettings.blockedDesktop", defaultMessage: "Notifications are blocked. Allow Armada in your system notification settings." })
+        ? intl.formatMessage({ id: "notificationSettings.blockedDesktop", defaultMessage: "Notifications are blocked. Allow Wizardry in your system notification settings." })
         : intl.formatMessage({ id: "notificationSettings.blockedBrowser", defaultMessage: "Notifications are blocked in your browser settings." })}
       // Permission never asked: the master wish defaults on, so without this it looks enabled but never fires.
       hint={apiAvailable && permission === "default"
         ? desktop
-          ? intl.formatMessage({ id: "notificationSettings.askDesktop", defaultMessage: "Armada isn't allowed to notify yet. Turn this on to ask." })
+          ? intl.formatMessage({ id: "notificationSettings.askDesktop", defaultMessage: "Wizardry isn't allowed to notify yet. Turn this on to ask." })
           : intl.formatMessage({ id: "notificationSettings.askBrowser", defaultMessage: "Your browser hasn't allowed notifications yet. Turn this on to ask." })
         : undefined}
       prefs={prefs}

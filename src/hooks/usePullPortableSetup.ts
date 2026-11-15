@@ -353,7 +353,7 @@ export function usePullPortableSetup() {
         const { stored, unreadable } = await readSettingsDocChecked(settingsCtx, name);
         if (unreadable) {
           throw new Error(
-            t({ id: "usePullPortableSetup.settingsDecryptFailed", defaultMessage: "Your private Armada settings ({name}) could not be decrypted; nothing was restored" }, { name }),
+            t({ id: "usePullPortableSetup.settingsDecryptFailed", defaultMessage: "Your private Wizardry settings ({name}) could not be decrypted; nothing was restored" }, { name }),
           );
         }
         if (!stored) continue;

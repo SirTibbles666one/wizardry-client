@@ -183,7 +183,7 @@ export function HistoryAuditView({ community, onClose }: HistoryAuditViewProps) 
             <p className="text-center text-xs text-muted-foreground">
               <FormattedMessage
                 id="historyAuditView.exportHint"
-                defaultMessage="Opens as a self-contained mini-Armada with Chat, Text, and JSON views. Offline, with images embedded."
+                defaultMessage="Opens as a self-contained mini-Wizardry with Chat, Text, and JSON views. Offline, with images embedded."
               />
             </p>
           </div>

@@ -177,7 +177,7 @@ export function RelaysSettings() {
       <SettingsGroup
         id="app-relays"
         title={intl.formatMessage({ id: "relaysSettings.yourRelays", defaultMessage: "Your relays" })}
-        info={intl.formatMessage({ id: "relaysSettings.yourRelaysInfo", defaultMessage: "Relays are servers that store and pass along your profile, messages and lists. Armada picked these for you; change any of them here, just as at sign-up." })}
+        info={intl.formatMessage({ id: "relaysSettings.yourRelaysInfo", defaultMessage: "Relays are servers that store and pass along your profile, messages and lists. Wizardry picked these for you; change any of them here, just as at sign-up." })}
       >
         {!config.useAppRelays && !(config.useUserRelays && userRelayUrls.length > 0) && (
           <SettingsRow>
@@ -199,7 +199,7 @@ export function RelaysSettings() {
             relays={config.appRelays}
             onChange={setAppRelays}
             onReset={() => setAppRelays([...APP_RELAYS])}
-            emptyText={intl.formatMessage({ id: "relaysSettings.homeEmpty", defaultMessage: "None. Add a relay, or reset to Armada's defaults." })}
+            emptyText={intl.formatMessage({ id: "relaysSettings.homeEmpty", defaultMessage: "None. Add a relay, or reset to Wizardry's defaults." })}
           />
           {user && (
             <Collapsible
@@ -240,7 +240,7 @@ export function RelaysSettings() {
         <SetupListRow
           label={intl.formatMessage({ id: "relaysSettings.messages", defaultMessage: "Messages" })}
           hint={intl.formatMessage({ id: "relaysSettings.messagesHint", defaultMessage: "Other apps deliver your direct messages here." })}
-          detail={intl.formatMessage({ id: "relaysSettings.messagesDetail", defaultMessage: "Other apps deliver your direct messages here. Armada also checks your home relays." })}
+          detail={intl.formatMessage({ id: "relaysSettings.messagesDetail", defaultMessage: "Other apps deliver your direct messages here. Wizardry also checks your home relays." })}
           urls={config.dmRelays}
           open={relayRowOpen("dm")}
           onOpenChange={setRelayRowOpen("dm")}
@@ -251,7 +251,7 @@ export function RelaysSettings() {
             relays={config.dmRelays}
             onChange={setDmRelays}
             onReset={() => setDmRelays(recommendedDmInbox(config))}
-            emptyText={intl.formatMessage({ id: "relaysSettings.messagesEmpty", defaultMessage: "None. Armada users can still reach you on your home relays; other apps can't." })}
+            emptyText={intl.formatMessage({ id: "relaysSettings.messagesEmpty", defaultMessage: "None. Wizardry users can still reach you on your home relays; other apps can't." })}
             placeholder="wss://dm-relay.example.com"
           />
         </SetupListRow>
@@ -276,7 +276,7 @@ export function RelaysSettings() {
           hint={intl.formatMessage({ id: "relaysSettings.mediaHint", defaultMessage: "Your uploads go here. Links use the first server." })}
           detail={ownServers
             ? intl.formatMessage({ id: "relaysSettings.mediaDetail", defaultMessage: "Your uploads go here. A file is sent to every server in the list; links point at the primary one, first in the list, and the others keep a copy in case it goes away." })
-            : intl.formatMessage({ id: "relaysSettings.mediaDetailDefaults", defaultMessage: "Your uploads go here. A file is sent to every server in the list; links point at the primary one, first in the list, and the others keep a copy in case it goes away. These are Armada's servers. Changing the list makes it your own and saves it to your account." })}
+            : intl.formatMessage({ id: "relaysSettings.mediaDetailDefaults", defaultMessage: "Your uploads go here. A file is sent to every server in the list; links point at the primary one, first in the list, and the others keep a copy in case it goes away. These are Wizardry's servers. Changing the list makes it your own and saves it to your account." })}
           urls={targets.servers}
           kind="blossom"
           open={relayRowOpen("blossom")}
@@ -310,7 +310,7 @@ export function RelaysSettings() {
         <SetupListRow
           label={intl.formatMessage({ id: "relaysSettings.broadcast", defaultMessage: "Broadcast" })}
           hint={intl.formatMessage({ id: "relaysSettings.broadcastHint", defaultMessage: "Extra relays your public profile is sent to." })}
-          detail={intl.formatMessage({ id: "relaysSettings.broadcastDetail", defaultMessage: "Extra relays your public profile is sent to, so people on other Nostr apps see it. Armada never reads from them or sends messages here." })}
+          detail={intl.formatMessage({ id: "relaysSettings.broadcastDetail", defaultMessage: "Extra relays your public profile is sent to, so people on other Nostr apps see it. Wizardry never reads from them or sends messages here." })}
           urls={config.broadcastRelays}
           open={relayRowOpen("broadcast")}
           onOpenChange={setRelayRowOpen("broadcast")}
@@ -334,8 +334,8 @@ export function RelaysSettings() {
         <SettingsRow
           label={connectTo}
           info={userRelayUrls.length > 0
-            ? intl.formatMessage({ id: "relaysSettings.connectToInfo", defaultMessage: "Which relays Armada reads and writes your account data on: the Home list above, the relay list you published for other apps, or both." })
-            : intl.formatMessage({ id: "relaysSettings.connectToInfoUnpublished", defaultMessage: "Which relays Armada reads and writes your account data on. Publish a relay list under Home to choose it here." })}
+            ? intl.formatMessage({ id: "relaysSettings.connectToInfo", defaultMessage: "Which relays Wizardry reads and writes your account data on: the Home list above, the relay list you published for other apps, or both." })
+            : intl.formatMessage({ id: "relaysSettings.connectToInfoUnpublished", defaultMessage: "Which relays Wizardry reads and writes your account data on. Publish a relay list under Home to choose it here." })}
         >
           <Select value={relaySources} onValueChange={setRelaySources}>
             <SelectTrigger className="w-44 sm:w-52" aria-label={connectTo}>

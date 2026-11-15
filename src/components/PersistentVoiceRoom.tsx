@@ -1809,7 +1809,7 @@ function ConcordVoiceRoom({
       ),
       description: t({
         id: "persistentVoiceRoom.otherTransport.description",
-        defaultMessage: "Armada can't join peer-to-peer calls yet, so you won't hear each other.",
+        defaultMessage: "Wizardry can't join peer-to-peer calls yet, so you won't hear each other.",
       }),
     });
   }, [tokenData, otherTransportCount]);

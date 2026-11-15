@@ -228,7 +228,7 @@ export function DiscordImportWizard({ onClose }: { onClose: () => void }) {
     setError("");
     try {
       const invite = parseInviteLink(status.inviteUrl);
-      if (!invite) throw new Error(t({ id: "discordImportWizard.badInvite", defaultMessage: "The portal returned an invite link Armada couldn't read." }));
+      if (!invite) throw new Error(t({ id: "discordImportWizard.badInvite", defaultMessage: "The portal returned an invite link Wizardry couldn't read." }));
       const { communityId, name } = await join({ invite });
       toast({ title: t({ id: "discordImportWizard.importedToast", defaultMessage: "Imported from Discord" }), description: name });
       // Navigating away IS the close (the wizard is the route); onClose would race a history pop.
@@ -385,7 +385,7 @@ function ConnectStep({
       glyph={glyph}
       title={intl.formatMessage({ id: "discordImportWizard.connect.title", defaultMessage: "import from discord" })}
       description={
-        <FormattedMessage id="discordImportWizard.connect.description" defaultMessage="Turn a Discord server you run into an encrypted Armada community, with its channels, roles, custom emoji, and optionally its message history. You'll sign for it with your own key, so you own it outright." />
+        <FormattedMessage id="discordImportWizard.connect.description" defaultMessage="Turn a Discord server you run into an encrypted Wizardry community, with its channels, roles, custom emoji, and optionally its message history. You'll sign for it with your own key, so you own it outright." />
       }
     >
       <div className="w-full space-y-3">
@@ -397,7 +397,7 @@ function ConnectStep({
           )}
         </Button>
         <p className="text-xs text-muted-foreground">
-          <FormattedMessage id="discordImportWizard.connect.hint" defaultMessage="Opens Discord's sign-in in a new window. Armada never sees your Discord password, and only servers where you hold Manage Server are listed." />
+          <FormattedMessage id="discordImportWizard.connect.hint" defaultMessage="Opens Discord's sign-in in a new window. Wizardry never sees your Discord password, and only servers where you hold Manage Server are listed." />
         </p>
       </div>
     </WizardStepBody>
@@ -423,7 +423,7 @@ function ServerStep({
       glyph={glyph}
       title={intl.formatMessage({ id: "discordImportWizard.server.title", defaultMessage: "pick a server" })}
       description={
-        <FormattedMessage id="discordImportWizard.server.description" defaultMessage="The whole server becomes a brand-new Armada community that you own. Only servers where you hold Manage Server are shown." />
+        <FormattedMessage id="discordImportWizard.server.description" defaultMessage="The whole server becomes a brand-new Wizardry community that you own. Only servers where you hold Manage Server are shown." />
       }
     >
       <div className="w-full space-y-3">
@@ -619,7 +619,7 @@ function ReviewStep(props: {
         </p>
         {plan.emojis.length > 0 && (
           <p className="text-xs text-muted-foreground">
-            <FormattedMessage id="discordImportWizard.review.emoji" defaultMessage="{count} custom emoji will be published as an Armada emoji pack." values={{ count: plan.emojis.length }} />
+            <FormattedMessage id="discordImportWizard.review.emoji" defaultMessage="{count} custom emoji will be published as an Wizardry emoji pack." values={{ count: plan.emojis.length }} />
           </p>
         )}
         {plan.channels.some((c) => c.private) && (
@@ -636,7 +636,7 @@ function ReviewStep(props: {
           <AlertDescription className="text-xs leading-relaxed">
             <FormattedMessage
               id="discordImportWizard.review.privateWarning"
-              defaultMessage="You're mirroring a private channel. Its key is handed to the bridge's own identity so it can read the room, and everything posted there is copied to Discord in plaintext. A gated room on this side is an ordinary Discord channel on the other. You can revoke the bridge's access from the channel's role in Armada at any time; note that doing so rotates the key, and the bridge stays silent on that channel until you re-grant it."
+              defaultMessage="You're mirroring a private channel. Its key is handed to the bridge's own identity so it can read the room, and everything posted there is copied to Discord in plaintext. A gated room on this side is an ordinary Discord channel on the other. You can revoke the bridge's access from the channel's role in Wizardry at any time; note that doing so rotates the key, and the bridge stays silent on that channel until you re-grant it."
             />
           </AlertDescription>
         </Alert>
@@ -746,7 +746,7 @@ function ReviewStep(props: {
         <AlertDescription className="text-xs leading-relaxed">
           <FormattedMessage
             id="discordImportWizard.review.ownership"
-            defaultMessage="You'll sign the community's founding events with your key, in this app. It never leaves your device, and the community is yours. The bridge keeps an Admin role to run the import and the live bridges; you can revoke it from Armada at any time. <strong>Bridged channels leave end-to-end encryption:</strong> their messages are mirrored to Discord in plaintext. The import runs once and can't be undone from here."
+            defaultMessage="You'll sign the community's founding events with your key, in this app. It never leaves your device, and the community is yours. The bridge keeps an Admin role to run the import and the live bridges; you can revoke it from Wizardry at any time. <strong>Bridged channels leave end-to-end encryption:</strong> their messages are mirrored to Discord in plaintext. The import runs once and can't be undone from here."
             values={{ strong: (chunks) => <strong>{chunks}</strong> }}
           />
         </AlertDescription>

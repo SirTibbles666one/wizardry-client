@@ -58,7 +58,7 @@ describe("StorageSettings", () => {
     expect(within(rowOf("Media cache")).getByText("12 MB")).toBeInTheDocument();
     expect(within(rowOf("Direct messages")).getByText("4.5 kB")).toBeInTheDocument();
     expect(screen.getByText("12 items")).toBeInTheDocument();
-    expect(screen.getByText("This browser lets Armada use up to 1 GB.")).toBeInTheDocument();
+    expect(screen.getByText("This browser lets Wizardry use up to 1 GB.")).toBeInTheDocument();
   });
 
   it("clears a cache and measures again", async () => {

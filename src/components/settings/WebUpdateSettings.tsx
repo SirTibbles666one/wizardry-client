@@ -38,7 +38,7 @@ export function WebUpdateSettings() {
   const description = intl.formatMessage(
     {
       id: "webUpdateSettings.description",
-      defaultMessage: "{channel, select, release {Only stable releases. Changes made since the last release wait until the next one.} off {Keep this version. Armada won't update until you change this.} other {Every update as soon as it's published, including changes not yet in a release.}}",
+      defaultMessage: "{channel, select, release {Only stable releases. Changes made since the last release wait until the next one.} off {Keep this version. Wizardry won't update until you change this.} other {Every update as soon as it's published, including changes not yet in a release.}}",
     },
     { channel: state.channel },
   );

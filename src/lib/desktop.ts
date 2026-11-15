@@ -422,7 +422,7 @@ export async function desktopHevcScreenShareCapability(): Promise<DesktopHevcScr
       encoder: null,
       backend: null,
       device: null,
-      reason: t({ id: "desktop.hevcUnavailable", defaultMessage: "This Armada build does not contain the custom H.265 publisher." }),
+      reason: t({ id: "desktop.hevcUnavailable", defaultMessage: "This Wizardry build does not contain the custom H.265 publisher." }),
     };
   }
   try {

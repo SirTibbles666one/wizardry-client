@@ -10,7 +10,7 @@ import { reducedMotion } from "@/lib/reducedMotion";
 
 const MESSAGES = defineMessages({
   title: { id: "encryptionQuiz.title", defaultMessage: "What are you talking about?" },
-  punchlineEncrypted: { id: "encryptionQuiz.punchlineEncrypted", defaultMessage: "Messages on Armada are encrypted." },
+  punchlineEncrypted: { id: "encryptionQuiz.punchlineEncrypted", defaultMessage: "Messages on Wizardry are encrypted." },
   punchlineNotEvenWe: { id: "encryptionQuiz.punchlineNotEvenWe", defaultMessage: "Not even we know what you're talking about." },
   pickOne: { id: "encryptionQuiz.pickOne", defaultMessage: "// pick one" },
   firstAnswer: { id: "encryptionQuiz.firstAnswer", defaultMessage: "First answer (encrypted)" },

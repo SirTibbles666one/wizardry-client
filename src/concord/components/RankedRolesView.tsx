@@ -408,7 +408,7 @@ export function RankedRolesSwitch({ community }: { community: Community }) {
           <p className="mt-5 clip-corner-lg bg-warning/10 px-3 py-2 text-xs text-warning">
             <FormattedMessage
               id="rankedRolesView.switchConfirmOlder"
-              defaultMessage="This can't be undone. Members on an older Armada will see this community's roles, channels and categories wrongly until they update."
+              defaultMessage="This can't be undone. Members on an older Wizardry will see this community's roles, channels and categories wrongly until they update."
             />
           </p>
           {error && <p className="mt-3 text-sm text-destructive">{error}</p>}

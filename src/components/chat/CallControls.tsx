@@ -170,7 +170,7 @@ export function ScreenShareButton({
         title: t({ id: "callControls.screenPermissionTitle", defaultMessage: "Screen Recording permission required" }),
         description: t({
           id: "callControls.screenPermissionDescription",
-          defaultMessage: "Allow Armada in macOS Privacy & Security, then try sharing again.",
+          defaultMessage: "Allow Wizardry in macOS Privacy & Security, then try sharing again.",
         }),
         variant: "destructive",
         action: (
@@ -282,7 +282,7 @@ export function ScreenShareButton({
             title: t({ id: "callControls.audioFailedTitle", defaultMessage: "Couldn't share screen audio" }),
             description: t({
               id: "callControls.audioFailedDescription",
-              defaultMessage: "This screen or window has no audio Armada can capture. Share without audio instead?",
+              defaultMessage: "This screen or window has no audio Wizardry can capture. Share without audio instead?",
             }),
             variant: "destructive",
             action: (

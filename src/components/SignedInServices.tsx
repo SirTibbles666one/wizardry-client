@@ -9,6 +9,7 @@ import { NostrSync } from "@/components/NostrSync";
 import { PublishOutbox } from "@/components/PublishOutbox";
 import { ScreenSharePicker } from "@/components/ScreenSharePicker";
 import { SyncGate } from "@/components/SyncGate";
+import { AccountKeySync } from "@/components/account/AccountKeySync";
 import { KeyBackupReminder } from "@/components/auth/KeyBackupReminder";
 import { LoginSetup } from "@/components/onboarding/LoginSetup";
 import { useChannelHistoryWalk } from "@/concord/hooks/useChannelHistoryWalk";
@@ -74,6 +75,7 @@ export function SignedInPushServices() {
       <ScreenSharePicker />
       <LoginSetup />
       <KeyBackupReminder />
+      <AccountKeySync />
     </>
   );
 }

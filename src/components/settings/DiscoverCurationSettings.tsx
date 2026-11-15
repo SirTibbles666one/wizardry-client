@@ -89,7 +89,7 @@ function CuratorRow({ entry, onRemove }: { entry: string; onRemove: () => void }
     body = (
       <>
         <p className="text-sm font-medium">
-          <FormattedMessage id="discoverCuration.developers" defaultMessage="Armada Developers" />
+          <FormattedMessage id="discoverCuration.developers" defaultMessage="Wizardry Developers" />
         </p>
         <p className="break-words text-xs text-muted-foreground">
           <FormattedMessage
@@ -330,7 +330,7 @@ export function DiscoverCurationSettings() {
                   onClick={() => setEntries([ARMADA_DEVELOPERS_ENTRY, ...entries])}
                 >
                   <Plus className="size-3.5 mr-1.5" />
-                  <FormattedMessage id="discoverCuration.addDevelopers" defaultMessage="Add Armada Developers" />
+                  <FormattedMessage id="discoverCuration.addDevelopers" defaultMessage="Add Wizardry Developers" />
                 </Button>
               )}
               {overridden && (
@@ -361,7 +361,7 @@ export function DiscoverCurationSettings() {
             <AlertDialogDescription>
               <FormattedMessage
                 id="discoverUnfiltered.confirmDescription"
-                defaultMessage="Armada does not review, moderate or endorse unfiltered listings. They may include spam, scams, and offensive or illegal content. You view them at your own risk; Armada and its developers are not responsible for them."
+                defaultMessage="Wizardry does not review, moderate or endorse unfiltered listings. They may include spam, scams, and offensive or illegal content. You view them at your own risk; Wizardry and its developers are not responsible for them."
               />
             </AlertDialogDescription>
           </AlertDialogHeader>
