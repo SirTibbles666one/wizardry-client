@@ -110,6 +110,32 @@ The client turns accounts on when its `ACCOUNT_SERVER` setting names the server'
 origin must be `https://`: the page's Content-Security-Policy allows nothing else, and the screen
 reports a plain-http server as unreachable.
 
+## Deploying it
+
+The files are in `deploy/account-server/`. On the machine that will run it (Node 22.13 or newer):
+
+1. `npm run build:account-server`, then as root
+   `deploy/account-server/install.sh server/account-server.mjs`. It makes the `wizardry-accounts`
+   user, `/opt/wizardry-accounts`, the state directory, the systemd unit, and
+   `/etc/wizardry-accounts/env` with a fresh pepper that is never printed.
+2. Edit the `CHANGE` lines in `/etc/wizardry-accounts/env`: the public origin, the site's origin,
+   and the From address. **Copy the pepper line somewhere other than where the database backups
+   go.**
+3. Point DNS for the hostname at the machine. Not through a proxying CDN: the server's rate limits
+   count the address nginx sees.
+4. Get a certificate, then install `nginx.conf` as a vhost (the steps are at the top of the file).
+5. `systemctl enable --now wizardry-accounts`, then `curl https://<hostname>/healthz`.
+6. Add `/opt/wizardry-accounts/backup.sh` to root's cron. It writes a consistent, checked copy of
+   the database to `/var/backups/wizardry-accounts` and keeps fourteen; include that directory in
+   the off-site backup.
+7. Build the web client with `ACCOUNT_SERVER=https://<hostname>` and deploy it. Until then the app
+   stays key-only, so the server can be up and tested first.
+
+To update: build, run `install.sh` again. It keeps the settings file and restarts the service.
+
+The From address must be one the mail server will sign (SPF and DKIM aligned), or the codes land
+in spam.
+
 ## In the app
 
 - **`LoginScreen`** shows the email-and-password step (`AccountGate`) first. An account that holds
@@ -146,10 +172,9 @@ Next: the wording that still assumes there is no account ("There's no Wizardry a
 
 ## 2. Deployment
 
-- Run the account server beside the mail server, behind the existing reverse proxy, on its own
-  hostname. A systemd unit and a backup line for `accounts.db` and the pepper (kept apart).
-- Send through the mail server you already run; a proper SPF/DKIM-aligned From address so codes do
-  not land in spam.
+- The files and steps are written ("Deploying it" above) and the backup script was run against a
+  real database. Not yet done on the host: the install itself, DNS, the certificate, and a code
+  arriving through the real mail server.
 - Optional: a members-only relay that calls `member/check` on NIP-42 AUTH, so the email gate is
   real for the community's own rooms and not just a screen in one client.
 
