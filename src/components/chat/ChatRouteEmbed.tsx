@@ -263,7 +263,7 @@ function ConcordRouteCard({
         <CardLabel Icon={MessagesSquare} label={encryptedCommunity} />
         {blocked ? (
           <p className="text-sm text-muted-foreground">
-            <FormattedMessage id="communityBlocked.title" defaultMessage="This community is unavailable in Armada" />
+            <FormattedMessage id="communityBlocked.title" defaultMessage="This community is unavailable in Wizardry" />
           </p>
         ) : membershipResolved ? (
           <div className="flex items-start gap-2 min-w-0 text-muted-foreground">

@@ -130,7 +130,7 @@ export function InvitePeopleDialog({ relayUrl, group, open, onOpenChange }: Invi
   const share = () => {
     if (!url) return;
     void nativeShare({
-      title: t({ id: "invitePeopleDialog.shareTitle", defaultMessage: "Join #{name} on Armada" }, { name: group.name }),
+      title: t({ id: "invitePeopleDialog.shareTitle", defaultMessage: "Join #{name} on Wizardry" }, { name: group.name }),
       text: t({ id: "invitePeopleDialog.shareText", defaultMessage: "You're invited to #{name}!" }, { name: group.name }),
       url,
     });

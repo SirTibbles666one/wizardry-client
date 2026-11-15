@@ -324,13 +324,13 @@ export function Watchalong({ sync }: { sync: AppSync }) {
             />
           ) : currentPlayer !== "youtube" ? (
             <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm text-white/70">
-              <FormattedMessage id="watchalong.unsupported" defaultMessage="This video can't be played in this version of Armada." />
+              <FormattedMessage id="watchalong.unsupported" defaultMessage="This video can't be played in this version of Wizardry." />
             </div>
           ) : nativeIosPlayer ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-chrome-deep px-6 text-center text-white">
               <MonitorPlay className="size-10 text-primary" />
               <div>
-                <p className="text-sm font-semibold"><FormattedMessage id="watchalong.iosPlayerTitle" defaultMessage="YouTube opens in Armada's video player" /></p>
+                <p className="text-sm font-semibold"><FormattedMessage id="watchalong.iosPlayerTitle" defaultMessage="YouTube opens in Wizardry's video player" /></p>
                 <p className="mt-1 text-xs text-white/60"><FormattedMessage id="watchalong.iosPlayerBody" defaultMessage="It starts at the shared watch position." /></p>
               </div>
               <Button type="button" className="clip-corner-lg" onClick={openIosPlayer}>

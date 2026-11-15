@@ -12,10 +12,10 @@ export function DesktopUpdateToast() {
       onDesktopWebUpdateReady(() => {
         toast({
           title: t({ id: "desktopUpdateToast.title", defaultMessage: "Update available" }),
-          description: t({ id: "desktopUpdateToast.description", defaultMessage: "Restart Armada to use the new version." }),
+          description: t({ id: "desktopUpdateToast.description", defaultMessage: "Restart Wizardry to use the new version." }),
           duration: Infinity,
           action: (
-            <ToastAction altText={t({ id: "desktopUpdateToast.restartAlt", defaultMessage: "Restart Armada to update" })} onClick={restartForDesktopWebUpdate}>
+            <ToastAction altText={t({ id: "desktopUpdateToast.restartAlt", defaultMessage: "Restart Wizardry to update" })} onClick={restartForDesktopWebUpdate}>
               {t({ id: "desktopUpdateToast.restart", defaultMessage: "Restart" })}
             </ToastAction>
           ),

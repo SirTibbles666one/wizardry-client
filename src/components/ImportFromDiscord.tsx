@@ -73,7 +73,7 @@ export function DiscordBridgeSection({ canManage }: { canManage: boolean }) {
         <p className="text-xs text-muted-foreground">
           <FormattedMessage
             id="importFromDiscord.bridgeDescription"
-            defaultMessage="Mirror a channel to a Discord server, or import one into Armada. Set up and managed in the bridge portal with your Discord account."
+            defaultMessage="Mirror a channel to a Discord server, or import one into Wizardry. Set up and managed in the bridge portal with your Discord account."
           />
         </p>
         <p className="text-xs text-muted-foreground">

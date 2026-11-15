@@ -1167,7 +1167,7 @@ function ChatComposerBody({ relayUrl, groupId, messages, replyTo, onCancelReply,
             title: t({ id: "chatComposer.cantUpload", defaultMessage: "Can't upload this file" }),
             description: t({
               id: "chatComposer.metadataNotRemovable",
-              defaultMessage: "Armada can't remove the location and camera details from this image here, so it wasn't sent.",
+              defaultMessage: "Wizardry can't remove the location and camera details from this image here, so it wasn't sent.",
             }),
             variant: "destructive",
           });
@@ -1245,7 +1245,7 @@ function ChatComposerBody({ relayUrl, groupId, messages, replyTo, onCancelReply,
             title: t({ id: "chatComposer.cantUpload", defaultMessage: "Can't upload this file" }),
             description: t({
               id: "chatComposer.videoMetadataNotRemovable",
-              defaultMessage: "Armada can't remove the location and camera details from this video, so it wasn't sent.",
+              defaultMessage: "Wizardry can't remove the location and camera details from this video, so it wasn't sent.",
             }),
             variant: "destructive",
           });

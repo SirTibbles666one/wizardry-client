@@ -611,7 +611,7 @@ export function VoiceDeviceSettings() {
             <p className="text-xs text-muted-foreground">
               <FormattedMessage
                 id="voiceDeviceSettings.pushToTalkHelp"
-                defaultMessage="Hold this shortcut to transmit; releasing it mutes immediately, even while Armada is in the background. Press Escape while recording to cancel."
+                defaultMessage="Hold this shortcut to transmit; releasing it mutes immediately, even while Wizardry is in the background. Press Escape while recording to cancel."
               />
             </p>
           )}
@@ -640,13 +640,13 @@ export function VoiceDeviceSettings() {
           <InfoTip label={intl.formatMessage({ id: "voiceDeviceSettings.aboutVoiceServer", defaultMessage: "About the voice server" })}>
             <FormattedMessage
               id="voiceDeviceSettings.voiceServerHelp"
-              defaultMessage="Used for direct-message calls and for communities that set no voice servers of their own; a community that sets them uses only those, and this is ignored there. A custom address replaces the built-in Armada voice servers on every synced client."
+              defaultMessage="Used for direct-message calls and for communities that set no voice servers of their own; a community that sets them uses only those, and this is ignored there. A custom address replaces the built-in Wizardry voice servers on every synced client."
             />
           </InfoTip>
         </div>
         <Input
           value={voiceServer}
-          placeholder={CONCORD_AV_SERVERS[0] ?? "https://your-armada-host"}
+          placeholder={CONCORD_AV_SERVERS[0] ?? "https://your-wizardry-host"}
           onChange={(e) => setVoiceServer(e.target.value)}
           onBlur={commitVoiceServer}
           onKeyDown={(e) => {

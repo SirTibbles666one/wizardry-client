@@ -181,7 +181,7 @@ export function SignupWizard({ onExit }: SignupWizardProps) {
             <p className="text-sm leading-relaxed text-muted-foreground">
               <FormattedMessage
                 id="signupWizard.join.body"
-                defaultMessage="You've been invited to create a new Armada account hosted on {count, plural, one {this relay} other {these relays}}. Your account's data will live here so it's ready wherever you sign in. You can change this later in Settings."
+                defaultMessage="You've been invited to create a new Wizardry account hosted on {count, plural, one {this relay} other {these relays}}. Your account's data will live here so it's ready wherever you sign in. You can change this later in Settings."
                 values={{ count: join.relays.length }}
               />
             </p>

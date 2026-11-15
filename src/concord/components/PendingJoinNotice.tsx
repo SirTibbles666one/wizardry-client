@@ -35,7 +35,7 @@ export function PendingJoinNotice({ state, onRetry }: { state: PendingJoinState 
         ) : (
           <FormattedMessage
             id="pendingJoinNotice.failed"
-            defaultMessage="Other members can't see you here yet: your join hasn't been signed or reached the community's relays. Armada keeps retrying."
+            defaultMessage="Other members can't see you here yet: your join hasn't been signed or reached the community's relays. Wizardry keeps retrying."
           />
         )}
       </span>

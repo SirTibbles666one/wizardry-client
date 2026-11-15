@@ -33,7 +33,7 @@ describe("AccountStandingDialog", () => {
       fireEvent.click(punchline);
     };
     tap();
-    expect(screen.getByRole("tooltip")).toHaveTextContent(/no Armada account to ban/);
+    expect(screen.getByRole("tooltip")).toHaveTextContent(/no Wizardry account to ban/);
 
     tap();
     expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();

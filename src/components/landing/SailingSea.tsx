@@ -24,7 +24,7 @@ function canWebGL(): boolean {
 export function SailingSea() {
   const hostRef = useRef<HTMLDivElement>(null);
   const intl = useIntl();
-  const label = intl.formatMessage({ id: "sailingScene.label", defaultMessage: "Sail the Armada ship" });
+  const label = intl.formatMessage({ id: "sailingScene.label", defaultMessage: "Sail the Wizardry ship" });
   // Read at mount through the ref, so a language switch relabels rather than remounts the scene.
   const labelRef = useRef(label);
   labelRef.current = label;

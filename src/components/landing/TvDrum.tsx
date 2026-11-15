@@ -358,7 +358,7 @@ export const TvDrum = memo(function TvDrum({
                 <div data-picture="" className="absolute inset-0 origin-center">
                   <Capture slug={channel.slug} size={size} alt={
                     front
-                      ? intl.formatMessage({ id: "tvDrum.captureAlt", defaultMessage: "Armada: {label}" }, { label: channel.label })
+                      ? intl.formatMessage({ id: "tvDrum.captureAlt", defaultMessage: "Wizardry: {label}" }, { label: channel.label })
                       : ""
                   } />
                 </div>

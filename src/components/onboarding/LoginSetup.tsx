@@ -258,7 +258,7 @@ function RelayStep({
         description={
           <FormattedMessage
           id="loginSetup.signOut.description"
-          defaultMessage="Going back signs this account out of Armada on this device, and removes what this device has stored for it. Your key and anything on your relays are not affected."
+          defaultMessage="Going back signs this account out of Wizardry on this device, and removes what this device has stored for it. Your key and anything on your relays are not affected."
         />
         }
       >
@@ -333,7 +333,7 @@ function NotificationsStep({ onDone }: { onDone: (granted: boolean) => void }) {
       description={
         <FormattedMessage
           id="loginSetup.notifications.description"
-          defaultMessage="Armada can notify you about direct messages, mentions and replies while the app is closed. Nothing leaves your device to a push service; your phone holds the connection itself."
+          defaultMessage="Wizardry can notify you about direct messages, mentions and replies while the app is closed. Nothing leaves your device to a push service; your phone holds the connection itself."
         />
       }
     >
@@ -391,12 +391,12 @@ function WebPushStep({ onDone }: { onDone: () => void }) {
         ? (
           <FormattedMessage
             id="loginSetup.webpush.foregroundDescription"
-            defaultMessage="Armada can notify you about direct messages, mentions and replies while it's open, even behind another window. This browser can't deliver notifications once Armada is closed, so nothing leaves your device for them."
+            defaultMessage="Wizardry can notify you about direct messages, mentions and replies while it's open, even behind another window. This browser can't deliver notifications once Wizardry is closed, so nothing leaves your device for them."
           />
         ) : (
           <FormattedMessage
             id="loginSetup.webpush.description"
-            defaultMessage="Armada can notify you about direct messages, mentions and replies even while it's closed. Notifications go through your browser's push service but carry no message content. Armada decrypts them on your device."
+            defaultMessage="Wizardry can notify you about direct messages, mentions and replies even while it's closed. Notifications go through your browser's push service but carry no message content. Wizardry decrypts them on your device."
           />
         )}
     >
@@ -448,7 +448,7 @@ function BatteryStep({ onDone }: { onDone: () => void }) {
       description={
         <FormattedMessage
           id="loginSetup.battery.description"
-          defaultMessage="Android's battery optimization suspends Armada's connection in the background, which silently stops notifications. Allowing background usage keeps them arriving."
+          defaultMessage="Android's battery optimization suspends Wizardry's connection in the background, which silently stops notifications. Allowing background usage keeps them arriving."
         />
       }
     >
@@ -492,7 +492,7 @@ function DecryptStep({ onDone }: { onDone: () => void }) {
       description={
         <FormattedMessage
           id="loginSetup.decrypt.description"
-          defaultMessage="Your messages are end-to-end encrypted. Armada needs your signer to unlock them."
+          defaultMessage="Your messages are end-to-end encrypted. Wizardry needs your signer to unlock them."
         />
       }
     >
@@ -501,7 +501,7 @@ function DecryptStep({ onDone }: { onDone: () => void }) {
           <p className="text-xs text-muted-foreground">
             <FormattedMessage
               id="loginSetup.decrypt.explainer"
-              defaultMessage="Allow it once and Armada decrypts quietly from here on. Decline and messages stay locked until you tap <strong>Decrypt</strong> on them."
+              defaultMessage="Allow it once and Wizardry decrypts quietly from here on. Decline and messages stay locked until you tap <strong>Decrypt</strong> on them."
               values={{ strong: (chunks) => <strong>{chunks}</strong> }}
             />
           </p>

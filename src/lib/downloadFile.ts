@@ -31,7 +31,7 @@ export async function downloadBinaryFile(
       data: bytesToBase64(bytes),
       directory: Directory.Documents,
     });
-    return t({ id: "downloadFile.iosLocation", defaultMessage: "the Armada folder in Files" });
+    return t({ id: "downloadFile.iosLocation", defaultMessage: "the Wizardry folder in Files" });
   }
   const blob = new Blob([bytes as BlobPart], { type: "application/octet-stream" });
   const url = URL.createObjectURL(blob);

@@ -63,7 +63,7 @@ describe("GiftPage", () => {
     expect(screen.getByText("Ana")).toBeInTheDocument();
     await openGift();
     expect(screen.getByText("Armada Ultra")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Join Armada to claim/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Join Wizardry to claim/ })).toBeInTheDocument();
     expect(h.publish).not.toHaveBeenCalled();
   });
 

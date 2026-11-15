@@ -128,7 +128,7 @@ export function UserPage() {
           <h2 className="text-2xl font-bold">
             <FormattedMessage
               id="userPage.chatWith"
-              defaultMessage="Chat with <name>{displayName}</name> on Armada"
+              defaultMessage="Chat with <name>{displayName}</name> on Wizardry"
               values={{ displayName, name: (chunks) => <span className="break-words">{chunks}</span> }}
             />
           </h2>
@@ -140,7 +140,7 @@ export function UserPage() {
           <p className="max-w-md text-muted-foreground">
             <FormattedMessage
               id="userPage.pitch"
-              defaultMessage="Armada is end-to-end encrypted messaging on Nostr. Create an account or sign in and this conversation is waiting for you."
+              defaultMessage="Wizardry is end-to-end encrypted messaging on Nostr. Create an account or sign in and this conversation is waiting for you."
             />
           </p>
           <JoinButton size="lg" className="h-12 w-full max-w-xs clip-corner-lg text-base font-medium" />

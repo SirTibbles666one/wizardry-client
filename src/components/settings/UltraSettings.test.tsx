@@ -88,7 +88,7 @@ describe("UltraSettings", () => {
     expect(screen.queryByTitle(DONATION_BITCOIN)).not.toBeInTheDocument();
     expect(screen.queryByText(/Soapbox/)).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Chip in" }));
-    expect(screen.getByText("Support Armada")).toBeInTheDocument();
+    expect(screen.getByText("Support Wizardry")).toBeInTheDocument();
     expect(screen.getByTitle(DONATION_BITCOIN)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Monero" }));
     expect(screen.getByTitle(DONATION_MONERO)).toBeInTheDocument();

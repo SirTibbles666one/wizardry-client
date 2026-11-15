@@ -91,7 +91,7 @@ function GiftBroken() {
       </h1>
       <Button asChild size="lg">
         <Link to="/">
-          <FormattedMessage id="giftPage.home" defaultMessage="Go to Armada" />
+          <FormattedMessage id="giftPage.home" defaultMessage="Go to Wizardry" />
         </Link>
       </Button>
     </div>
@@ -256,7 +256,7 @@ function GiftBody({ gifter }: { gifter: string }) {
               ) : alreadyUltra ? (
                 <FormattedMessage id="giftPage.subAlready" defaultMessage="You’re already Ultra, so pass this one on." />
               ) : (
-                <FormattedMessage id="giftPage.subChoose" defaultMessage="Pick your look. Everyone on Armada will see it." />
+                <FormattedMessage id="giftPage.subChoose" defaultMessage="Pick your look. Everyone on Wizardry will see it." />
               )}
             </p>
           </div>
@@ -286,7 +286,7 @@ function GiftBody({ gifter }: { gifter: string }) {
               ) : (
                 <JoinButton size="lg" className={cn(GRADIENT_CTA, "h-14 text-base clip-corner-lg")}>
                   <Gem className="size-5 mr-2" />
-                  <FormattedMessage id="giftPage.joinToClaim" defaultMessage="Join Armada to claim" />
+                  <FormattedMessage id="giftPage.joinToClaim" defaultMessage="Join Wizardry to claim" />
                 </JoinButton>
               )
             ) : (

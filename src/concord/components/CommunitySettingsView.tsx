@@ -515,7 +515,7 @@ function HistorySection({ community }: { community: Community }) {
         <p className="text-xs text-muted-foreground">
           <FormattedMessage
             id="communitySettingsView.history.description"
-            defaultMessage="Read every channel across all relays, save it to your local store, and export a self-contained HTML copy that opens as a mini-Armada."
+            defaultMessage="Read every channel across all relays, save it to your local store, and export a self-contained HTML copy that opens as a mini-Wizardry."
           />
         </p>
         <Button

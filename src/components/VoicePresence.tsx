@@ -222,7 +222,7 @@ function VoiceParticipantRow({
 const TRANSPORT_LABELS = {
   other: defineMessage({
     id: "voicePresence.otherTransport",
-    defaultMessage: "In the call peer to peer, which Armada can't join yet",
+    defaultMessage: "In the call peer to peer, which Wizardry can't join yet",
   }),
   bridged: defineMessage({
     id: "voicePresence.bridgedTransport",

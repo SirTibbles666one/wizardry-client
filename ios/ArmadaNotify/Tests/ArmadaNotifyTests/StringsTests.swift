@@ -120,7 +120,7 @@ final class StringsTests: XCTestCase {
     func testADroppedPushCarriesTheQuietText() {
         let dropped = PreparedPush.dropped(Strings(locale: "it"))
         XCTAssertTrue(dropped.drop)
-        XCTAssertEqual(dropped.title, "Armada")
+        XCTAssertEqual(dropped.title, "Wizardry")
         XCTAssertEqual(dropped.body, "Messaggi sincronizzati")
     }
 }

@@ -9,7 +9,7 @@ import { FormattedMessage } from "@/i18n";
 export function CommunityBlocked() {
   return (
     <GameOverScreen
-      title={<FormattedMessage id="communityBlocked.title" defaultMessage="This community is unavailable in Armada" />}
+      title={<FormattedMessage id="communityBlocked.title" defaultMessage="This community is unavailable in Wizardry" />}
     />
   );
 }

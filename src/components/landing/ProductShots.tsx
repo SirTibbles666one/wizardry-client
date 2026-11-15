@@ -190,7 +190,7 @@ export function ProductShots({
             size="desktop"
             ratio="aspect-[2400/1520]"
             className="rounded-[6px]"
-            alt={intl.formatMessage({ id: "productShots.desktopAlt", defaultMessage: "Armada on desktop: {label}" }, { label })}
+            alt={intl.formatMessage({ id: "productShots.desktopAlt", defaultMessage: "Wizardry on desktop: {label}" }, { label })}
           />
         </div>
       </div>
@@ -208,7 +208,7 @@ export function ProductShots({
             size="mobile"
             ratio="aspect-[1170/2532]"
             className="rounded-[24px]"
-            alt={intl.formatMessage({ id: "productShots.phoneAlt", defaultMessage: "Armada on a phone: {label}" }, { label })}
+            alt={intl.formatMessage({ id: "productShots.phoneAlt", defaultMessage: "Wizardry on a phone: {label}" }, { label })}
           />
         </div>
       </div>

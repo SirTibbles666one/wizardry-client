@@ -9,7 +9,7 @@ import { FormattedMessage } from "@/i18n";
 export function UserBanned() {
   return (
     <GameOverScreen
-      title={<FormattedMessage id="userBanned.title" defaultMessage="This account is unavailable in Armada" />}
+      title={<FormattedMessage id="userBanned.title" defaultMessage="This account is unavailable in Wizardry" />}
     />
   );
 }

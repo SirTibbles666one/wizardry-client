@@ -45,7 +45,7 @@ export function DesktopSettings() {
     <>
       <SettingsRow
         label={intl.formatMessage({ id: "desktopSettings.launchOnStartup", defaultMessage: "Launch on startup" })}
-        description={intl.formatMessage({ id: "desktopSettings.launchOnStartupDescription", defaultMessage: "Start Armada automatically when you log in to this computer." })}
+        description={intl.formatMessage({ id: "desktopSettings.launchOnStartupDescription", defaultMessage: "Start Wizardry automatically when you log in to this computer." })}
       >
         <Switch
           checked={settings.openAtLogin}

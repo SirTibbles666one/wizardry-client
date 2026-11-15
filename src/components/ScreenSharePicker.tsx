@@ -80,12 +80,12 @@ export function ScreenSharePicker() {
           macDenied
             ? t({
                 id: "screenSharePicker.macDenied",
-                defaultMessage: "Armada needs Screen Recording permission in macOS Privacy & Security.",
+                defaultMessage: "Wizardry needs Screen Recording permission in macOS Privacy & Security.",
               })
             : t({
                 id: "screenSharePicker.pickerFailed",
                 defaultMessage:
-                  "Armada couldn't open the system screen picker. Check your operating system's screen-capture permission or picker service and try again.",
+                  "Wizardry couldn't open the system screen picker. Check your operating system's screen-capture permission or picker service and try again.",
               }),
         );
         setShowScreenRecordingSettings(

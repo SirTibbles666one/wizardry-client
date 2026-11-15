@@ -82,7 +82,7 @@ export function SyncSettings() {
         ? intl.formatMessage({ id: "syncSettings.noRelayListFooter", defaultMessage: "Publish a relay list under Relays › Home to sync across devices." })
         : undefined}
       info={userWriteRelayUrls.length === 0
-        ? intl.formatMessage({ id: "syncSettings.noRelayListInfo", defaultMessage: "Publishing a relay list lets Armada copy your lists, settings and communities to your other devices. Device, audio and wallet settings always stay on this device." })
+        ? intl.formatMessage({ id: "syncSettings.noRelayListInfo", defaultMessage: "Publishing a relay list lets Wizardry copy your lists, settings and communities to your other devices. Device, audio and wallet settings always stay on this device." })
         : intl.formatMessage({ id: "syncSettings.localInfo", defaultMessage: "Device, audio and wallet settings always stay on this device." })}
     >
       <SettingsRow

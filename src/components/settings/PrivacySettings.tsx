@@ -25,7 +25,7 @@ export function PrivacySettings() {
       {user && (
         <SettingsGroup
           title={intl.formatMessage({ id: "privacySettings.blocking", defaultMessage: "Blocking" })}
-          info={intl.formatMessage({ id: "privacySettings.blockingInfo", defaultMessage: "Blocked people and muted words are hidden everywhere in Armada. Only you see these lists, and nobody is told." })}
+          info={intl.formatMessage({ id: "privacySettings.blockingInfo", defaultMessage: "Blocked people and muted words are hidden everywhere in Wizardry. Only you see these lists, and nobody is told." })}
         >
           {/* The only place to unblock: blocked people appear in no other list. */}
           <SettingsRow

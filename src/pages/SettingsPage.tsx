@@ -189,7 +189,7 @@ function useSettingsPages(): { pages: Partial<Record<SettingsPageId, PageDef>>; 
         render: () => <SupportSettings />,
       },
       about: {
-        title: intl.formatMessage({ id: "settingsPage.about.title", defaultMessage: "About Armada" }),
+        title: intl.formatMessage({ id: "settingsPage.about.title", defaultMessage: "About Wizardry" }),
         icon: Info,
         tone: "muted",
         summary: appVersionLabel(),
@@ -198,7 +198,7 @@ function useSettingsPages(): { pages: Partial<Record<SettingsPageId, PageDef>>; 
     };
     if (user) {
       pages.ultra = {
-        title: "Armada Ultra",
+        title: "Wizardry Ultra",
         icon: Gem,
         tone: "accent2",
         summary: ultra
@@ -225,7 +225,7 @@ function useSettingsPages(): { pages: Partial<Record<SettingsPageId, PageDef>>; 
         render: () => (
           <SettingsGroup
             id="muted"
-            footer={intl.formatMessage({ id: "settingsPage.blocked.footer", defaultMessage: "Hidden everywhere in Armada. They are never told." })}
+            footer={intl.formatMessage({ id: "settingsPage.blocked.footer", defaultMessage: "Hidden everywhere in Wizardry. They are never told." })}
           >
             <MutedPeopleSettings />
           </SettingsGroup>
@@ -398,7 +398,7 @@ function RootList({
             <SettingsRow
               icon={Download}
               tone="primary"
-              label={intl.formatMessage({ id: "settingsPage.install.label", defaultMessage: "Install Armada" })}
+              label={intl.formatMessage({ id: "settingsPage.install.label", defaultMessage: "Install Wizardry" })}
               description={compact ? undefined : needsManualInstall
                 ? intl.formatMessage({ id: "settingsPage.install.manual", defaultMessage: "Add to your Home Screen from Safari." })
                 : intl.formatMessage({
@@ -408,7 +408,7 @@ function RootList({
               info={needsManualInstall
                 ? intl.formatMessage({
                   id: "settingsPage.install.manualInfo",
-                  defaultMessage: "In Safari, tap Share → Add to Home Screen, keep Open as Web App on, then launch Armada from its new icon.",
+                  defaultMessage: "In Safari, tap Share → Add to Home Screen, keep Open as Web App on, then launch Wizardry from its new icon.",
                 })
                 : undefined}
               onClick={canInstall ? () => install() : undefined}

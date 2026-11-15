@@ -154,7 +154,7 @@ export const LandingPage = memo(function LandingPage({
               <p className="text-pretty px-2 pt-6 text-xs leading-relaxed text-muted-foreground sm:text-sm">
                 <FormattedMessage
                   id="landingPage.whyBody"
-                  defaultMessage="Armada is built on <link>Nostr</link>, a social protocol which redefines the Internet. On Nostr, apps are separate from infra. Users sign events with private keys and distribute them across multiple public relays. Messages can be encrypted so even Nostr relays don't know what they say."
+                  defaultMessage="Wizardry is built on <link>Nostr</link>, a social protocol which redefines the Internet. On Nostr, apps are separate from infra. Users sign events with private keys and distribute them across multiple public relays. Messages can be encrypted so even Nostr relays don't know what they say."
                   values={{ link: nostrLink }}
                 />
               </p>

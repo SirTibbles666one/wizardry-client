@@ -405,7 +405,7 @@ export function ScreenShareQualityDialog({
               {quality.codec === "h265" && (
                 <p className="text-xs text-muted-foreground">
                   {customHevcAvailable
-                    ? intl.formatMessage({ id: "screenShareQualityDialog.hevcCustom", defaultMessage: "The Linux desktop uses FFmpeg with VA-API and publishes one end-to-end encrypted HEVC layer. Every viewer still needs H.265 decoding and an updated Armada client." })
+                    ? intl.formatMessage({ id: "screenShareQualityDialog.hevcCustom", defaultMessage: "The Linux desktop uses FFmpeg with VA-API and publishes one end-to-end encrypted HEVC layer. Every viewer still needs H.265 decoding and an updated Wizardry client." })
                     : intl.formatMessage({ id: "screenShareQualityDialog.hevcHardware", defaultMessage: "HEVC requires hardware encoding here and H.265 decoding on every viewer. Concord calls cannot provide a VP8 fallback for an end-to-end encrypted HEVC track." })}
                 </p>
               )}
@@ -468,12 +468,12 @@ export function ScreenShareQualityDialog({
                 {restartRequired ? (
                   <FormattedMessage
                     id="screenShareQualityDialog.encoderNoteRestart"
-                    defaultMessage="This is process-wide and takes effect after restarting Armada. Restart required for the selected mode."
+                    defaultMessage="This is process-wide and takes effect after restarting Wizardry. Restart required for the selected mode."
                   />
                 ) : (
                   <FormattedMessage
                     id="screenShareQualityDialog.encoderNote"
-                    defaultMessage="This is process-wide and takes effect after restarting Armada."
+                    defaultMessage="This is process-wide and takes effect after restarting Wizardry."
                   />
                 )}
               </p>
@@ -481,7 +481,7 @@ export function ScreenShareQualityDialog({
                 <p className="text-xs text-destructive">
                   <FormattedMessage
                     id="screenShareQualityDialog.h264Blocked"
-                    defaultMessage="H.264 is blocked while hardware mode is active because this driver sent black encrypted frames. Select software compatibility and restart Armada first."
+                    defaultMessage="H.264 is blocked while hardware mode is active because this driver sent black encrypted frames. Select software compatibility and restart Wizardry first."
                   />
                 </p>
               )}
