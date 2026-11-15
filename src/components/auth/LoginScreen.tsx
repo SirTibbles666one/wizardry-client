@@ -42,6 +42,8 @@ interface LoginScreenProps {
   onClose: () => void;
   onLogin: () => void;
   onSignupClick?: () => void;
+  /** True when the person got here through an account, so its key is what is being chosen. */
+  accountExists?: boolean;
 }
 
 // bech32 charset (no b, i, o, 1 or uppercase), so a mistyped key fails here.
@@ -84,7 +86,7 @@ const connectStatusLabel = (intl: IntlShape, status: NostrConnectStatus | null):
  * nsec or bunker:// URI. Driven by `isOpen` (not conditionally mounted) so the
  * handshake effects can abort cleanly on close.
  */
-const KeyLoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, onSignupClick }) => {
+const KeyLoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, onSignupClick, accountExists }) => {
   // On the APK the WebView origin is unreachable from the signer's browser, so
   // use the public deployment; its verified App Link reopens the app (#44).
   const callbackOrigin = shareOrigin();
@@ -391,8 +393,10 @@ const KeyLoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, 
           </h1>
           {joinMode && (
             <p className="text-sm leading-relaxed text-muted-foreground">
-              {accountsEnabled() ? (
+              {accountsEnabled() && accountExists ? (
                 <FormattedMessage id="loginScreen.chooseKeyDescription" defaultMessage="You're signed in. Now choose your key: make a new one, or use one you already have. It will be locked to your account." />
+              ) : accountsEnabled() ? (
+                <FormattedMessage id="loginScreen.keyOnlyDescription" defaultMessage="Make a new key, or log in with one you already have." />
               ) : (
                 <FormattedMessage id="loginScreen.joinDescription" defaultMessage="Create a new account, or log in with a key you already have." />
               )}
@@ -615,7 +619,9 @@ const KeyLoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, 
  */
 const LoginScreen: React.FC<LoginScreenProps> = (props) => {
   const account = useAccountState();
-  if (!accountsEnabled() || accountReady(account) || useKeyInstead()) return <KeyLoginScreen {...props} />;
+  if (!accountsEnabled() || accountReady(account) || useKeyInstead()) {
+    return <KeyLoginScreen {...props} accountExists={account !== null} />;
+  }
   return (
     <AccountGate
       isOpen={props.isOpen}
