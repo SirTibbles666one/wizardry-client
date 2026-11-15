@@ -150,11 +150,11 @@ constants so a normal build carries none of it: `VITE_PROFILE=1` on the web
 side (`src/lib/perfRuntime.ts`, `npm run build:profile`) and
 `-ParmadaProfile=true` for the Android notification service
 (`ServiceProfiler.java`, read through `adb shell dumpsys activity service
-buzz.armada.app.profile/buzz.armada.app.NotificationRelayService`). Keep new
+xyz.slothlee.wizardry.profile/buzz.armada.app.NotificationRelayService`). Keep new
 probes behind the same guards. `scripts/perf-profile.mjs` drives the web
 client headless over seeded DM and Concord data; `scripts/android-profile.sh`
 measures the service on a connected device. The profiling APK installs as
-`buzz.armada.app.profile`, beside the real app, never over it.
+`xyz.slothlee.wizardry.profile`, beside the real app, never over it.
 
 ### Performance rules that have regressed before
 

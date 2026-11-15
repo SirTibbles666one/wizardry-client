@@ -40,7 +40,7 @@
     <string name="notif_not_sent">⚠️ 送信されませんでした: %1$s</string>
     <string name="notif_connected">即時通知のために接続しています</string>
     <string name="channel_service_name">バックグラウンド接続</string>
-    <string name="channel_service_description">即時通知のために Armada の接続を維持します</string>
+    <string name="channel_service_description">即時通知のために Wizardry の接続を維持します</string>
     <string name="channel_messages_name">通知</string>
     <string name="channel_messages_description">メンション、返信、リアクション、ダイレクトメッセージ</string>
     <string name="channel_calls_name">着信</string>

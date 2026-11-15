@@ -89,7 +89,7 @@ for (const scenario of readdirSync(root).filter((d) => statSync(join(root, d)).i
   if (pss) console.log(`  meminfo total PSS ${Math.round(Number(pss[1]) / 1024)}MB`);
   const alarms = read(join(dir, "alarm.txt"))
     .split("\n")
-    .filter((l) => l.includes("buzz.armada.app") && /wakeup|alarm/i.test(l))
+    .filter((l) => l.includes("xyz.slothlee.wizardry") && /wakeup|alarm/i.test(l))
     .slice(0, 5);
   if (alarms.length) {
     console.log("  alarms:");

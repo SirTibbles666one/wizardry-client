@@ -160,7 +160,8 @@ The mark, the copy and the hosted site say Wizardry. Still Armada underneath:
 - **Defaults:** `APP_NAME` falls back to "Armada" in `src/lib/platform.ts`, and the desktop shell
   hard-codes it in window and tray titles. `APP_ID` is `armada` — changing that one moves where
   settings are stored, so it needs a decision before anyone has data, not after.
-- **App identity:** Android/iOS/desktop are still `buzz.armada.app`, signed and associated with
+- **Android** has its own application id, name and signing-key script: see `docs/apps.md`.
+- **App identity:** iOS and desktop are still `buzz.armada.app`, signed and associated with
   Soapbox's team and `armada.buzz`. Shipping apps needs our own id, signing keys, and
   `assetlinks.json` / `apple-app-site-association` on our domain.
 - **Links and services:** `armada.buzz` appears in share links, invite previews, the AV broker
