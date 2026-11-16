@@ -6,6 +6,7 @@ import { SettingsSearchingContext } from "@/components/settings/settingsNav";
 import { FormattedMessage, useIntl } from "@/i18n";
 import { appVersionLabel } from "@/lib/appVersion";
 import { SUPPORT_EMAIL } from "@/lib/platform";
+import { APPS_PUBLISHED } from "@/lib/releases";
 
 /** Settings › Help & support. */
 export function SupportSettings() {
@@ -54,7 +55,9 @@ export function AboutSettings() {
       <SettingsGroup id="about">
         <SettingsRow label={intl.formatMessage({ id: "aboutSettings.version", defaultMessage: "Version" })} value={<span className="tabular-nums">{appVersionLabel()}</span>} />
         <SettingsRow icon={ScrollText} tone="primary" label={intl.formatMessage({ id: "aboutSettings.whatsNew", defaultMessage: "What's new" })} to="/changelog" />
-        <SettingsRow icon={Download} tone="accent2" label={intl.formatMessage({ id: "aboutSettings.getTheApps", defaultMessage: "Get the apps" })} to="/downloads" />
+        {APPS_PUBLISHED && (
+          <SettingsRow icon={Download} tone="accent2" label={intl.formatMessage({ id: "aboutSettings.getTheApps", defaultMessage: "Get the apps" })} to="/downloads" />
+        )}
       </SettingsGroup>
 
       <SettingsGroup>

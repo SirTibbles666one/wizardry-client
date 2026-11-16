@@ -33,7 +33,7 @@ import {
 import { formatBytes } from "@/lib/fileBytes";
 import { APP_NAME } from "@/lib/platform";
 import { HashMismatchError, downloadArtifact } from "@/lib/releaseDownload";
-import { featuredRelease, isStable, type Release, type ReleaseArtifact } from "@/lib/releases";
+import { APPS_PUBLISHED, featuredRelease, isStable, type Release, type ReleaseArtifact } from "@/lib/releases";
 import { cn } from "@/lib/utils";
 import { scrollBehavior } from "@/lib/reducedMotion";
 
@@ -690,6 +690,54 @@ function HeroButton({ href, to, external, download, icon: Mark, title, detail, o
 }
 
 export function DownloadsPage() {
+  return APPS_PUBLISHED ? <PublishedDownloads /> : <NoAppsYet />;
+}
+
+/** Until Wizardry publishes its own builds: the browser is the app. */
+function NoAppsYet() {
+  const intl = useIntl();
+  const back = useBackOrHome();
+  return (
+    <main className="relative flex-1 min-w-0 overflow-y-auto">
+      <Button
+        variant="ghost"
+        size="icon"
+        aria-label={intl.formatMessage(common.back)}
+        onClick={back}
+        className="absolute left-2 top-2 z-20 size-9 touch:size-11 text-muted-foreground hover:text-foreground safe-area-top"
+      >
+        <ArrowLeft className="size-5" />
+      </Button>
+      <section className="mx-auto flex min-h-[88svh] max-w-xl flex-col items-center justify-center gap-8 px-6 py-16 text-center safe-area-top">
+        <ArmadaCrest size={130} />
+        <div className="space-y-3">
+          <h1 className="font-mono text-3xl font-bold lowercase tracking-tight text-foreground sm:text-4xl">
+            <FormattedMessage
+              id="downloadsPage.noAppsTitle"
+              defaultMessage="{app} runs in your browser"
+              values={{ app: APP_NAME.toLowerCase() }}
+            />
+          </h1>
+          <p className="text-pretty text-sm text-muted-foreground sm:text-base">
+            <FormattedMessage
+              id="downloadsPage.noAppsBody"
+              defaultMessage="The desktop and phone apps aren't out yet. Use {app} in any browser in the meantime: your account works the same there."
+              values={{ app: APP_NAME }}
+            />
+          </p>
+        </div>
+        <Button asChild>
+          <Link to="/">
+            <FormattedMessage id="downloadsPage.noAppsOpen" defaultMessage="Open {app}" values={{ app: APP_NAME }} />
+          </Link>
+        </Button>
+      </section>
+      <ArmadaCrestKeyframes />
+    </main>
+  );
+}
+
+function PublishedDownloads() {
   const intl = useIntl();
   const back = useBackOrHome();
   // The sea reads scrollTop imperatively, so a ref, never state.

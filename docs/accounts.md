@@ -198,9 +198,11 @@ The mark, the copy, the hosted site and the app identity say Wizardry. Still Arm
   is empty and `ios-release.sh` now requires `IOS_TEAM_ID` and the App Store Connect key), a
   release key for `RELEASE_AUTHORS` and `.ngit/release.yaml`'s `pubkey`, and a domain for app links
   (`assetlinks.json` and `apple-app-site-association` are empty until then).
-- **Downloads:** `/downloads` and the no-JavaScript page offer Soapbox's packages, which install
-  Armada, not Wizardry (no account step, their branding). Until we publish our own builds, either
-  hide the page or say plainly that the apps are upstream's.
+- **Done, downloads:** while `RELEASE_AUTHORS` is empty (`APPS_PUBLISHED` false), `/downloads` says
+  the apps aren't out yet and points at the browser, and the landing page, Settings › About and
+  the no-JavaScript page offer no downloads. The store and package listings in `downloads.ts` are
+  still upstream's; replace them with Wizardry's before setting a release signer, and restore the
+  skipped `<noscript>` test in `downloads.test.ts`.
 - **Links and services:** `armada.buzz` appears in share links, invite previews, the AV broker
   default, the push gateway and the release feed. Each needs a Wizardry home or a deliberate
   "we use the public one".

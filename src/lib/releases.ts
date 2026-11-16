@@ -36,6 +36,13 @@ export const RELEASE_AUTHORS: string[] = (config("RELEASE_AUTHORS") || "")
   .map((pubkey: string) => pubkey.trim().toLowerCase())
   .filter((pubkey: string) => /^[0-9a-f]{64}$/.test(pubkey));
 
+/**
+ * Whether this build has apps to offer. With no trusted signer there are no
+ * releases, and the package and store listings in `downloads.ts` install
+ * upstream's Armada, so the download links stay hidden.
+ */
+export const APPS_PUBLISHED: boolean = RELEASE_AUTHORS.length > 0;
+
 /** One build output of a release (a kind-3063 asset). */
 export interface ReleaseArtifact {
   id: string;
