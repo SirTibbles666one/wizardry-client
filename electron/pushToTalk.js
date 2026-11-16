@@ -121,7 +121,7 @@ function errorReason(error, platform, portal, env = process.env) {
   const message = error instanceof Error ? error.message : String(error || "");
   if (message.includes("cancelled")) return "Push-to-talk shortcut setup was cancelled.";
   if (platform === "darwin") {
-    return "Allow Armada in macOS Accessibility settings, then try again.";
+    return "Allow Wizardry in macOS Accessibility settings, then try again.";
   }
   if (portal) {
     const desktop = [env.XDG_CURRENT_DESKTOP, env.XDG_SESSION_DESKTOP, env.DESKTOP_SESSION]
@@ -211,7 +211,7 @@ class PushToTalkController {
           supported: false,
           backend: null,
           bindingLabel: binding.label,
-          reason: "Allow Armada in macOS Accessibility settings, then try again.",
+          reason: "Allow Wizardry in macOS Accessibility settings, then try again.",
         };
       }
 

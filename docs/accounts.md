@@ -183,20 +183,24 @@ the stored key turns that reminder back on.
 
 ## 3. Finishing the rebrand
 
-The mark, the copy and the hosted site say Wizardry. Still Armada underneath:
+The mark, the copy, the hosted site and the app identity say Wizardry. Still Armada underneath:
 
 - **Done:** the app's default name, the copy in all eight languages, "Wizardry Ultra", and the
   link-preview cards (titles and the drawn wordmark).
-- **Defaults:** the desktop shell hard-codes "Armada" in window, tray and update messages, and its
-  package is still `armada-desktop`; those change together with the app identity below. `APP_ID`
-  is `armada` — changing that one moves where settings are stored, so it needs a decision before
-  anyone has data, not after.
+- **Done, identity:** the apps are `xyz.slothlee.wizardry` on Android, iOS (App Group
+  `group.xyz.slothlee.wizardry`), desktop and Flatpak; `APP_ID` is `wizardry`, so settings live
+  under `wizardry/…` apart from upstream's; the desktop shell says Wizardry in its window, tray,
+  dialogs and installer names. Upstream's release key is no longer trusted (`RELEASE_AUTHORS` is
+  empty), so a desktop build never loads Armada's web app or installs Armada's updates; it runs the
+  web app it shipped with. The Java/Kotlin package (`buzz.armada.app`) stays: it is the code's
+  namespace, not the app's identity, and moving it would touch every native file for nothing.
+- **Still to do for shipping apps:** our own Android signing key, an Apple team (`DEVELOPMENT_TEAM`
+  is empty and `ios-release.sh` now requires `IOS_TEAM_ID` and the App Store Connect key), a
+  release key for `RELEASE_AUTHORS` and `.ngit/release.yaml`'s `pubkey`, and a domain for app links
+  (`assetlinks.json` and `apple-app-site-association` are empty until then).
 - **Downloads:** `/downloads` and the no-JavaScript page offer Soapbox's packages, which install
   Armada, not Wizardry (no account step, their branding). Until we publish our own builds, either
   hide the page or say plainly that the apps are upstream's.
-- **App identity:** Android/iOS/desktop are still `buzz.armada.app`, signed and associated with
-  Soapbox's team and `armada.buzz`. Shipping apps needs our own id, signing keys, and
-  `assetlinks.json` / `apple-app-site-association` on our domain.
 - **Links and services:** `armada.buzz` appears in share links, invite previews, the AV broker
   default, the push gateway and the release feed. Each needs a Wizardry home or a deliberate
   "we use the public one".

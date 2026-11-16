@@ -76,14 +76,14 @@ describe("desktop update publication", () => {
   it("stages all seven desktop installers, the Flatpak among them", () => {
     const stage = namedStep("Stage installers for the release event").run;
     expect(stage).toContain('out="$PWD/.release-artifacts"');
-    expect(stage).toContain('"$out/Armada-$TAG.AppImage"');
-    expect(stage).toContain('"$out/Armada-$TAG.deb"');
-    expect(stage).toContain('"$out/Armada-$TAG.exe"');
-    expect(stage).toContain('"$out/Armada-$TAG-portable.exe"');
-    expect(stage).toContain('"$out/Armada-$TAG-mac-x64.zip"');
-    expect(stage).toContain('"$out/Armada-$TAG-mac-arm64.zip"');
+    expect(stage).toContain('"$out/Wizardry-$TAG.AppImage"');
+    expect(stage).toContain('"$out/Wizardry-$TAG.deb"');
+    expect(stage).toContain('"$out/Wizardry-$TAG.exe"');
+    expect(stage).toContain('"$out/Wizardry-$TAG-portable.exe"');
+    expect(stage).toContain('"$out/Wizardry-$TAG-mac-x64.zip"');
+    expect(stage).toContain('"$out/Wizardry-$TAG-mac-arm64.zip"');
     expect(stage).toContain(
-      'cp electron/release/Armada-flatpak-*.flatpak "$out/Armada-$TAG.flatpak"',
+      'cp electron/release/Wizardry-flatpak-*.flatpak "$out/Wizardry-$TAG.flatpak"',
     );
   });
 
@@ -190,7 +190,7 @@ describe("nsite deploy", () => {
     }
     expect(wrapperCalls).toEqual([
       "scripts/nsite-deploy.sh dist",
-      "scripts/nsite-deploy.sh dist --name armada-stable --no-config --fallback /index.html",
+      "scripts/nsite-deploy.sh dist --name wizardry-rel --no-config --fallback /index.html",
     ]);
 
     // No step may reintroduce the OSTree repository fold.

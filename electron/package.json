@@ -1,10 +1,10 @@
 {
   "name": "armada-desktop",
-  "productName": "Armada",
+  "productName": "Wizardry",
   "version": "0.0.0",
-  "description": "Armada desktop client (Electron wrapper around the web app).",
+  "description": "Wizardry desktop client (Electron wrapper around the web app).",
   "homepage": "https://armada.buzz",
-  "desktopName": "buzz.armada.app.desktop",
+  "desktopName": "xyz.slothlee.wizardry.desktop",
   "author": {
     "name": "Soapbox",
     "email": "contact@soapbox.pub"

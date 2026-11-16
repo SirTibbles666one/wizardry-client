@@ -5,7 +5,7 @@
 // Nothing installs a .desktop entry for an AppImage. A desktop environment
 // names a running app after the entry its window matches (WM_CLASS ->
 // StartupWMClass, with WM_CLASS from `app.setDesktopName()` in main.js), so
-// with none installed the dock shows the raw "buzz.armada.app" and the
+// with none installed the dock shows the raw "xyz.slothlee.wizardry" and the
 // window's own icon. The deb and the Flatpak install an entry of their own.
 //
 // So the AppImage installs its own, on launch, into XDG_DATA_HOME: the same
@@ -27,15 +27,15 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 
-const DESKTOP_ID = "buzz.armada.app";
+const DESKTOP_ID = "xyz.slothlee.wizardry";
 const DESKTOP_FILE = `${DESKTOP_ID}.desktop`;
 
 // Written into every entry this module generates, and the ONLY thing that
 // authorizes overwriting one. An entry without it belongs to somebody else.
-const MARKER_KEY = "X-Armada-Desktop-Entry";
+const MARKER_KEY = "X-Wizardry-Desktop-Entry";
 // The AppImage the entry was written for, so moving/renaming the file is
 // detected as a rewrite rather than leaving a launcher that fails to start.
-const SOURCE_KEY = "X-Armada-AppImage";
+const SOURCE_KEY = "X-Wizardry-AppImage";
 
 // Must match the entry electron-builder generates for the packaged targets
 // (electron/electron-builder.yml -> linux.desktop.entry). An AppImage that
@@ -43,7 +43,7 @@ const SOURCE_KEY = "X-Armada-AppImage";
 // two spellings of one; desktopIntegration.test.mjs reads the yaml and fails
 // if these drift apart.
 const ENTRY_FIELDS = {
-  Name: "Armada",
+  Name: "Wizardry",
   Comment: "Sovereign encrypted communities and chat",
   Categories: "Network;Chat;InstantMessaging;",
 };

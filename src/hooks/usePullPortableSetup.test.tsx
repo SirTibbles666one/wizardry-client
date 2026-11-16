@@ -248,7 +248,7 @@ describe("usePullPortableSetup", () => {
     // come back missing.
     const settingsFilter = (h.queryExplicitRelays.mock.calls[0]?.[2] as NostrFilter[])
       .find((filter) => filter.kinds?.includes(30078));
-    expect(settingsFilter?.["#d"]).toEqual(["armada", ...[
+    expect(settingsFilter?.["#d"]).toEqual(["wizardry", ...[
       "metadata", "rail", "read-state", "read-state-recent", "notifications", "dms", "reactions",
     ].map((name) => settingsDTag(name as never))]);
     expect(settingsFilter?.limit).toBeUndefined();
@@ -602,7 +602,7 @@ describe("usePullPortableSetup", () => {
     clearSettingsRootMemory();
     const rootHex = "09".repeat(32);
     const keyring = settingsKeyring(rootHex);
-    const root = event(30078, "root", [["d", "armada"]], `sealed:${encodeSettingsRoot({ v: 1, root: rootHex })}`, 40);
+    const root = event(30078, "root", [["d", "wizardry"]], `sealed:${encodeSettingsRoot({ v: 1, root: rootHex })}`, 40);
     const metadata = keyring.settings.metadata;
     const derivedMetadata = {
       ...event(30078, "derived-metadata", [["d", metadata.d]], "", 50),

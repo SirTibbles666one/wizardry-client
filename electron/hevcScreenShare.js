@@ -273,7 +273,7 @@ async function detectHevcCapability({
   }
   const helperPath = resolveHelperPath({ env, resourcesPath, fsImpl });
   if (!helperPath) {
-    return unavailable("This Armada Linux package is missing an executable H.265 publisher.");
+    return unavailable("This Wizardry Linux package is missing an executable H.265 publisher.");
   }
   const ffmpegPath = resolveFfmpegPath({ env, fsImpl });
   if (!ffmpegPath) {
@@ -293,7 +293,7 @@ async function detectHevcCapability({
   }
   const accessible = nodes.filter((device) => isAccessibleDevice(device, fsImpl));
   if (accessible.length === 0) {
-    return unavailable("Armada cannot read and write any VA-API render device under /dev/dri.", {
+    return unavailable("Wizardry cannot read and write any VA-API render device under /dev/dri.", {
       helperPath,
       ffmpegPath,
     });
@@ -423,7 +423,7 @@ function normalizeConfig(value) {
     throw new TypeError("The H.265 publisher frame rate is invalid.");
   }
   if (!Number.isInteger(bitrate) || bitrate < MIN_BITRATE || bitrate > MAX_BITRATE) {
-    throw new TypeError("The H.265 publisher bitrate is outside Armada's allowed range.");
+    throw new TypeError("The H.265 publisher bitrate is outside Wizardry's allowed range.");
   }
   return { url, token, keyMaterial: value.keyMaterial, width, height, frameRate, bitrate };
 }

@@ -373,7 +373,7 @@ describe("useInitialSync", () => {
           kind: 30078,
           sig: "s",
           created_at: 30,
-          tags: [["d", "armada/metadata"]],
+          tags: [["d", "wizardry/metadata"]],
           content: "cipher",
         },
       ],
@@ -401,7 +401,7 @@ describe("useInitialSync", () => {
       kind: 30078,
       sig: "s",
       created_at: 30,
-      tags: [["d", "armada/metadata"]],
+      tags: [["d", "wizardry/metadata"]],
       content: "cipher",
     };
     respondByKind({
@@ -519,7 +519,7 @@ describe("useInitialSync", () => {
           kind: 30078,
           sig: "s",
           created_at: 41,
-          tags: [["d", "armada/metadata"]],
+          tags: [["d", "wizardry/metadata"]],
           content: "metadata-cipher",
         },
       ],
@@ -548,7 +548,7 @@ describe("useInitialSync", () => {
         kind: 30078,
         sig: "s",
         created_at: 41,
-        tags: [["d", "armada/metadata"]],
+        tags: [["d", "wizardry/metadata"]],
         content: "metadata-cipher",
       }],
     });

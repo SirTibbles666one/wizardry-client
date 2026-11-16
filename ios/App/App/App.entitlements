@@ -2,22 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<!-- Universal Links: the iOS counterpart of the Android verified App Links
-	     intent filter (AndroidManifest.xml), so invite/share links on
-	     armada.buzz open in the app instead of Safari. Verified against
-	     https://armada.buzz/.well-known/apple-app-site-association, which ships
-	     in public/.well-known/ and must name <TEAMID>.buzz.armada.app.
-
-	     Requires Associated Domains to be enabled on the App ID in the Apple
-	     developer portal; automatic signing then regenerates a profile carrying
-	     the capability. AppDelegate already proxies `continue userActivity` to
-	     Capacitor, and pathFromDeepLinkUrl() already forwards any https path to
-	     the router, so no app code is involved. -->
-	<key>com.apple.developer.associated-domains</key>
-	<array>
-		<string>applinks:armada.buzz</string>
-	</array>
-
 	<!-- ArmadaDB and the push config live in this App Group's container
 	     rather than in the app's own sandbox, because an extension can only
 	     see the group's — and the Notification Service Extension
@@ -34,7 +18,7 @@
 	     regenerates a profile carrying the capability. -->
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.buzz.armada.app</string>
+		<string>group.xyz.slothlee.wizardry</string>
 	</array>
 
 	<!-- APNs, the app's only route to a notification while it is closed: iOS

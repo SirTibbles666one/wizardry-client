@@ -36,11 +36,11 @@ describe("settingsRoot", () => {
   });
 
   it("carries only the d tag", () => {
-    expect(settingsRootTags()).toEqual([["d", "armada"]]);
+    expect(settingsRootTags()).toEqual([["d", "wizardry"]]);
   });
 
   it("picks the NIP-01 winner among the user's roots", () => {
-    const base = { kind: 30078, pubkey: "p", content: "", tags: [["d", "armada"]] };
+    const base = { kind: 30078, pubkey: "p", content: "", tags: [["d", "wizardry"]] };
     const a = { ...base, id: "b", created_at: 10 };
     const b = { ...base, id: "a", created_at: 10 };
     const forged = { ...base, id: "0", created_at: 99, pubkey: "q" };

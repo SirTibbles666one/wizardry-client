@@ -5,11 +5,11 @@ script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 electron_dir=$(dirname -- "$script_dir")
 repo_root=$(dirname -- "$electron_dir")
 release_dir="$electron_dir/release"
-manifest="$script_dir/buzz.armada.app.yml"
-staged_appimage="$release_dir/Armada.AppImage"
+manifest="$script_dir/xyz.slothlee.wizardry.yml"
+staged_appimage="$release_dir/Wizardry.AppImage"
 build_dir="$release_dir/flatpak-build"
 repo_dir="$release_dir/flatpak-repo"
-bundle="$release_dir/Armada-flatpak-$(uname -m).flatpak"
+bundle="$release_dir/Wizardry-flatpak-$(uname -m).flatpak"
 # No --repo-url and no GPG signing: the bundle is the only artifact, and it is
 # consumed by npkg (pkg.soapbox.pub), which publishes it into its OWN OSTree
 # repo as a new commit signed with its OWN key — so a signature or an embedded
@@ -34,14 +34,14 @@ fi
 
 appimage=${1:-}
 if [ -z "$appimage" ]; then
-  for candidate in "$release_dir"/Armada-*-linux-*.AppImage; do
+  for candidate in "$release_dir"/Wizardry-*-linux-*.AppImage; do
     if [ -f "$candidate" ]; then
       appimage=$candidate
     fi
   done
 fi
 if [ -z "$appimage" ] || [ ! -f "$appimage" ]; then
-  echo "Usage: ./flatpak/build.sh path/to/Armada-*-linux-*.AppImage" >&2
+  echo "Usage: ./flatpak/build.sh path/to/Wizardry-*-linux-*.AppImage" >&2
   echo "Build one first with: npm run dist:linux" >&2
   exit 1
 fi
@@ -63,20 +63,20 @@ fi
 # otherwise a fast local build can restore a cached /app/armada from a previous
 # payload while still exporting a brand-new OSTree commit.
 appimage_sha=$(sha256sum "$staged_appimage" | cut -d ' ' -f1)
-printf '%s\n' "$appimage_sha" > "$release_dir/Armada.AppImage.sha256"
+printf '%s\n' "$appimage_sha" > "$release_dir/Wizardry.AppImage.sha256"
 
 # The metainfo the manifest installs is staged here with a <release> for this
 # version, so GNOME Software and `flatpak search` show it. The version comes
 # from package.json, which release.yml sets from the tag; a local build at
 # 0.0.0 lists no release rather than a wrong one.
 version=$(sed -n 's/^  "version": "\([^"]*\)",$/\1/p' "$electron_dir/package.json")
-staged_metainfo="$release_dir/buzz.armada.app.metainfo.xml"
+staged_metainfo="$release_dir/xyz.slothlee.wizardry.metainfo.xml"
 if [ -n "$version" ] && [ "$version" != 0.0.0 ]; then
   release_date=$(git -C "$repo_root" log -1 --format=%cs 2>/dev/null || date -u +%F)
   sed "s|^</component>|  <releases>\n    <release version=\"$version\" date=\"$release_date\"/>\n  </releases>\n</component>|" \
-    "$script_dir/buzz.armada.app.metainfo.xml" > "$staged_metainfo"
+    "$script_dir/xyz.slothlee.wizardry.metainfo.xml" > "$staged_metainfo"
 else
-  cp "$script_dir/buzz.armada.app.metainfo.xml" "$staged_metainfo"
+  cp "$script_dir/xyz.slothlee.wizardry.metainfo.xml" "$staged_metainfo"
 fi
 
 # Recorded in the bundle, so whoever installs it, directly or through npkg's
@@ -88,7 +88,7 @@ case "$builder" in
   system)
     flatpak-builder "$@" "$build_dir" "$manifest"
     flatpak build-update-repo "$repo_dir"
-    flatpak build-bundle --runtime-repo="$runtime_repo" "$repo_dir" "$bundle" buzz.armada.app stable
+    flatpak build-bundle --runtime-repo="$runtime_repo" "$repo_dir" "$bundle" xyz.slothlee.wizardry stable
     ;;
   flatpak-user)
     flatpak run --user --filesystem="$repo_root" --command=sh \
@@ -103,7 +103,7 @@ case "$builder" in
         flatpak-builder "$@" "$ARMADA_FLATPAK_BUILD_DIR" "$ARMADA_FLATPAK_MANIFEST" &
         wait "$!"
         flatpak build-update-repo "$ARMADA_FLATPAK_REPO_DIR"
-        flatpak build-bundle --runtime-repo="$ARMADA_FLATPAK_RUNTIME_REPO" "$ARMADA_FLATPAK_REPO_DIR" "$ARMADA_FLATPAK_BUNDLE" buzz.armada.app stable
+        flatpak build-bundle --runtime-repo="$ARMADA_FLATPAK_RUNTIME_REPO" "$ARMADA_FLATPAK_REPO_DIR" "$ARMADA_FLATPAK_BUNDLE" xyz.slothlee.wizardry stable
       ' sh "$@"
     ;;
   flatpak-system)
@@ -119,7 +119,7 @@ case "$builder" in
         flatpak-builder "$@" "$ARMADA_FLATPAK_BUILD_DIR" "$ARMADA_FLATPAK_MANIFEST" &
         wait "$!"
         flatpak build-update-repo "$ARMADA_FLATPAK_REPO_DIR"
-        flatpak build-bundle --runtime-repo="$ARMADA_FLATPAK_RUNTIME_REPO" "$ARMADA_FLATPAK_REPO_DIR" "$ARMADA_FLATPAK_BUNDLE" buzz.armada.app stable
+        flatpak build-bundle --runtime-repo="$ARMADA_FLATPAK_RUNTIME_REPO" "$ARMADA_FLATPAK_REPO_DIR" "$ARMADA_FLATPAK_BUNDLE" xyz.slothlee.wizardry stable
       ' sh "$@"
     ;;
 esac

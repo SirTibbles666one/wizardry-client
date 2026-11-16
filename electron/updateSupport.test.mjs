@@ -49,7 +49,7 @@ describe("desktop self-update ownership", () => {
     expect(
       supported({
         platform: "linux",
-        env: { APPIMAGE: "/opt/Armada.AppImage", FLATPAK_ID: "buzz.armada.app" },
+        env: { APPIMAGE: "/opt/Armada.AppImage", FLATPAK_ID: "xyz.slothlee.wizardry" },
       }),
     ).toBe(false);
     expect(supported({ platform: "linux", env: {} })).toBe(false);

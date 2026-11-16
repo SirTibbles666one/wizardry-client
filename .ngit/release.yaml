@@ -6,7 +6,7 @@
 schema: 1
 # The application zsp created and Zapstore lists, so Zapstore's installs keep
 # updating from these releases.
-application: buzz.armada.app
+application: xyz.slothlee.wizardry
 # Every release of an application has to come from the key that published the
 # first, so publishing fails before anything is uploaded under another one.
 pubkey: npub10qdp2fc9ta6vraczxrcs8prqnv69fru2k6s2dj48gqjcylulmtjsg9arpj

@@ -64,13 +64,13 @@ async function rootEvent(root: string, createdAt: number): Promise<NostrEvent> {
   return finalizeEvent({
     kind: 30078,
     content: await signer.nip44.encrypt(PUBKEY, encodeSettingsRoot({ v: 1, root })),
-    tags: [["d", "armada"]],
+    tags: [["d", "wizardry"]],
     created_at: createdAt,
   }, SK);
 }
 
 function legacyMetadata(): NostrEvent {
-  return finalizeEvent({ kind: 30078, content: "x", tags: [["d", "armada/metadata"]], created_at: 1 }, SK);
+  return finalizeEvent({ kind: 30078, content: "x", tags: [["d", "wizardry/metadata"]], created_at: 1 }, SK);
 }
 
 function ensure(opts: { explicit?: boolean; onCreated?: () => Promise<void> } = {}) {
@@ -122,7 +122,7 @@ describe("settings root lifecycle", () => {
     expect(onCreated).toHaveBeenCalledOnce();
     expect(published).toHaveLength(1);
     const [root] = published;
-    expect(root!.tags).toEqual([["d", "armada"]]);
+    expect(root!.tags).toEqual([["d", "wizardry"]]);
     expect((await signer.nip44.decrypt(PUBKEY, root!.content)).length).toBe(ROOT_PLAINTEXT_BYTES);
 
     const decrypt = vi.spyOn(signer.nip44, "decrypt");

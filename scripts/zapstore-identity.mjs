@@ -26,7 +26,7 @@
  * an unrelated certificate to the release key.
  *
  * Usage:
- *   node scripts/zapstore-identity.mjs --keystore upload.p12 [--alias upload] [--app buzz.armada.app]
+ *   node scripts/zapstore-identity.mjs --keystore upload.p12 [--alias upload] [--app xyz.slothlee.wizardry]
  *   node scripts/zapstore-identity.mjs --keystore upload.p12 --dry-run --pubkey <hex>
  *
  * Environment:
@@ -64,7 +64,7 @@ const QUERY_WAIT_MS = 10_000;
 const PUBLISH_TIMEOUT_MS = 30_000;
 
 function parseArgs(args) {
-  const opts = { alias: undefined, app: 'buzz.armada.app' };
+  const opts = { alias: undefined, app: 'xyz.slothlee.wizardry' };
   for (let i = 0; i < args.length; i++) {
     const value = args[i + 1];
     if (args[i] === '--keystore') { opts.keystore = value; i++; }

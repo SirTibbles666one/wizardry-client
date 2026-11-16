@@ -111,7 +111,7 @@
 		  `ios/ArmadaDB/Sources/CArmadaSQLite` (26 call sites in its unix VFS)
 		  and from `@capacitor/filesystem`'s `stat()`. C617.1 is the container
 		  reason, and it is the accurate one: the only file ArmadaDB opens is
-		  `armada.db` in the `group.buzz.armada.app` App Group container, and
+		  `armada.db` in the `group.xyz.slothlee.wizardry` App Group container, and
 		  no timestamp is ever shown to the user or sent off-device.
 		-->
 		<dict>

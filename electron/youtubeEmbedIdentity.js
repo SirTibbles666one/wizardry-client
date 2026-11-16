@@ -6,7 +6,7 @@
 // This is deliberately NOT Armada's hosted-web origin: browser deployments
 // (including self-hosted ones and ARMADA_DEV_URL) send their own HTTP(S)
 // Referer, which this policy preserves unchanged.
-const PACKAGED_APP_REFERRER = "https://buzz.armada.app/";
+const PACKAGED_APP_REFERRER = "https://xyz.slothlee.wizardry/";
 
 const YOUTUBE_EMBED_HOSTS = new Set([
   "youtube-nocookie.com",

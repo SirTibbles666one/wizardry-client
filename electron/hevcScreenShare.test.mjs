@@ -145,7 +145,7 @@ describe("Linux H.265 capability detection", () => {
   it("retains the legacy Flatpak helper fallback", () => {
     const fsImpl = fakeFs({ files: [HELPER_PATH] });
     expect(resolveHelperPath({
-      env: { FLATPAK_ID: "buzz.armada.app" },
+      env: { FLATPAK_ID: "xyz.slothlee.wizardry" },
       resourcesPath: "/missing/resources",
       fsImpl,
     })).toBe(HELPER_PATH);

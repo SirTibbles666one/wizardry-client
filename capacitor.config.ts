@@ -4,8 +4,8 @@ import type { CapacitorConfig } from '@capacitor/cli';
 import { KeyboardResize } from '@capacitor/keyboard';
 
 const config: CapacitorConfig = {
-  appId: 'buzz.armada.app',
-  appName: 'Armada',
+  appId: 'xyz.slothlee.wizardry',
+  appName: 'Wizardry',
   webDir: 'dist',
   // No Capacitor bridge logging, in debug builds too (the default logs there).
   // It writes every plugin call AND its full result to logcat and routes every

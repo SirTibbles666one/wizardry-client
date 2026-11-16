@@ -134,9 +134,9 @@ describe("package repositories (pkg.soapbox.pub / npkg)", () => {
 describe("the CI workflow that publishes these files", () => {
   const workflow = readFileSync(resolve(process.cwd(), ".ngit/act/workflows/release.yml"), "utf8");
 
-  /** Every `Armada-...` artifact name the workflow stages for the release. */
+  /** Every `Wizardry-...` artifact name the workflow stages for the release. */
   const staged = [...new Set(
-    [...workflow.matchAll(/\bArmada-\$(?:TAG|\{TAG\}|VERSION_NAME|\{VERSION_NAME\})[\w.$-]*\.\w+/g)]
+    [...workflow.matchAll(/\bWizardry-\$(?:TAG|\{TAG\}|VERSION_NAME|\{VERSION_NAME\})[\w.$-]*\.\w+/g)]
       .map((match) => match[0].replace(/\$\{?(?:TAG|VERSION_NAME)\}?/g, "v1.2.3")),
   )];
 

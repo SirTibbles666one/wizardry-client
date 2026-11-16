@@ -1,6 +1,6 @@
 name: Deploy nsite
 
-# Builds the web client and publishes it as the named nsite "armada" (NIP-5A
+# Builds the web client and publishes it as the named nsite "wizardry" (NIP-5A
 # kind 35128) described by .nsite/config.json: the files become Blossom blobs,
 # the manifest mapping path -> sha256 goes to relays, and a gateway
 # (nsite.lol, nosto.re, …) glues the two together. Same tool and the same
@@ -225,7 +225,7 @@ jobs:
           # and their own PID namespace, so a concurrent job cannot read it.
           scripts/nsite-deploy.sh dist
 
-      # The same build again as the named site `armada-stable`, but only when
+      # The same build again as the named site `wizardry-rel`, but only when
       # this push IS a stable release (the release skill's "Release vX.Y.Z"
       # commit; a prerelease carries a "-" and is skipped). Desktop shells on
       # the "Releases only" channel (Settings › Desktop, electron/webUpdateChannel.js)
@@ -246,4 +246,4 @@ jobs:
             echo "not a stable release commit ($subject); the release track is unchanged"
             exit 0
           fi
-          scripts/nsite-deploy.sh dist --name armada-stable --no-config --fallback /index.html
+          scripts/nsite-deploy.sh dist --name wizardry-rel --no-config --fallback /index.html

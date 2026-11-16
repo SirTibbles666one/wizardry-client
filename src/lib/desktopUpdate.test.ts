@@ -61,7 +61,7 @@ function assetEvent(secretKey: Uint8Array, version: string, spec: AssetSpec, cre
     created_at: createdAt,
     content: "",
     tags: [
-      ["i", "buzz.armada.app"],
+      ["i", "xyz.slothlee.wizardry"],
       ["m", spec.m ?? "application/octet-stream"],
       ...(x ? [["x", x]] : []),
       ["version", version],
@@ -80,7 +80,7 @@ function published(
   {
     version,
     channel = "main",
-    appId = "buzz.armada.app",
+    appId = "xyz.slothlee.wizardry",
     createdAt = 1_700_000_000,
     assets = allAssets(version),
   }: { version: string; channel?: string; appId?: string; createdAt?: number; assets?: AssetSpec[] },
@@ -354,7 +354,7 @@ describe("web site manifests", () => {
     secretKey: Uint8Array,
     {
       createdAt = 1_800_000_000,
-      site = "armada",
+      site = "wizardry",
       paths = [["/index.html", INDEX], ["/assets/app.js", "d".repeat(64)]] as string[][],
       servers = ["https://blossom.one", "https://blossom.two/"],
     } = {},
@@ -402,12 +402,12 @@ describe("web site manifests", () => {
   it("knows which track a site is on, and holds a track request to it", () => {
     const key = generateSecretKey();
     const authors = [getPublicKey(key)];
-    expect(parseWebSite(manifest(key), { authors })?.siteId).toBe("armada");
-    const release = manifest(key, { site: "armada-stable" });
+    expect(parseWebSite(manifest(key), { authors })?.siteId).toBe("wizardry");
+    const release = manifest(key, { site: "wizardry-rel" });
     // A stored manifest is re-verified without a track: either is the shell's own.
-    expect(parseWebSite(release, { authors })?.siteId).toBe("armada-stable");
-    expect(parseWebSite(release, { authors, siteId: "armada" })).toBeUndefined();
-    expect(parseWebSite(manifest(key), { authors, siteId: "armada-stable" })).toBeUndefined();
+    expect(parseWebSite(release, { authors })?.siteId).toBe("wizardry-rel");
+    expect(parseWebSite(release, { authors, siteId: "wizardry" })).toBeUndefined();
+    expect(parseWebSite(manifest(key), { authors, siteId: "wizardry-rel" })).toBeUndefined();
   });
 
   it("selects the newest acceptable manifest, past a newer forgery", () => {
@@ -463,7 +463,7 @@ describe("web site manifests", () => {
     expect(resolved?.id).toBe(site.id);
     expect(resolved?.servers).toEqual(["https://blossom.one", "https://list.example", "https://fallback.example"]);
     expect(requests).toEqual([
-      { kinds: [35128], authors: [pubkey], "#d": ["armada"] },
+      { kinds: [35128], authors: [pubkey], "#d": ["wizardry"] },
       { kinds: [10063], authors: [pubkey] },
     ]);
   });

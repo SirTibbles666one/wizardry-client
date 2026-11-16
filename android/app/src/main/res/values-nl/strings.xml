@@ -40,7 +40,7 @@
     <string name="notif_not_sent">⚠️ Niet verzonden: %1$s</string>
     <string name="notif_connected">Verbonden voor directe meldingen</string>
     <string name="channel_service_name">Achtergrondverbinding</string>
-    <string name="channel_service_description">Houdt Armada verbonden voor directe meldingen</string>
+    <string name="channel_service_description">Houdt Wizardry verbonden voor directe meldingen</string>
     <string name="channel_messages_name">Meldingen</string>
     <string name="channel_messages_description">Vermeldingen, antwoorden, reacties en privéberichten</string>
     <string name="channel_calls_name">Inkomende oproepen</string>

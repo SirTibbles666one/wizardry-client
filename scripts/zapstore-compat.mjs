@@ -32,7 +32,7 @@
  * seen.
  *
  * Usage:
- *   node scripts/zapstore-compat.mjs --version 1.2.3 [--app buzz.armada.app]
+ *   node scripts/zapstore-compat.mjs --version 1.2.3 [--app xyz.slothlee.wizardry]
  *   node scripts/zapstore-compat.mjs --version 1.2.3 --dry-run --pubkey <hex>
  *
  *   --dry-run prints the events it would sign and publishes nothing.
@@ -69,7 +69,7 @@ const QUERY_WAIT_MS = 10_000;
 const PUBLISH_TIMEOUT_MS = 30_000;
 
 function parseArgs(args) {
-  const opts = { app: 'buzz.armada.app' };
+  const opts = { app: 'xyz.slothlee.wizardry' };
   for (let i = 0; i < args.length; i++) {
     const value = args[i + 1];
     if (args[i] === '--version') { opts.version = value?.replace(/^v/, ''); i++; }
