@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { toast } from "@/hooks/useToast";
 import { common, FormattedMessage, useIntl } from "@/i18n";
+import { clearKeyBackupPending, markKeyBackupPending } from "@/lib/keyBackup";
 import { APP_NAME } from "@/lib/platform";
 
 import { accountErrorText, MIN_PASSWORD_LENGTH } from "./accountText";
@@ -103,6 +104,7 @@ export function AccountServerSettings() {
         const sk = localSk();
         if (!sk) throw new Error("no local key");
         const code = await client.storeKey(opened, { sk });
+        clearKeyBackupPending(user.pubkey);
         await client.linkKey(token, (template) => user.signer.signEvent(template)).catch(() => undefined);
         markAccountKeyDone();
         setRecoveryCode(code);
@@ -114,6 +116,8 @@ export function AccountServerSettings() {
         toast({ title: intl.formatMessage({ id: "accountServerSettings.passwordChanged", defaultMessage: "Password changed. Other devices have been signed out." }) });
       } else if (action === "remove") {
         await client.forgetKey(token);
+        // This device holds the only copy again.
+        if (localSk()) markKeyBackupPending(user.pubkey);
         toast({ title: intl.formatMessage({ id: "accountServerSettings.keyRemoved", defaultMessage: "Stored key removed. This device still has it." }) });
       } else {
         // Take the key's hash out of the member list too; without a signature it simply stays until it is unlinked.

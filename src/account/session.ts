@@ -91,7 +91,7 @@ export function setAccountSession(session: OpenedSession): void {
  * The gate is otherwise the only front door, and it has no way through for someone who already has
  * a key and no account — which would lock out every existing key-only user the day accounts ship.
  */
-export function useKeyInstead(): boolean {
+export function keyInsteadChosen(): boolean {
   try {
     return localStorage.getItem(KEY_ONLY_KEY) === "1";
   } catch {

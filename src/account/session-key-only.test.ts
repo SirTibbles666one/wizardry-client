@@ -23,23 +23,23 @@ const session = async () => {
   return mod;
 };
 
-describe("useKeyInstead", () => {
+describe("keyInsteadChosen", () => {
   it("is off until the device asks for it", async () => {
     const s = await session();
-    expect(s.useKeyInstead()).toBe(false);
+    expect(s.keyInsteadChosen()).toBe(false);
   });
 
   it("stays on once chosen, so the gate does not come back on the next visit", async () => {
     const s = await session();
     s.skipAccountGate();
-    expect(s.useKeyInstead()).toBe(true);
+    expect(s.keyInsteadChosen()).toBe(true);
   });
 
   it("is cleared by an account sign-in, because that answers the question", async () => {
     const s = await session();
     s.skipAccountGate();
     s.setAccountSession({ token: "a".repeat(64) } as never);
-    expect(s.useKeyInstead()).toBe(false);
+    expect(s.keyInsteadChosen()).toBe(false);
   });
 
   it("treats storage that throws as no choice rather than an error", async () => {
@@ -56,6 +56,6 @@ describe("useKeyInstead", () => {
     });
     const s = await session();
     expect(() => s.skipAccountGate()).not.toThrow();
-    expect(s.useKeyInstead()).toBe(false);
+    expect(s.keyInsteadChosen()).toBe(false);
   });
 });

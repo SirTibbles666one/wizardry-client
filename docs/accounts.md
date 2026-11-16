@@ -168,7 +168,10 @@ Done: the gate, sign-up with an emailed code, sign-in on a new device, the recov
 forgotten password (with and without the recovery code), sign-out, and Settings › Account, in all
 eight languages.
 
-Next: the wording that still assumes there is no account ("There's no Wizardry account to ban…").
+Also done: the copy that assumed there is no account (account standing, the support page, the
+landing page) has an account version when `ACCOUNT_SERVER` is set, and a key locked into the vault
+no longer counts as "only on this device" for the backup reminder and the logout warning. Removing
+the stored key turns that reminder back on.
 
 ## 2. Deployment
 

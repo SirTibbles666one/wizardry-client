@@ -2,6 +2,7 @@ import { HardDriveDownload } from "lucide-react";
 import { memo, useRef } from "react";
 import { Link } from "react-router-dom";
 
+import { accountsEnabled } from "@/account/session";
 import { ArmadaCrest, ArmadaCrestKeyframes } from "@/components/brand/ArmadaCrest";
 import { BrandMark } from "@/components/brand/BrandMark";
 import { RelayLed } from "@/components/RelayLed";
@@ -175,10 +176,17 @@ export const LandingPage = memo(function LandingPage({
             <FormattedMessage id="landingPage.closerTitle" defaultMessage="Everything, on every deck" />
           </h2>
           <p className="mt-3 text-pretty text-sm text-muted-foreground sm:text-base">
-            <FormattedMessage
-              id="landingPage.closerBody"
-              defaultMessage="Desktop, phone or browser. Your key is your account on all of them."
-            />
+            {accountsEnabled() ? (
+              <FormattedMessage
+                id="landingPage.closerBodyWithAccount"
+                defaultMessage="Desktop, phone or browser. Sign in with your email on any of them, and your key comes with you."
+              />
+            ) : (
+              <FormattedMessage
+                id="landingPage.closerBody"
+                defaultMessage="Desktop, phone or browser. Your key is your account on all of them."
+              />
+            )}
           </p>
 
           <div className="mt-10 w-full">

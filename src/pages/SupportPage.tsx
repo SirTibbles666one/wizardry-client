@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import { accountsEnabled } from "@/account/session";
 import { Button } from "@/components/ui/button";
 import { useBackOrHome } from "@/hooks/useBackOrHome";
 import { FormattedMessage, common, useIntl } from "@/i18n";
@@ -95,10 +96,17 @@ export function SupportPage() {
               <FormattedMessage id="supportPage.account.heading" defaultMessage="Your Account" />
             </h2>
             <p>
-              <FormattedMessage
-                id="supportPage.account.body"
-                defaultMessage="Your account is a secret key that only you hold. Nobody, including us, can recover it if it is lost, so back it up from Settings › Keys. To delete your account, use Settings › Delete account."
-              />
+              {accountsEnabled() ? (
+                <FormattedMessage
+                  id="supportPage.account.bodyWithAccount"
+                  defaultMessage="You sign in with an email and password. Behind them is a secret key that only you can open: we keep a locked copy we can't read. If you forget your password, your recovery code gets you back in; without it, we can keep your email account but not your key. Manage both in Settings › Account."
+                />
+              ) : (
+                <FormattedMessage
+                  id="supportPage.account.body"
+                  defaultMessage="Your account is a secret key that only you hold. Nobody, including us, can recover it if it is lost, so back it up from Settings › Keys. To delete your account, use Settings › Delete account."
+                />
+              )}
             </p>
           </section>
 
