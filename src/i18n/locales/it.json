@@ -4359,7 +4359,7 @@
   "supportPage.account.body": "Il tuo account è una chiave segreta che possiedi solo tu. Nessuno, nemmeno noi, può recuperarla se va persa, quindi fanne un backup da Impostazioni › Chiavi. Per eliminare il tuo account, usa Impostazioni › Elimina account.",
   "supportPage.account.bodyWithAccount": "Accedi con email e password. Dietro c'è una chiave segreta che solo tu puoi aprire: ne conserviamo una copia chiusa che non possiamo leggere. Se dimentichi la password, il codice di recupero ti fa rientrare; senza, possiamo mantenere il tuo account email ma non la tua chiave. Gestisci entrambi in Impostazioni › Account.",
   "supportPage.account.heading": "Il tuo account",
-  "supportPage.contact.body": "Per domande, problemi, feedback o per segnalare attività inappropriate, scrivi a {mail}. {appName} è realizzato da Soapbox Technology LLC.",
+  "supportPage.contact.bodyBuiltOn": "Per domande, problemi, feedback o per segnalare attività inappropriate, scrivi a {mail}. {appName} è basato su Armada, un'app open source di Soapbox.",
   "supportPage.contact.heading": "Contattaci",
   "supportPage.contact.reporting": "Quando segnali un abuso, includi il link al profilo della persona (npub) e, se puoi, uno screenshot o un link al messaggio.",
   "supportPage.policies.body": "Leggi i <terms>Termini di servizio</terms> e l’<privacy>Informativa sulla privacy</privacy>.",

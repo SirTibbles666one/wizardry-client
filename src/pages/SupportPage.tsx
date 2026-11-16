@@ -36,8 +36,8 @@ export function SupportPage() {
             </h2>
             <p>
               <FormattedMessage
-                id="supportPage.contact.body"
-                defaultMessage="For questions, problems, feedback, or to report inappropriate activity, email {mail}. {appName} is made by Soapbox Technology LLC."
+                id="supportPage.contact.bodyBuiltOn"
+                defaultMessage="For questions, problems, feedback, or to report inappropriate activity, email {mail}. {appName} is built on Armada, an open-source app by Soapbox."
                 values={{ mail, appName: APP_NAME }}
               />
             </p>

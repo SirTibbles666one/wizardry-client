@@ -12,7 +12,7 @@ import { config } from "@/lib/env";
 
 /** The hosted web client's origin, used as the base for native-built links. */
 export const PUBLIC_WEB_ORIGIN: string =
-  config("PUBLIC_WEB_ORIGIN") || "https://armada.buzz";
+  config("PUBLIC_WEB_ORIGIN") || "https://wizardry.slothlee.xyz";
 
 /** Page origin on the web; the public deployment on native and desktop. */
 export function shareOrigin(): string {

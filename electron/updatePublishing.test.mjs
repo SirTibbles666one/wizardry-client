@@ -29,7 +29,7 @@ describe("desktop update publication", () => {
     expect(builder.publish).toEqual({
       provider: "generic",
       publishAutoUpdate: false,
-      url: "https://armada.buzz/downloads/desktop",
+      url: "https://wizardry.slothlee.xyz/downloads/desktop",
     });
   });
 

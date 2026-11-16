@@ -1115,7 +1115,7 @@ function announceWebUpdate() {
   }
 }
 
-const DOWNLOADS_URL = "https://armada.buzz/downloads";
+const DOWNLOADS_URL = "https://wizardry.slothlee.xyz/downloads";
 
 /** The web track's outcome, for a build with no shell updater. */
 async function reportWebUpdate(result, manual) {

@@ -4359,7 +4359,7 @@
   "supportPage.account.body": "Dein Konto ist ein geheimer Schlüssel, den nur du besitzt. Niemand, auch wir nicht, kann ihn wiederherstellen, wenn er verloren geht – sichere ihn also unter Einstellungen › Schlüssel. Um dein Konto zu löschen, nutze Einstellungen › Konto löschen.",
   "supportPage.account.bodyWithAccount": "Du meldest dich mit E-Mail und Passwort an. Dahinter steht ein geheimer Schlüssel, den nur du öffnen kannst: Wir bewahren eine verschlossene Kopie auf, die wir nicht lesen können. Wenn du dein Passwort vergisst, bringt dich dein Wiederherstellungscode zurück; ohne ihn können wir dein E-Mail-Konto behalten, aber nicht deinen Schlüssel. Beides verwaltest du unter Einstellungen › Konto.",
   "supportPage.account.heading": "Dein Konto",
-  "supportPage.contact.body": "Bei Fragen, Problemen, Feedback oder um unangemessene Aktivitäten zu melden, schreib eine E-Mail an {mail}. {appName} wird von Soapbox Technology LLC entwickelt.",
+  "supportPage.contact.bodyBuiltOn": "Bei Fragen, Problemen, Feedback oder um unangemessene Aktivitäten zu melden, schreib eine E-Mail an {mail}. {appName} basiert auf Armada, einer Open-Source-App von Soapbox.",
   "supportPage.contact.heading": "Kontakt",
   "supportPage.contact.reporting": "Wenn du Missbrauch meldest, füge den Profillink der Person (npub) und, wenn möglich, einen Screenshot oder einen Link zur Nachricht bei.",
   "supportPage.policies.body": "Lies die <terms>Nutzungsbedingungen</terms> und die <privacy>Datenschutzerklärung</privacy>.",

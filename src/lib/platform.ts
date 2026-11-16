@@ -99,7 +99,7 @@ export function routeParamToRelay(param: string): string | undefined {
 export const APP_NAME: string = config("APP_NAME") || "Wizardry";
 
 /** Where users reach the developers, including to report inappropriate activity (App Store 1.2). */
-export const SUPPORT_EMAIL = "support@soapbox.pub";
+export const SUPPORT_EMAIL = "support@slothlee.xyz";
 
 /**
  * Fork identifier namespacing the NIP-78 settings `d` tags (see

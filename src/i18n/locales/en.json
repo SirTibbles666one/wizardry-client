@@ -4359,7 +4359,7 @@
   "supportPage.account.body": "Your account is a secret key that only you hold. Nobody, including us, can recover it if it is lost, so back it up from Settings › Keys. To delete your account, use Settings › Delete account.",
   "supportPage.account.bodyWithAccount": "You sign in with an email and password. Behind them is a secret key that only you can open: we keep a locked copy we can't read. If you forget your password, your recovery code gets you back in; without it, we can keep your email account but not your key. Manage both in Settings › Account.",
   "supportPage.account.heading": "Your Account",
-  "supportPage.contact.body": "For questions, problems, feedback, or to report inappropriate activity, email {mail}. {appName} is made by Soapbox Technology LLC.",
+  "supportPage.contact.bodyBuiltOn": "For questions, problems, feedback, or to report inappropriate activity, email {mail}. {appName} is built on Armada, an open-source app by Soapbox.",
   "supportPage.contact.heading": "Contact Us",
   "supportPage.contact.reporting": "When reporting abuse, include the person's profile link (npub) and, if you can, a screenshot or a link to the message.",
   "supportPage.policies.body": "Read the <terms>Terms of Service</terms> and the <privacy>Privacy Policy</privacy>.",

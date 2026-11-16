@@ -4359,7 +4359,7 @@
   "supportPage.account.body": "Sua conta é uma chave secreta que só você tem. Ninguém, nem nós, consegue recuperá-la se ela for perdida, então faça backup dela em Configurações › Chaves. Para excluir sua conta, use Configurações › Excluir conta.",
   "supportPage.account.bodyWithAccount": "Você entra com um e-mail e uma senha. Por trás deles há uma chave secreta que só você pode abrir: guardamos uma cópia trancada que não conseguimos ler. Se esquecer a senha, seu código de recuperação traz você de volta; sem ele, podemos manter sua conta de e-mail, mas não sua chave. Gerencie os dois em Configurações › Conta.",
   "supportPage.account.heading": "Sua conta",
-  "supportPage.contact.body": "Para dúvidas, problemas, feedback ou para denunciar atividade inadequada, envie um e-mail para {mail}. O {appName} é feito pela Soapbox Technology LLC.",
+  "supportPage.contact.bodyBuiltOn": "Para dúvidas, problemas, feedback ou para denunciar atividade inadequada, envie um e-mail para {mail}. O {appName} é baseado no Armada, um app de código aberto da Soapbox.",
   "supportPage.contact.heading": "Fale conosco",
   "supportPage.contact.reporting": "Ao denunciar abuso, inclua o link do perfil da pessoa (npub) e, se puder, uma captura de tela ou um link para a mensagem.",
   "supportPage.policies.body": "Leia os <terms>Termos de Serviço</terms> e a <privacy>Política de Privacidade</privacy>.",

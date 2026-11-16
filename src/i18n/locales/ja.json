@@ -4359,7 +4359,7 @@
   "supportPage.account.body": "あなたのアカウントは、あなただけが持つ秘密鍵です。紛失した場合、私たちを含め誰も復元できないため、設定 › 鍵 からバックアップしてください。アカウントを削除するには、設定 › アカウントを削除 を使用します。",
   "supportPage.account.bodyWithAccount": "メールアドレスとパスワードでサインインします。その奥には、あなただけが開ける秘密鍵があります。私たちは読めない状態で鍵のコピーを保管しています。パスワードを忘れた場合は、復元コードで戻れます。復元コードがない場合、メールアカウントは残せますが鍵は失われます。どちらも 設定 › アカウント で管理できます。",
   "supportPage.account.heading": "あなたのアカウント",
-  "supportPage.contact.body": "ご質問、問題、フィードバック、不適切な行為の報告は {mail} までメールでお寄せください。{appName} は Soapbox Technology LLC が開発しています。",
+  "supportPage.contact.bodyBuiltOn": "ご質問、問題、フィードバック、不適切な行為の報告は {mail} までメールでお寄せください。{appName} は Soapbox のオープンソースアプリ Armada をもとに作られています。",
   "supportPage.contact.heading": "お問い合わせ",
   "supportPage.contact.reporting": "迷惑行為を報告する際は、相手のプロフィールリンク（npub）と、可能であればスクリーンショットまたはメッセージへのリンクを添えてください。",
   "supportPage.policies.body": "<terms>利用規約</terms>と<privacy>プライバシーポリシー</privacy>をお読みください。",

@@ -203,9 +203,10 @@ The mark, the copy, the hosted site and the app identity say Wizardry. Still Arm
   the no-JavaScript page offer no downloads. The store and package listings in `downloads.ts` are
   still upstream's; replace them with Wizardry's before setting a release signer, and restore the
   skipped `<noscript>` test in `downloads.test.ts`.
-- **Links and services:** `armada.buzz` appears in share links, invite previews, the AV broker
-  default, the push gateway and the release feed. Each needs a Wizardry home or a deliberate
-  "we use the public one".
+- **Done, links and services:** links are built on `https://wizardry.slothlee.xyz`, support and
+  security mail go to `support@slothlee.xyz`, the privacy policy describes the email accounts and
+  who runs each default service, and the voice broker and push gateway stay on the public ones on
+  purpose. `docs/hosting.md` has the table and the steps to publish the web app.
 - **Component names** (`ArmadaCrest`, `ArmadaDB`, on-disk `concord2-*` keys) stay as they are, the
   way the repo's own notes say on-disk identifiers must: nobody sees them, and renaming loses data.
 - **Licence:** it is AGPL-3.0. Keep upstream's notices, publish our source (the repo is public),

@@ -85,7 +85,7 @@ afterEach(cleanup);
 
 const NPUB = "npub1q3sle0kvfsehgsuexttt3ugjd8xdklxfwwkh559wxckmzddywnws6cd26p";
 const MSG = "9eb8fee9fc77aad33f7957bee461417b882b565958ada1f8f1d3bdccfe1e7da8";
-const DM_URL = `https://armada.buzz/dm/${NPUB}/m/${MSG}`;
+const DM_URL = `https://wizardry.slothlee.xyz/dm/${NPUB}/m/${MSG}`;
 
 let nextId = 0;
 
@@ -143,7 +143,7 @@ describe("ChatContent own-origin links", () => {
 
   it("names the community and channel a member can already see", () => {
     const { container } = renderContent(
-      `https://armada.buzz/c/${MEMBER_COMMUNITY}/general`,
+      `https://wizardry.slothlee.xyz/c/${MEMBER_COMMUNITY}/general`,
     );
     expect(container.textContent).toContain("Community channel");
     // The folded metadata name, not the bundle's join-time preview.
@@ -153,7 +153,7 @@ describe("ChatContent own-origin links", () => {
 
   it("shows a member the linked message out of the community's own store", async () => {
     const { container, findByText } = renderContent(
-      `https://armada.buzz/c/${MEMBER_COMMUNITY}/general/m/${CACHED_MSG}`,
+      `https://wizardry.slothlee.xyz/c/${MEMBER_COMMUNITY}/general/m/${CACHED_MSG}`,
     );
     expect(container.textContent).toContain("Community message");
     expect(await findByText("hello from the community")).toBeInTheDocument();
@@ -161,7 +161,7 @@ describe("ChatContent own-origin links", () => {
 
   it("tells a non-member they aren't one, and names nothing else", () => {
     const { container } = renderContent(
-      `https://armada.buzz/c/${STRANGER_COMMUNITY}/general/m/${CACHED_MSG}`,
+      `https://wizardry.slothlee.xyz/c/${STRANGER_COMMUNITY}/general/m/${CACHED_MSG}`,
     );
     expect(container.textContent).toContain("not a member of this community");
     // Nothing about the community itself — not a name, not a channel, not a body.
@@ -171,9 +171,9 @@ describe("ChatContent own-origin links", () => {
   });
 
   it("reads a bare profile link as a mention rather than a link", () => {
-    const { container } = renderContent(`hi ${`https://armada.buzz/${NPUB}`} there`);
+    const { container } = renderContent(`hi ${`https://wizardry.slothlee.xyz/${NPUB}`} there`);
     expect(anchors(container)).toEqual([]);
-    expect(container.textContent).not.toContain("armada.buzz");
+    expect(container.textContent).not.toContain("wizardry.slothlee.xyz");
   });
 
   it("leaves the same path shape on another host external", () => {
@@ -185,8 +185,8 @@ describe("ChatContent own-origin links", () => {
   });
 
   it("leaves an own-origin path that names no chat location external", () => {
-    const { container } = renderContent("see https://armada.buzz/settings here");
-    expect(anchors(container)).toEqual([["https://armada.buzz/settings", "_blank"]]);
+    const { container } = renderContent("see https://wizardry.slothlee.xyz/settings here");
+    expect(anchors(container)).toEqual([["https://wizardry.slothlee.xyz/settings", "_blank"]]);
   });
 });
 

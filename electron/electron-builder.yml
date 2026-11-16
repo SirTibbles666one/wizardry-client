@@ -109,7 +109,7 @@ asarUnpack:
 publish:
   provider: generic
   publishAutoUpdate: false
-  url: https://armada.buzz/downloads/desktop
+  url: https://wizardry.slothlee.xyz/downloads/desktop
 
 # Flipped right before signing. Without them ELECTRON_RUN_AS_NODE, NODE_OPTIONS
 # or --inspect run arbitrary code as this signed binary, under its macOS TCC

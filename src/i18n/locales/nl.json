@@ -4359,7 +4359,7 @@
   "supportPage.account.body": "Je account is een geheime sleutel die alleen jij hebt. Niemand, ook wij niet, kan hem herstellen als hij verloren gaat, dus maak een back-up via Instellingen › Sleutels. Om je account te verwijderen, gebruik je Instellingen › Account verwijderen.",
   "supportPage.account.bodyWithAccount": "Je logt in met een e-mailadres en wachtwoord. Daarachter zit een geheime sleutel die alleen jij kunt openen: wij bewaren een vergrendelde kopie die we niet kunnen lezen. Vergeet je je wachtwoord, dan brengt je herstelcode je terug; zonder die code kunnen we je e-mailaccount houden, maar niet je sleutel. Beheer beide via Instellingen › Account.",
   "supportPage.account.heading": "Je account",
-  "supportPage.contact.body": "Voor vragen, problemen, feedback of om ongepaste activiteit te melden, mail naar {mail}. {appName} wordt gemaakt door Soapbox Technology LLC.",
+  "supportPage.contact.bodyBuiltOn": "Voor vragen, problemen, feedback of om ongepaste activiteit te melden, mail naar {mail}. {appName} is gebouwd op Armada, een opensource-app van Soapbox.",
   "supportPage.contact.heading": "Contact",
   "supportPage.contact.reporting": "Voeg bij het melden van misbruik de profiellink van de persoon (npub) toe en, als het kan, een screenshot of een link naar het bericht.",
   "supportPage.policies.body": "Lees de <terms>Servicevoorwaarden</terms> en het <privacy>Privacybeleid</privacy>.",

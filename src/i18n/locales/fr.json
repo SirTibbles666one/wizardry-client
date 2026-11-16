@@ -4359,7 +4359,7 @@
   "supportPage.account.body": "Votre compte est une clé secrète que vous seul détenez. Personne, pas même nous, ne peut la récupérer si elle est perdue : sauvegardez-la depuis Paramètres › Clés. Pour supprimer votre compte, utilisez Paramètres › Supprimer le compte.",
   "supportPage.account.bodyWithAccount": "Vous vous connectez avec un e-mail et un mot de passe. Derrière, il y a une clé secrète que vous seul pouvez ouvrir : nous en gardons une copie verrouillée que nous ne pouvons pas lire. Si vous oubliez votre mot de passe, votre code de récupération vous permet de revenir ; sans lui, nous pouvons garder votre compte e-mail, mais pas votre clé. Gérez les deux dans Paramètres › Compte.",
   "supportPage.account.heading": "Votre compte",
-  "supportPage.contact.body": "Pour toute question, problème, retour ou pour signaler une activité inappropriée, écrivez à {mail}. {appName} est développé par Soapbox Technology LLC.",
+  "supportPage.contact.bodyBuiltOn": "Pour toute question, problème, retour ou pour signaler une activité inappropriée, écrivez à {mail}. {appName} est basé sur Armada, une application open source de Soapbox.",
   "supportPage.contact.heading": "Nous contacter",
   "supportPage.contact.reporting": "Pour signaler un abus, joignez le lien du profil de la personne (npub) et, si possible, une capture d’écran ou un lien vers le message.",
   "supportPage.policies.body": "Lisez les <terms>Conditions d’utilisation</terms> et la <privacy>Politique de confidentialité</privacy>.",
