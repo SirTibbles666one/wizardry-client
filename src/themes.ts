@@ -115,54 +115,70 @@ export interface ThemePreset {
 
 /** Named presets; selecting one sets `theme` to "custom" with the preset's colors. */
 export const themePresets: Record<string, ThemePreset> = {
-  armada: {
-    label: "Wizardry",
+  // Wizardry's own set first: the forest at night, in five lights.
+  grove: {
+    label: "Grove",
     emoji: "🌿",
     featured: true,
-    // The default. Canopy shade, honey highlight, ink on bark.
+    // The default: Sloth Lee's canopy greens with the honey accent (brand/theme.css).
     colors: { background: "136 24% 12%", text: "111 29% 91%", primary: "40 68% 62%" },
+  },
+  moonlit: {
+    label: "Moonlit",
+    emoji: "🌙",
+    featured: true,
+    // Night sky over the canopy, silver moonlight.
+    colors: { background: "222 38% 11%", text: "215 30% 91%", primary: "212 45% 78%" },
   },
   lantern: {
     label: "Lantern",
     emoji: "🏮",
     featured: true,
-    // Deep-sea hull, sailcloth text, brass lantern glow. A ship at night.
-    colors: { background: "205 38% 8%", text: "38 18% 88%", primary: "38 85% 58%" },
+    // Bark-brown dark, warm amber glow.
+    colors: { background: "26 28% 10%", text: "38 38% 90%", primary: "34 88% 58%" },
+  },
+  spellbook: {
+    label: "Spellbook",
+    emoji: "📜",
+    featured: true,
+    // Parchment pages, oak-gall ink, a gilded honey accent.
+    colors: { background: "42 48% 91%", text: "28 32% 15%", primary: "33 72% 33%" },
+  },
+  midnightMoss: {
+    label: "Midnight Moss",
+    emoji: "🍃",
+    featured: true,
+    // True black for OLED screens, moss accent.
+    colors: { background: "0 0% 0%", text: "100 18% 86%", primary: "96 42% 56%" },
   },
   midnight: {
     label: "Midnight",
     emoji: "🌃",
-    featured: true,
     colors: { background: "222 47% 8%", text: "213 31% 91%", primary: "217 91% 60%" },
   },
   ocean: {
     label: "Ocean",
     emoji: "🌊",
-    featured: true,
     colors: { background: "202 60% 9%", text: "190 30% 92%", primary: "190 90% 50%" },
   },
   forest: {
     label: "Forest",
     emoji: "🌲",
-    featured: true,
     colors: { background: "150 25% 8%", text: "140 20% 92%", primary: "142 70% 45%" },
   },
   ember: {
     label: "Ember",
     emoji: "🔥",
-    featured: true,
     colors: { background: "20 30% 8%", text: "30 25% 92%", primary: "18 90% 55%" },
   },
   grape: {
     label: "Grape",
     emoji: "🍇",
-    featured: true,
     colors: { background: "270 30% 9%", text: "270 20% 93%", primary: "270 80% 65%" },
   },
   rose: {
     label: "Rose",
     emoji: "🌹",
-    featured: true,
     colors: { background: "340 25% 9%", text: "340 20% 93%", primary: "340 85% 62%" },
   },
   slate: {

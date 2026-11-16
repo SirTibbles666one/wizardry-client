@@ -9,10 +9,10 @@
   var STORAGE_KEY = "armada:app-config";
 
   var builtins = {
-    // Light "Corsair": violet parchment + violet ink + rose-magenta blade.
-    light: { background: "260 30% 97%", text: "260 30% 14%", primary: "330 80% 52%" },
-    // Armada "Corsair": cold violet-black sea, gilt-cream text, rose-magenta blade.
-    dark: { background: "260 22% 9%", text: "42 38% 90%", primary: "330 90% 62%" },
+    // Light canopy: paper with a green cast, ink text, honey accent.
+    light: { background: "120 22% 97%", text: "136 24% 14%", primary: "40 58% 42%" },
+    // Grove: canopy-green ground, honey accent, soft ink text.
+    dark: { background: "136 24% 12%", text: "111 29% 91%", primary: "40 68% 62%" },
   };
 
   function parseHsl(hsl) {
@@ -43,7 +43,21 @@
   }
   function lighten(hsl, a) { var c = parseHsl(hsl); return fmt(c.h, c.s, Math.min(100, c.l + a)); }
   function darken(hsl, a) { var c = parseHsl(hsl); return fmt(c.h, c.s, Math.max(0, c.l - a)); }
-  function contrastFg(bg) { return isDark(bg) ? "0 0% 100%" : "222.2 84% 4.9%"; }
+  function ratio(a, b) {
+    var x = parseHsl(a), y = parseHsl(b);
+    var ra = hslToRgb(x.h, x.s, x.l), rb = hslToRgb(y.h, y.s, y.l);
+    var la = lum(ra[0], ra[1], ra[2]), lb = lum(rb[0], rb[1], rb[2]);
+    return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+  }
+  // Mirrors contrastForeground and ensureContrast in src/lib/colorUtils.ts.
+  function contrastFg(bg) {
+    return ratio("222.2 84% 4.9%", bg) >= ratio("0 0% 100%", bg) ? "222.2 84% 4.9%" : "0 0% 100%";
+  }
+  function ensureContrast(fgHsl, surface, dark) {
+    var c = parseHsl(fgHsl), l = c.l;
+    while (ratio(fmt(c.h, c.s, l), surface) < 4.5 && l > 0 && l < 100) l += dark ? 1 : -1;
+    return fmt(c.h, c.s, l);
+  }
   function rgbToHsl(r, g, b) {
     r /= 255; g /= 255; b /= 255;
     var max = Math.max(r, g, b), min = Math.min(r, g, b);
@@ -76,9 +90,9 @@
     var card = dark ? lighten(bg, 2) : bg;
     var sec = dark ? lighten(bg, 8) : darken(bg, 4);
     var border = dark ? fmt(p.h, p.s * 0.4, 30) : fmt(p.h, p.s * 0.5, 82);
-    var mutedFg = dark
+    var mutedFg = ensureContrast(dark
       ? fmt(fg.h, Math.max(fg.s * 0.7, 12), Math.max(fg.l - 30, 40))
-      : fmt(fg.h, Math.max(fg.s * 0.7, 18), Math.min(fg.l + 35, 55));
+      : fmt(fg.h, Math.max(fg.s * 0.7, 18), Math.min(fg.l + 35, 55)), sec, dark);
     var pFg = contrastFg(primary);
     var b = parseHsl(bg);
     var chrome, chromeDeep, chromeDivider;

@@ -217,11 +217,13 @@ The mark, the copy, the hosted site and the app identity say Wizardry. Still Arm
 - **One mascot sheet.** The mark exists; draw the same sloth for the empty states, the sign-up
   steps, the recovery-code screen (holding a key), errors, and the twelve-face emoji pack already
   made for the other Wizardry.
-- **Default theme: "Grove".** The canopy greens and honey accent from `brand/theme.css` in the
-  Wizardry repo, as the built-in dark theme, with a matching light one. Replace the `armada` preset.
-- **A small themed set** in the presets: Grove, Moonlit (deep blue, silver), Lantern (warm amber),
-  Spellbook (parchment light theme), Midnight Moss (OLED black). Each is three core colours; the
-  rest derives, so they are cheap and stay consistent.
+- **Done, themes:** Grove (the default, Sloth Lee's canopy and honey), Moonlit, Lantern, Spellbook
+  (parchment, light) and Midnight Moss (true black) lead the presets and are the featured ones; the
+  generic upstream presets stay, unfeatured. Button labels now pick whichever of dark or light text
+  contrasts more (honey takes dark, as the brand sheet says), and secondary text is pushed to
+  4.5:1 — both in `colorUtils.ts` and the pre-paint `public/theme.js`, which also lost Armada's
+  violet built-ins. `themeContrast.test.ts` and `themePrepaint.test.ts` hold both.
+- **Still open:** the brand fonts (Baloo 2 for headings, Nunito for text) as the default.
 - **Sign-in page art.** The portrait forest backdrop and glass card from the other Wizardry, reused
   here so both feel like one place.
 - **Sound and motion, lightly:** a soft chime set to replace the nautical ones, fireflies on the
