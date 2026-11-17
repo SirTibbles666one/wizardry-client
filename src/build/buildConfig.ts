@@ -37,7 +37,7 @@ export const CONFIG_NAMES = [
   "KLIPY_API_KEY",
   "NOSTR_PUSH2_PUBKEY",
   "NOSTR_PUSH2_RELAYS",
-  // NIP-82 application id whose releases `/downloads` and the updater offer. Unset = "buzz.armada.app".
+  // NIP-82 application id whose releases `/downloads` and the updater offer. Unset = "xyz.slothlee.wizardry".
   "RELEASE_APP_ID",
   // Comma-separated hex pubkeys whose NIP-82 releases are trusted. Unset = Armada's release signer.
   "RELEASE_AUTHORS",

@@ -168,7 +168,10 @@ Done: the gate, sign-up with an emailed code, sign-in on a new device, the recov
 forgotten password (with and without the recovery code), sign-out, and Settings › Account, in all
 eight languages.
 
-Next: the wording that still assumes there is no account ("There's no Wizardry account to ban…").
+Also done: the copy that assumed there is no account (account standing, the support page, the
+landing page) has an account version when `ACCOUNT_SERVER` is set, and a key locked into the vault
+no longer counts as "only on this device" for the backup reminder and the logout warning. Removing
+the stored key turns that reminder back on.
 
 ## 2. Deployment
 
@@ -180,23 +183,30 @@ Next: the wording that still assumes there is no account ("There's no Wizardry a
 
 ## 3. Finishing the rebrand
 
-The mark, the copy and the hosted site say Wizardry. Still Armada underneath:
+The mark, the copy, the hosted site and the app identity say Wizardry. Still Armada underneath:
 
 - **Done:** the app's default name, the copy in all eight languages, "Wizardry Ultra", and the
   link-preview cards (titles and the drawn wordmark).
-- **Defaults:** the desktop shell hard-codes "Armada" in window, tray and update messages, and its
-  package is still `armada-desktop`; those change together with the app identity below. `APP_ID`
-  is `armada` — changing that one moves where settings are stored, so it needs a decision before
-  anyone has data, not after.
-- **Downloads:** `/downloads` and the no-JavaScript page offer Soapbox's packages, which install
-  Armada, not Wizardry (no account step, their branding). Until we publish our own builds, either
-  hide the page or say plainly that the apps are upstream's.
-- **App identity:** Android/iOS/desktop are still `buzz.armada.app`, signed and associated with
-  Soapbox's team and `armada.buzz`. Shipping apps needs our own id, signing keys, and
-  `assetlinks.json` / `apple-app-site-association` on our domain.
-- **Links and services:** `armada.buzz` appears in share links, invite previews, the AV broker
-  default, the push gateway and the release feed. Each needs a Wizardry home or a deliberate
-  "we use the public one".
+- **Done, identity:** the apps are `xyz.slothlee.wizardry` on Android, iOS (App Group
+  `group.xyz.slothlee.wizardry`), desktop and Flatpak; `APP_ID` is `wizardry`, so settings live
+  under `wizardry/…` apart from upstream's; the desktop shell says Wizardry in its window, tray,
+  dialogs and installer names. Upstream's release key is no longer trusted (`RELEASE_AUTHORS` is
+  empty), so a desktop build never loads Armada's web app or installs Armada's updates; it runs the
+  web app it shipped with. The Java/Kotlin package (`buzz.armada.app`) stays: it is the code's
+  namespace, not the app's identity, and moving it would touch every native file for nothing.
+- **Still to do for shipping apps:** our own Android signing key, an Apple team (`DEVELOPMENT_TEAM`
+  is empty and `ios-release.sh` now requires `IOS_TEAM_ID` and the App Store Connect key), a
+  release key for `RELEASE_AUTHORS` and `.ngit/release.yaml`'s `pubkey`, and a domain for app links
+  (`assetlinks.json` and `apple-app-site-association` are empty until then).
+- **Done, downloads:** while `RELEASE_AUTHORS` is empty (`APPS_PUBLISHED` false), `/downloads` says
+  the apps aren't out yet and points at the browser, and the landing page, Settings › About and
+  the no-JavaScript page offer no downloads. The store and package listings in `downloads.ts` are
+  still upstream's; replace them with Wizardry's before setting a release signer, and restore the
+  skipped `<noscript>` test in `downloads.test.ts`.
+- **Done, links and services:** links are built on `https://wizardry.slothlee.xyz`, support and
+  security mail go to `support@slothlee.xyz`, the privacy policy describes the email accounts and
+  who runs each default service, and the voice broker and push gateway stay on the public ones on
+  purpose. `docs/hosting.md` has the table and the steps to publish the web app.
 - **Component names** (`ArmadaCrest`, `ArmadaDB`, on-disk `concord2-*` keys) stay as they are, the
   way the repo's own notes say on-disk identifiers must: nobody sees them, and renaming loses data.
 - **Licence:** it is AGPL-3.0. Keep upstream's notices, publish our source (the repo is public),
@@ -207,11 +217,13 @@ The mark, the copy and the hosted site say Wizardry. Still Armada underneath:
 - **One mascot sheet.** The mark exists; draw the same sloth for the empty states, the sign-up
   steps, the recovery-code screen (holding a key), errors, and the twelve-face emoji pack already
   made for the other Wizardry.
-- **Default theme: "Grove".** The canopy greens and honey accent from `brand/theme.css` in the
-  Wizardry repo, as the built-in dark theme, with a matching light one. Replace the `armada` preset.
-- **A small themed set** in the presets: Grove, Moonlit (deep blue, silver), Lantern (warm amber),
-  Spellbook (parchment light theme), Midnight Moss (OLED black). Each is three core colours; the
-  rest derives, so they are cheap and stay consistent.
+- **Done, themes:** Grove (the default, Sloth Lee's canopy and honey), Moonlit, Lantern, Spellbook
+  (parchment, light) and Midnight Moss (true black) lead the presets and are the featured ones; the
+  generic upstream presets stay, unfeatured. Button labels now pick whichever of dark or light text
+  contrasts more (honey takes dark, as the brand sheet says), and secondary text is pushed to
+  4.5:1 — both in `colorUtils.ts` and the pre-paint `public/theme.js`, which also lost Armada's
+  violet built-ins. `themeContrast.test.ts` and `themePrepaint.test.ts` hold both.
+- **Still open:** the brand fonts (Baloo 2 for headings, Nunito for text) as the default.
 - **Sign-in page art.** The portrait forest backdrop and glass card from the other Wizardry, reused
   here so both feel like one place.
 - **Sound and motion, lightly:** a soft chime set to replace the nautical ones, fireflies on the

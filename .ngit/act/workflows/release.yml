@@ -85,13 +85,13 @@ name: Release
 #                            and what actually authorizes signing is this key,
 #                            which the bunker already approved.
 #   NSYTE_BUNKER             nbunksec for a session on the Soapbox key, which
-#                            owns buzz.armada.app. Signs the NIP-82 release
+#                            owns xyz.slothlee.wizardry. Signs the NIP-82 release
 #                            (and the nsite deploys).
 #   WINDOWS_CSC_LINK         (optional) base64 PFX for Authenticode signing
 #   WINDOWS_CSC_KEY_PASSWORD (optional) its password
 #   GOOGLE_PLAY_SERVICE_ACCOUNT_JSON  (optional) base64 of the Play Console
 #                            service-account JSON key with release permission on
-#                            buzz.armada.app. Empty (unprovisioned) skips the
+#                            xyz.slothlee.wizardry. Empty (unprovisioned) skips the
 #                            Google Play publish instead of failing.
 #
 # NOTHING here is published over SSH. Every artifact — installers, the APK, the
@@ -318,16 +318,16 @@ jobs:
           tar xzf "$RUNNER_TEMP/$name.tar.gz" -C "$RUNNER_TEMP"
 
           cd electron/release/mac
-          for dir in Armada-darwin-*; do
+          for dir in Wizardry-darwin-*; do
             arch="${dir##*-}"
             # --config-file /dev/null: sign only from these arguments, never
             # from an ambient user/cwd rcodesign.toml.
             "$RUNNER_TEMP/$name/rcodesign" --config-file /dev/null \
-              sign "$dir/Armada.app" >/dev/null
+              sign "$dir/Wizardry.app" >/dev/null
             # -y keeps symlinks as symlinks: an Electron .app is full of
             # framework Versions/Current links, and dereferencing them inflates
             # the archive and lands a bundle whose signature no longer verifies.
-            (cd "$dir" && zip -qry "../Armada-mac-$arch.zip" Armada.app)
+            (cd "$dir" && zip -qry "../Wizardry-mac-$arch.zip" Wizardry.app)
           done
           ls -lh ./*.zip
 
@@ -349,21 +349,21 @@ jobs:
           out="$PWD/.release-artifacts"
           mkdir -p "$out"
           # Match electron-builder's versioned name specifically. flatpak/build.sh
-          # stages its input beside it as the unversioned Armada.AppImage, so a
+          # stages its input beside it as the unversioned Wizardry.AppImage, so a
           # bare *.AppImage glob matches two files and cp then reads the last
           # argument as a destination directory.
-          cp electron/release/Armada-*-linux-*.AppImage "$out/Armada-$TAG.AppImage"
-          cp electron/release/*.deb "$out/Armada-$TAG.deb"
+          cp electron/release/Wizardry-*-linux-*.AppImage "$out/Wizardry-$TAG.AppImage"
+          cp electron/release/*.deb "$out/Wizardry-$TAG.deb"
           # Anchored to the trailing -Setup.exe so it can't also match the
           # intermediate Armada-<ver>-Setup.__uninstaller.exe.
-          cp electron/release/Armada-*-Setup.exe "$out/Armada-$TAG.exe"
+          cp electron/release/Wizardry-*-Setup.exe "$out/Wizardry-$TAG.exe"
           # The portable build is the non-Setup .exe.
-          cp "$(ls electron/release/*.exe | grep -iv setup | head -n1)" "$out/Armada-$TAG-portable.exe"
+          cp "$(ls electron/release/*.exe | grep -iv setup | head -n1)" "$out/Wizardry-$TAG-portable.exe"
           # .zip names its platform, since the extension doesn't.
-          cp electron/release/mac/Armada-mac-x64.zip "$out/Armada-$TAG-mac-x64.zip"
-          cp electron/release/mac/Armada-mac-arm64.zip "$out/Armada-$TAG-mac-arm64.zip"
+          cp electron/release/mac/Wizardry-mac-x64.zip "$out/Wizardry-$TAG-mac-x64.zip"
+          cp electron/release/mac/Wizardry-mac-arm64.zip "$out/Wizardry-$TAG-mac-arm64.zip"
           # The unsigned Flatpak bundle. npkg re-signs on import.
-          cp electron/release/Armada-flatpak-*.flatpak "$out/Armada-$TAG.flatpak"
+          cp electron/release/Wizardry-flatpak-*.flatpak "$out/Wizardry-$TAG.flatpak"
           ls -lh "$out"
 
   android:
@@ -509,8 +509,8 @@ jobs:
           set -eu
           out="$RUNNER_TEMP/armada-android-v$VERSION_NAME"
           mkdir -p "$out"
-          cp android/app/build/outputs/apk/release/app-release.apk "$out/Armada-v$VERSION_NAME.apk"
-          cp android/app/build/outputs/bundle/release/app-release.aab "$out/Armada-v$VERSION_NAME.aab"
+          cp android/app/build/outputs/apk/release/app-release.apk "$out/Wizardry-v$VERSION_NAME.apk"
+          cp android/app/build/outputs/bundle/release/app-release.aab "$out/Wizardry-v$VERSION_NAME.aab"
           # The release build is minified, so a stack trace from a sideloaded
           # or Zapstore install is unreadable without this. (Play needs no
           # copy: AGP embeds the map in the AAB as
@@ -518,7 +518,7 @@ jobs:
           # It is the APK build's map, written by the assembleRelease that ran
           # last above.
           cp android/app/build/outputs/mapping/release/mapping.txt \
-            "$out/Armada-v$VERSION_NAME-apk-mapping.txt"
+            "$out/Wizardry-v$VERSION_NAME-apk-mapping.txt"
           ls -lh "$out"
           echo "dir=$out" >> "$GITHUB_OUTPUT"
 
@@ -530,7 +530,7 @@ jobs:
           # installed by a user, so offering one would be a trap; the ProGuard
           # map is a debugging aid, not a download. Both stay run artifacts.
           mkdir -p "$PWD/.release-artifacts"
-          cp "$out/Armada-v$VERSION_NAME.apk" "$PWD/.release-artifacts/Armada-v$VERSION_NAME.apk"
+          cp "$out/Wizardry-v$VERSION_NAME.apk" "$PWD/.release-artifacts/Wizardry-v$VERSION_NAME.apk"
 
       # The APK/AAB are signed now; remove the keystore and password file.
       - name: Remove release signing material
@@ -547,9 +547,9 @@ jobs:
         with:
           name: armada-android-v${{ steps.version.outputs.name }}
           path: |
-            ${{ steps.artifacts.outputs.dir }}/Armada-v${{ steps.version.outputs.name }}.apk
-            ${{ steps.artifacts.outputs.dir }}/Armada-v${{ steps.version.outputs.name }}.aab
-            ${{ steps.artifacts.outputs.dir }}/Armada-v${{ steps.version.outputs.name }}-apk-mapping.txt
+            ${{ steps.artifacts.outputs.dir }}/Wizardry-v${{ steps.version.outputs.name }}.apk
+            ${{ steps.artifacts.outputs.dir }}/Wizardry-v${{ steps.version.outputs.name }}.aab
+            ${{ steps.artifacts.outputs.dir }}/Wizardry-v${{ steps.version.outputs.name }}-apk-mapping.txt
 
       # Publish the AAB to Google Play in the SAME job (ported from ditto's
       # GitLab `publish-google-play` job). Cross-job artifact hand-off is broken
@@ -578,7 +578,7 @@ jobs:
             exit 0
           fi
 
-          aab_path="$ARTIFACT_DIR/Armada-v$VERSION_NAME.aab"
+          aab_path="$ARTIFACT_DIR/Wizardry-v$VERSION_NAME.aab"
           test -f "$aab_path"
 
           # Build the fastlane supply metadata layout for the changelog. supply
@@ -624,7 +624,7 @@ jobs:
           timeout --signal=TERM --kill-after=30 1800 \
           fastlane supply \
             --aab "$aab_path" \
-            --package_name buzz.armada.app \
+            --package_name xyz.slothlee.wizardry \
             --track production \
             --json_key "$json_key" \
             --metadata_path android/fastlane/metadata/android \
@@ -650,7 +650,7 @@ jobs:
           if [ "$supply_rc" -ne 0 ] && grep -qi "you must let us know\|required to tell Google Play\|declaration\|app content" "$out"; then
             echo "Google rejected the COMMIT, not the upload: the Play Console is" >&2
             echo "waiting on an App content declaration. Answer it at" >&2
-            echo "Play Console > buzz.armada.app > Policy > App content, then" >&2
+            echo "Play Console > xyz.slothlee.wizardry > Policy > App content, then" >&2
             echo "re-run this job — no code change here will help." >&2
           fi
           if [ "$supply_rc" -eq 124 ] || [ "$supply_rc" -eq 137 ]; then
@@ -780,7 +780,7 @@ jobs:
             -srcalias upload -destalias upload
           node scripts/zapstore-identity.mjs --keystore "$dir/upload.p12" --alias upload
 
-      # The NIP-82 release (.ngit/release.yaml) of buzz.armada.app, which
+      # The NIP-82 release (.ngit/release.yaml) of xyz.slothlee.wizardry, which
       # /downloads, the desktop updater, Zapstore and npkg read. Runs whether or
       # not the kind-30622 step above succeeded: the two are read by different clients and neither should
       # cost the other. Runs after it so the blobs are already on Blossom.
@@ -800,7 +800,7 @@ jobs:
           # The checkout's remote is the coordinator's clone, so name the
           # repository. The checkout has the tagged commit but not the tag
           # itself, so the version and commit are given rather than found.
-          # Version without the "v", continuing buzz.armada.app@X.Y.Z. ngit
+          # Version without the "v", continuing xyz.slothlee.wizardry@X.Y.Z. ngit
           # defaults the channel to main, which would offer a prerelease tag to
           # every stable install.
           channel=main

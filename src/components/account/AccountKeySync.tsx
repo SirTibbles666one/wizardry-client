@@ -17,6 +17,7 @@ import { useLoggedInAccounts } from "@/hooks/useLoggedInAccounts";
 import { toast } from "@/hooks/useToast";
 import { FormattedMessage, useIntl } from "@/i18n";
 import { registerBeforeAccountExit } from "@/lib/beforeAccountExit";
+import { clearKeyBackupPending } from "@/lib/keyBackup";
 
 import { AccountGate } from "./AccountGate";
 import { accountErrorText } from "./accountText";
@@ -69,6 +70,8 @@ export function AccountKeySync() {
           const decoded = nip19.decode(activeLogin.data.nsec);
           if (decoded.type !== "nsec") throw new Error("bad login");
           setRecoveryCode(await client.storeKey(unlocked, { sk: bytesToHex(decoded.data) }));
+          // The vault is a second copy, so the "only on this device" reminder no longer holds.
+          clearKeyBackupPending(pubkey);
         }
         await client.linkKey(unlocked.token, (template) => signer.signEvent(template));
         markAccountKeyDone();

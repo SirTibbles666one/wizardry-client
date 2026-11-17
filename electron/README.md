@@ -132,7 +132,7 @@ icon is what a dock draws whenever it cannot match the window to an installed
 That case is the AppImage, and `desktopIntegration.js` is the other half of the
 fix: the deb and the Flatpak install an entry, an AppImage run from
 `~/Downloads` has none, and a desktop environment with no entry to match falls
-back to naming the app after its WM_CLASS — `buzz.armada.app` in the dock
+back to naming the app after its WM_CLASS — `xyz.slothlee.wizardry` in the dock
 tooltip. So the AppImage writes its own entry (and hicolor icons) into
 `XDG_DATA_HOME` at launch, with the same id, `Name` and `StartupWMClass` the
 packaged entries use. It only ever writes when `$APPIMAGE` is set, never
@@ -166,10 +166,10 @@ foreground notifier and the push runtime both post through the Web Notifications
 API, and Electron backs it with the OS notifier (libnotify on Linux, the Action
 Center on Windows, `NSUserNotification`/`UNUserNotification` on macOS). Two
 platforms need an identity set before `ready` for those toasts to appear and
-be attributed correctly: Linux via `app.setDesktopName("buzz.armada.app.desktop")`
+be attributed correctly: Linux via `app.setDesktopName("xyz.slothlee.wizardry.desktop")`
 (matching the installed `.desktop` entry the Flatpak's
 `--talk-name=org.freedesktop.Notifications` permission also depends on), and
-Windows via `app.setAppUserModelId("buzz.armada.app")` — the AUMID the NSIS
+Windows via `app.setAppUserModelId("xyz.slothlee.wizardry")` — the AUMID the NSIS
 installer stamps onto the Start Menu shortcut, without which Windows silently
 drops the toast or shows it as `electron.app.Electron`. Both live in `main.js`
 right after the app object is created.
@@ -294,7 +294,7 @@ updates, `electron/webUpdateChannel.js`, a file in userData):
 | Channel | Follows |
 | --- | --- |
 | Every update (`latest`, default) | `d=armada`, every push to `main` |
-| Releases only (`release`) | `d=armada-stable`, which `deploy-nsite.yml` publishes only for a `Release vX.Y.Z` commit |
+| Releases only (`release`) | `d=wizardry-rel`, which `deploy-nsite.yml` publishes only for a `Release vX.Y.Z` commit |
 | Off (`off`) | nothing; choosing it also discards a staged site, so the next launch serves what is running now |
 
 The rollback guard is per track: moving from `latest` to `release` may install
@@ -388,7 +388,7 @@ reason.
 
 ## Flatpak
 
-The manifest is `flatpak/buzz.armada.app.yml`. It wraps the already-built
+The manifest is `flatpak/xyz.slothlee.wizardry.yml`. It wraps the already-built
 AppImage with Electron BaseApp and grants PipeWire audio and the narrow session
 bus permissions needed for screen audio, the shortcut portal and tray
 registration.
@@ -427,8 +427,8 @@ For a local update cycle against it:
 ```sh
 flatpak remote-add --user --no-gpg-verify armada-local \
   "file://$PWD/release/flatpak-repo"
-flatpak install --user armada-local buzz.armada.app
-flatpak update --user buzz.armada.app
+flatpak install --user armada-local xyz.slothlee.wizardry
+flatpak update --user xyz.slothlee.wizardry
 ```
 
 ### Distribution
@@ -442,18 +442,18 @@ with its own key. Users install from its flatpakref, which adds the remote too:
 
 ```sh
 flatpak install --user \
-  https://pkg.soapbox.pub/flatpak/soapbox.pub/buzz.armada.app/buzz.armada.app.flatpakref
+  https://pkg.soapbox.pub/flatpak/soapbox.pub/xyz.slothlee.wizardry/xyz.slothlee.wizardry.flatpakref
 ```
 
 That is a normal remote-tracked install, so `flatpak update` upgrades the whole
-app — shell, native modules and web bundle — from the `buzz.armada.app` remote.
+app — shell, native modules and web bundle — from the `xyz.slothlee.wizardry` remote.
 
 The same `.flatpak` bundle is also named in the release and rendered by
 `/downloads` for a direct sideload:
 
 ```sh
 flatpak install --user ./Armada-vX.Y.Z.flatpak
-flatpak run buzz.armada.app
+flatpak run xyz.slothlee.wizardry
 ```
 
 **Armada does not sign this bundle.** Authenticity rests on the sha256 in the
@@ -486,11 +486,11 @@ Two update paths, and they do not conflict:
 
 Installs from an older, self-hosted bundle embedded a now-dead origin. If a
 global `flatpak update` complains about it, disable it — this keeps the profile
-under `~/.var/app/buzz.armada.app`:
+under `~/.var/app/xyz.slothlee.wizardry`:
 
 ```sh
 flatpak remote-modify --user --disable \
-  "$(flatpak info --user --show-origin buzz.armada.app)"
+  "$(flatpak info --user --show-origin xyz.slothlee.wizardry)"
 ```
 
 ### Migrating an older system-wide installation
@@ -506,17 +506,17 @@ per-user, then remove the old system deployment:
 
 ```sh
 flatpak install --user ./Armada-vX.Y.Z.flatpak
-flatpak info --user buzz.armada.app
-armada_system_origin="$(flatpak info --system --show-origin buzz.armada.app)"
-sudo flatpak uninstall --system buzz.armada.app
+flatpak info --user xyz.slothlee.wizardry
+armada_system_origin="$(flatpak info --system --show-origin xyz.slothlee.wizardry)"
+sudo flatpak uninstall --system xyz.slothlee.wizardry
 ```
 
-Optionally launch it with `flatpak run --user buzz.armada.app` and close it
+Optionally launch it with `flatpak run --user xyz.slothlee.wizardry` and close it
 again before the uninstall. This brief overlap leaves the known-working system
 deployment in place if downloading or installing the bundle fails.
 
 Do not add `--delete-data` to the uninstall: leaving it out preserves the
-profile under `~/.var/app/buzz.armada.app`. If the now-unused unsigned system
+profile under `~/.var/app/xyz.slothlee.wizardry`. If the now-unused unsigned system
 remote remains listed, remove only that captured origin:
 
 ```sh

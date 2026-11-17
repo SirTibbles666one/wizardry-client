@@ -28,10 +28,10 @@ function releaseEvent(overrides: Partial<{ kind: number; tags: string[][]; conte
     created_at: 1791789786,
     content: "### Fixed\n- something",
     tags: [
-      ["a", `32267:${PUBKEY}:buzz.armada.app`, "wss://relay.ngit.dev"],
-      ["i", "buzz.armada.app"],
+      ["a", `32267:${PUBKEY}:xyz.slothlee.wizardry`, "wss://relay.ngit.dev"],
+      ["i", "xyz.slothlee.wizardry"],
       ["version", "0.64.13"],
-      ["d", "buzz.armada.app@0.64.13"],
+      ["d", "xyz.slothlee.wizardry@0.64.13"],
       ["c", "main"],
       ["e", APK_ID, "wss://relay.ngit.dev"],
       ["e", APPIMAGE_ID, "wss://relay.ngit.dev"],
@@ -52,8 +52,8 @@ function assetEvent(overrides: Partial<{ id: string; pubkey: string; tags: strin
     created_at: 1791789780,
     content: "",
     tags: [
-      ["a", `32267:${PUBKEY}:buzz.armada.app`, "wss://relay.ngit.dev"],
-      ["i", "buzz.armada.app"],
+      ["a", `32267:${PUBKEY}:xyz.slothlee.wizardry`, "wss://relay.ngit.dev"],
+      ["i", "xyz.slothlee.wizardry"],
       ["m", "application/vnd.appimage"],
       ["x", "74b21f2ef4833bf1e529d4bea1f757722d4dca0ea2e60b529baa5a5476a2663d"],
       ["version", "0.64.13"],
@@ -70,7 +70,7 @@ function assetEvent(overrides: Partial<{ id: string; pubkey: string; tags: strin
 describe("parseRelease", () => {
   it("reads a release and the ids of its assets", () => {
     expect(parseRelease(releaseEvent())).toMatchObject({
-      appId: "buzz.armada.app",
+      appId: "xyz.slothlee.wizardry",
       version: "0.64.13",
       channel: "main",
       commit: "9a9eb7190bee3af7c406fcf9786188726cfbcf0c",
@@ -85,16 +85,16 @@ describe("parseRelease", () => {
   });
 
   it("defaults the channel to main", () => {
-    expect(parseRelease(releaseEvent({ tags: [["d", "buzz.armada.app@1.0.0"], ["e", APK_ID]] }))?.channel)
+    expect(parseRelease(releaseEvent({ tags: [["d", "xyz.slothlee.wizardry@1.0.0"], ["e", APK_ID]] }))?.channel)
       .toBe("main");
   });
 
   it("refuses anything it cannot render", () => {
     expect(parseRelease(releaseEvent({ kind: 30622 }))).toBeUndefined();
     // No version: it could be neither labelled nor ordered.
-    expect(parseRelease(releaseEvent({ tags: [["i", "buzz.armada.app"], ["e", APK_ID]] }))).toBeUndefined();
+    expect(parseRelease(releaseEvent({ tags: [["i", "xyz.slothlee.wizardry"], ["e", APK_ID]] }))).toBeUndefined();
     // No assets: a version with no downloads is worse than no entry at all.
-    expect(parseRelease(releaseEvent({ tags: [["d", "buzz.armada.app@1.0.0"], ["e", "not-an-id"]] })))
+    expect(parseRelease(releaseEvent({ tags: [["d", "xyz.slothlee.wizardry@1.0.0"], ["e", "not-an-id"]] })))
       .toBeUndefined();
   });
 });
@@ -208,7 +208,7 @@ const rel = (version: string, channel = "main", createdAt = 1, id = version): Re
   id,
   pubkey: "p",
   createdAt,
-  appId: "buzz.armada.app",
+  appId: "xyz.slothlee.wizardry",
   version,
   channel,
   commit: undefined,

@@ -39,11 +39,10 @@ describe("settings document naming", () => {
   });
 
   it("keeps the default build's metadata tag at its shipped spelling", () => {
-    // Existing installs read `armada/metadata`. The APP_ID default is what
-    // makes parameterizing the tag cost no migration; changing it would strand
-    // every user's settings.
-    expect(APP_ID).toBe("armada");
-    expect(settingsDTag("metadata")).toBe("armada/metadata");
+    // Installs read `wizardry/metadata`, apart from upstream's `armada/` ones.
+    // The APP_ID default names it; changing it would strand every user's settings.
+    expect(APP_ID).toBe("wizardry");
+    expect(settingsDTag("metadata")).toBe("wizardry/metadata");
   });
 
   it("round-trips a `d` tag back to its document, and rejects a foreign one", () => {

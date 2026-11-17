@@ -1,9 +1,11 @@
 import { ArrowLeft } from "lucide-react";
 
+import { accountServerUrl } from "@/account/client";
 import { Button } from "@/components/ui/button";
 import { useBackOrHome } from "@/hooks/useBackOrHome";
 import { FormattedMessage, common, useIntl } from "@/i18n";
-import { APP_NAME } from "@/lib/platform";
+import { APP_NAME, SUPPORT_EMAIL } from "@/lib/platform";
+import { PUBLIC_WEB_ORIGIN } from "@/lib/shareOrigin";
 
 export function PrivacyPolicyPage() {
   const intl = useIntl();
@@ -23,7 +25,7 @@ export function PrivacyPolicyPage() {
 
       <div className="flex-1 min-h-0 overflow-y-auto safe-area-bottom">
         <article className="max-w-2xl mx-auto px-4 sm:px-6 pb-16 pt-3 space-y-6 text-sm text-foreground/90 leading-relaxed">
-          <p className="text-xs text-muted-foreground">Last updated: October 8, 2026</p>
+          <p className="text-xs text-muted-foreground">Last updated: November 16, 2026</p>
 
           <section className="space-y-2">
             <h2 className="text-base font-bold text-foreground">Overview</h2>
@@ -42,11 +44,12 @@ export function PrivacyPolicyPage() {
               visible to anyone, except where it is encrypted (direct messages and Concord communities, below).
             </p>
             <p>
-              Out of the box, {APP_NAME} uses a few default servers, some of which are operated by Soapbox, the team
-              behind {APP_NAME}: the relay <code>relay.ditto.pub</code>, the file server <code>blossom.ditto.pub</code>,
-              the link-preview service at <code>ditto.pub</code>, and the voice broker at <code>armada.buzz</code>. The
-              rest are run by independent operators. You can replace the relays, file servers and voice server in
-              Settings, and anyone can host their own.
+              {APP_NAME} is built on Armada, an open-source app by Soapbox. Out of the box it uses a few default
+              servers that Soapbox operates: the relay <code>relay.ditto.pub</code>, the file server{" "}
+              <code>blossom.ditto.pub</code>, the link-preview service at <code>ditto.pub</code>, and the voice broker
+              at <code>av.armada.buzz</code>. The rest are run by independent operators. The team behind {APP_NAME}
+              does not run these servers. You can replace the relays, file servers and voice server in Settings,
+              and anyone can host their own.
             </p>
           </section>
 
@@ -68,6 +71,43 @@ export function PrivacyPolicyPage() {
               </li>
             </ul>
           </section>
+
+          {accountServerUrl() && (
+            <section className="space-y-2">
+              <h2 className="text-base font-bold text-foreground">Email Accounts</h2>
+              <p>
+                {APP_NAME} asks for an email address and a password, kept by the account server at{" "}
+                <code>{new URL(accountServerUrl()).host}</code>, which the team behind {APP_NAME} operates. It is
+                built so that it cannot read your key or learn your password:
+              </p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>
+                  <strong>Email address:</strong> used once, in memory, to send you a code. The server stores only a
+                  keyed hash of it, never the address itself.
+                </li>
+                <li>
+                  <strong>Password:</strong> never sent. Your device derives a key from it and sends a value the
+                  server hashes again.
+                </li>
+                <li>
+                  <strong>Your Nostr key:</strong> stored as a locked copy, encrypted on your device under your
+                  password (and a second copy under your recovery code). The server cannot open either.
+                </li>
+                <li>
+                  <strong>Your public key:</strong> stored only as a hash, in a table that does not say which
+                  account it belongs to, dated to the day.
+                </li>
+                <li>
+                  <strong>Sessions and codes:</strong> stored as hashes, with an expiry.
+                </li>
+              </ul>
+              <p>
+                The server logs no requests. It sees your IP address only to limit repeated sign-in attempts, in
+                memory, and never writes it down. Deleting your email account in Settings removes the account, its
+                locked copies, its sessions, and the hash of your public key.
+              </p>
+            </section>
+          )}
 
           <section className="space-y-2">
             <h2 className="text-base font-bold text-foreground">Private Keys</h2>
@@ -115,10 +155,9 @@ export function PrivacyPolicyPage() {
               analytics in the client, on any platform.
             </p>
             <p>
-              The website at armada.buzz is served by Soapbox's hosting gateway, which collects error reports when
-              the page crashes: the error, the page address, and a short trail of recent clicks, page changes and
-              network requests leading up to it, with secret keys removed. The Android, iOS and desktop apps do not
-              load it, and a self-hosted copy of {APP_NAME} only sends these reports if its host turns them on.
+              The website at {new URL(PUBLIC_WEB_ORIGIN).host} is served as plain files through Cloudflare, which
+              handles each request to deliver the page and may keep standard connection logs. The website collects
+              no error reports and no analytics of its own.
             </p>
           </section>
 
@@ -161,8 +200,8 @@ export function PrivacyPolicyPage() {
             <h2 className="text-base font-bold text-foreground">Contact</h2>
             <p>
               If you have questions about this privacy policy, you can reach the team behind {APP_NAME} at{" "}
-              <a href="https://soapbox.pub" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">
-                soapbox.pub
+              <a href={`mailto:${SUPPORT_EMAIL}`} className="text-primary hover:underline">
+                {SUPPORT_EMAIL}
               </a>.
             </p>
           </section>

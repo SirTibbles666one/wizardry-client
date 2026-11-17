@@ -15,6 +15,7 @@ import {
 import { AsciiSea } from "@/components/landing/AsciiSea";
 import { Button } from "@/components/ui/button";
 import { useBackOrHome } from "@/hooks/useBackOrHome";
+import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import { useReleaseArtifacts, useReleases } from "@/hooks/useReleases";
 import { toast } from "@/hooks/useToast";
 import { common, defineMessages, FormattedMessage, t, useIntl, type IntlShape, type MessageDescriptor } from "@/i18n";
@@ -33,7 +34,7 @@ import {
 import { formatBytes } from "@/lib/fileBytes";
 import { APP_NAME } from "@/lib/platform";
 import { HashMismatchError, downloadArtifact } from "@/lib/releaseDownload";
-import { featuredRelease, isStable, type Release, type ReleaseArtifact } from "@/lib/releases";
+import { APPS_PUBLISHED, featuredRelease, isStable, type Release, type ReleaseArtifact } from "@/lib/releases";
 import { cn } from "@/lib/utils";
 import { scrollBehavior } from "@/lib/reducedMotion";
 
@@ -690,6 +691,93 @@ function HeroButton({ href, to, external, download, icon: Mark, title, detail, o
 }
 
 export function DownloadsPage() {
+  return APPS_PUBLISHED ? <PublishedDownloads /> : <NoAppsYet />;
+}
+
+/** Until Wizardry publishes its own builds: the browser is the app, installed from the browser. */
+function NoAppsYet() {
+  const intl = useIntl();
+  const back = useBackOrHome();
+  const { canInstall, install, isInstalled, needsManualInstall } = useInstallPrompt();
+  return (
+    <main className="relative flex-1 min-w-0 overflow-y-auto">
+      <Button
+        variant="ghost"
+        size="icon"
+        aria-label={intl.formatMessage(common.back)}
+        onClick={back}
+        className="absolute left-2 top-2 z-20 size-9 touch:size-11 text-muted-foreground hover:text-foreground safe-area-top"
+      >
+        <ArrowLeft className="size-5" />
+      </Button>
+      <section className="mx-auto flex min-h-[88svh] max-w-xl flex-col items-center justify-center gap-8 px-6 py-16 text-center safe-area-top">
+        <ArmadaCrest size={130} />
+        <div className="space-y-3">
+          <h1 className="font-mono text-3xl font-bold lowercase tracking-tight text-foreground sm:text-4xl">
+            <FormattedMessage
+              id="downloadsPage.noAppsTitle"
+              defaultMessage="{app} runs in your browser"
+              values={{ app: APP_NAME.toLowerCase() }}
+            />
+          </h1>
+          <p className="text-pretty text-sm text-muted-foreground sm:text-base">
+            {isInstalled ? (
+              <FormattedMessage
+                id="downloadsPage.installedBody"
+                defaultMessage="{app} is installed on this device. Open it from your home screen, dock or app list."
+                values={{ app: APP_NAME }}
+              />
+            ) : (
+              <FormattedMessage
+                id="downloadsPage.installBody"
+                defaultMessage="Install it from your browser and it opens in its own window, with its own icon, like any other app. Your account works the same everywhere."
+              />
+            )}
+          </p>
+        </div>
+        {!isInstalled && (
+          <div className="flex flex-col items-center gap-3">
+            {canInstall ? (
+              <Button size="lg" onClick={() => void install()}>
+                <Download className="size-4" />
+                <FormattedMessage id="downloadsPage.installButton" defaultMessage="Install {app}" values={{ app: APP_NAME }} />
+              </Button>
+            ) : (
+              <p className="max-w-sm text-pretty text-sm text-foreground">
+                {needsManualInstall ? (
+                  <FormattedMessage
+                    id="downloadsPage.installIos"
+                    defaultMessage="In Safari, tap Share, then Add to Home Screen."
+                  />
+                ) : (
+                  <FormattedMessage
+                    id="downloadsPage.installOther"
+                    defaultMessage="Look for Install app or Add to Home Screen in your browser's menu or address bar."
+                  />
+                )}
+              </p>
+            )}
+            <Button asChild variant="ghost">
+              <Link to="/">
+                <FormattedMessage id="downloadsPage.continueInBrowser" defaultMessage="Keep using it in the browser" />
+              </Link>
+            </Button>
+          </div>
+        )}
+        {isInstalled && (
+          <Button asChild>
+            <Link to="/">
+              <FormattedMessage id="downloadsPage.noAppsOpen" defaultMessage="Open {app}" values={{ app: APP_NAME }} />
+            </Link>
+          </Button>
+        )}
+      </section>
+      <ArmadaCrestKeyframes />
+    </main>
+  );
+}
+
+function PublishedDownloads() {
   const intl = useIntl();
   const back = useBackOrHome();
   // The sea reads scrollTop imperatively, so a ref, never state.

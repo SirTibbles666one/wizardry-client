@@ -351,9 +351,9 @@ const NSITE_KIND = 35128;
 const BLOSSOM_SERVER_LIST_KIND = 10063;
 
 /** The named site `.nsite/config.json` publishes: every push to main. */
-export const WEB_SITE_ID = "armada";
+export const WEB_SITE_ID = "wizardry";
 /** The named site deploy-nsite.yml also publishes on a stable release commit only. */
-export const WEB_RELEASE_SITE_ID = "armada-stable";
+export const WEB_RELEASE_SITE_ID = "wizardry-rel";
 /** Every site id a stored manifest may carry; each is signed by the same pinned authors. */
 export const WEB_SITE_IDS: readonly string[] = [WEB_SITE_ID, WEB_RELEASE_SITE_ID];
 

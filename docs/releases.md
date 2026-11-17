@@ -1,7 +1,7 @@
 # Releases: NIP-82
 
 Armada's releases are [NIP-82](https://github.com/nostr-protocol/nips/blob/master/82.md)
-software releases of the application `buzz.armada.app`: one kind-30063 release
+software releases of the application `xyz.slothlee.wizardry`: one kind-30063 release
 per version, naming one kind-3063 asset per build output, with the files on
 Blossom. `/downloads`, the desktop updater, Zapstore and npkg
 (`pkg.soapbox.pub`) all read the same events.
@@ -14,7 +14,7 @@ still publishes one per release (below) until most installs are past them.
 
 ## The events
 
-The application (kind 32267, `d = buzz.armada.app`) carries the listing:
+The application (kind 32267, `d = xyz.slothlee.wizardry`) carries the listing:
 name, summary, description, icon, license, platforms (`f`), and an `a` tag to
 the NIP-34 repository.
 
@@ -26,10 +26,10 @@ A release (kind 30063):
   "created_at": 1791789786,           // the release date
   "content": "<release notes, markdown>",
   "tags": [
-    ["a", "32267:<pubkey>:buzz.armada.app", "wss://relay.ngit.dev"],
-    ["i", "buzz.armada.app"],
+    ["a", "32267:<pubkey>:xyz.slothlee.wizardry", "wss://relay.ngit.dev"],
+    ["i", "xyz.slothlee.wizardry"],
     ["version", "0.64.13"],           // the tag without its "v"
-    ["d", "buzz.armada.app@0.64.13"],
+    ["d", "xyz.slothlee.wizardry@0.64.13"],
     ["c", "main"],                    // "beta" for a prerelease tag
     ["e", "<asset id>", "<relay>"],   // one per asset, in release.yaml's order
     ["f", "android-arm64-v8a"],       // the union of the assets' platforms
@@ -45,8 +45,8 @@ An asset (kind 3063):
   "kind": 3063,
   "content": "",
   "tags": [
-    ["a", "32267:<pubkey>:buzz.armada.app", "wss://relay.ngit.dev"],
-    ["i", "buzz.armada.app"],
+    ["a", "32267:<pubkey>:xyz.slothlee.wizardry", "wss://relay.ngit.dev"],
+    ["i", "xyz.slothlee.wizardry"],
     ["m", "application/vnd.appimage"],
     ["x", "<sha256>"],
     ["version", "0.64.13"],
@@ -79,13 +79,13 @@ hint rather than a download button. NIP-82 assets carry no human label, so
 
 ```jsonc
 // every release of the application, newest first
-{"kinds":[30063],"authors":["<release signer>"],"#i":["buzz.armada.app"]}
+{"kinds":[30063],"authors":["<release signer>"],"#i":["xyz.slothlee.wizardry"]}
 // one release's assets
 {"kinds":[3063],"authors":["<the release's author>"],"ids":["<its e tags>"]}
 ```
 
 `authors` is never optional: `#i` alone would accept a release of
-`buzz.armada.app` from anybody. The signers are `RELEASE_AUTHORS`, a
+`xyz.slothlee.wizardry` from anybody. The signers are `RELEASE_AUTHORS`, a
 build-time setting rather than anything read from the network, because these
 events hand out executables and adding a signer has to go through code review.
 

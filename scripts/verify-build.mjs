@@ -7,8 +7,8 @@
  * Usage:
  *   node scripts/verify-build.mjs                    the live site, from the release relays
  *   node scripts/verify-build.mjs --manifest e.json  a specific kind-35128 site manifest
- *   node scripts/verify-build.mjs --apk Armada-vX.Y.Z.apk
- *   node scripts/verify-build.mjs --desktop Armada-vX.Y.Z.AppImage [--desktop …]
+ *   node scripts/verify-build.mjs --apk Wizardry-vX.Y.Z.apk
+ *   node scripts/verify-build.mjs --desktop Wizardry-vX.Y.Z.AppImage [--desktop …]
  *                                       (.deb, .flatpak, .exe, -portable.exe, -mac-x64.zip, -mac-arm64.zip;
  *                                        several artifacts of one release share one rebuild)
  *
@@ -303,7 +303,7 @@ function desktopBuildScript(tag, kinds) {
     steps.push(`node scripts/package-mac.mjs --arch=${arches.join(",")}`);
     for (const arch of arches) {
       steps.push(
-        `(cd release/mac/Armada-darwin-${arch} && rcodesign --config-file /dev/null sign Armada.app >/dev/null && zip -qry ../Armada-mac-${arch}.zip Armada.app)`,
+        `(cd release/mac/Wizardry-darwin-${arch} && rcodesign --config-file /dev/null sign Wizardry.app >/dev/null && zip -qry ../Wizardry-mac-${arch}.zip Wizardry.app)`,
       );
     }
   }
@@ -330,7 +330,7 @@ function rebuiltDesktop(checkout, kind) {
     case "portable":
       return pick((n) => n.endsWith(".exe") && !/setup/i.test(n));
     case "mac":
-      return path.join(release, `mac/Armada-mac-${kind.arch}.zip`);
+      return path.join(release, `mac/Wizardry-mac-${kind.arch}.zip`);
   }
 }
 
@@ -407,9 +407,9 @@ function expectedFlatpak(target, checkout, scratch) {
   const expected = new Map();
   for (const [name, hash] of appimage) expected.set(`files/armada/${name}`, hash);
 
-  const manifestYml = fs.readFileSync(path.join(checkout, "electron/flatpak/buzz.armada.app.yml"), "utf8");
+  const manifestYml = fs.readFileSync(path.join(checkout, "electron/flatpak/xyz.slothlee.wizardry.yml"), "utf8");
   const venmic = manifestYml.match(/url: (https:\/\/registry\.npmjs\.org\/@vencord\/venmic\/[^\s]+)\s+sha256: ([0-9a-f]{64})/);
-  if (!venmic) fail("could not find the venmic source in electron/flatpak/buzz.armada.app.yml");
+  if (!venmic) fail("could not find the venmic source in electron/flatpak/xyz.slothlee.wizardry.yml");
   const tgz = path.join(scratch, "venmic.tgz");
   run("curl", ["-fsSL", "-o", tgz, venmic[1]]);
   if (sha256(fs.readFileSync(tgz)) !== venmic[2]) fail(`${venmic[1]} does not match the manifest's sha256`);
@@ -423,14 +423,14 @@ function expectedFlatpak(target, checkout, scratch) {
   const repoFile = (file) => sha256(fs.readFileSync(path.join(checkout, file)));
   expected.set("files/bin/armada", repoFile("electron/flatpak/armada-wrapper"));
   for (const prefix of ["files", "export"]) {
-    expected.set(`${prefix}/share/applications/buzz.armada.app.desktop`, repoFile("electron/flatpak/buzz.armada.app.desktop"));
-    expected.set(`${prefix}/share/icons/hicolor/512x512/apps/buzz.armada.app.png`, repoFile("electron/build/linux-icon.png"));
+    expected.set(`${prefix}/share/applications/xyz.slothlee.wizardry.desktop`, repoFile("electron/flatpak/xyz.slothlee.wizardry.desktop"));
+    expected.set(`${prefix}/share/icons/hicolor/512x512/apps/xyz.slothlee.wizardry.png`, repoFile("electron/build/linux-icon.png"));
   }
   // electron/flatpak/build.sh stages the metainfo with this release's <release>.
   const date = execFileSync("git", ["-C", checkout, "log", "-1", "--format=%cs"], { encoding: "utf8" }).trim();
-  const metainfo = fs.readFileSync(path.join(checkout, "electron/flatpak/buzz.armada.app.metainfo.xml"), "utf8")
+  const metainfo = fs.readFileSync(path.join(checkout, "electron/flatpak/xyz.slothlee.wizardry.metainfo.xml"), "utf8")
     .replace(/^<\/component>/m, `  <releases>\n    <release version="${versionOf(target.tag)}" date="${date}"/>\n  </releases>\n</component>`);
-  for (const prefix of ["files", "export"]) expected.set(`${prefix}/share/metainfo/buzz.armada.app.metainfo.xml`, sha256(metainfo));
+  for (const prefix of ["files", "export"]) expected.set(`${prefix}/share/metainfo/xyz.slothlee.wizardry.metainfo.xml`, sha256(metainfo));
   expected.set("files/.ref", sha256(Buffer.alloc(0)));
 
   const appManifest = JSON.parse(fs.readFileSync(path.join(target.published, "files/manifest.json"), "utf8"));

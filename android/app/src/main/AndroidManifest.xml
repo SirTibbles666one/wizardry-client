@@ -26,18 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- Verified App Links: open https://armada.buzz links (invites,
-                 shared channels) directly in the app. Verified against
-                 https://armada.buzz/.well-known/assetlinks.json (shipped in
-                 client/public/), which must list the APK signing cert's
-                 SHA-256 fingerprint. -->
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="armada.buzz" />
-            </intent-filter>
-
             <!-- Share target: receive text/links/files from other apps' share
                  sheets (ShareTargetPlugin stages the payload for the web
                  layer's destination picker). -->
@@ -178,7 +166,7 @@
          seconds, which drops the call. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
-    <!-- Let the user exempt Armada from battery optimization so the persistent
+    <!-- Let the user exempt Wizardry from battery optimization so the persistent
          relay connections survive Doze and the service can restart on boot
          (Android 15+). Only requested when background notifications are on. -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />

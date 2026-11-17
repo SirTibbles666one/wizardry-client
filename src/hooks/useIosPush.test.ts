@@ -29,7 +29,7 @@ beforeEach(() => {
   register.mockReset().mockResolvedValue({
     granted: true,
     token: TOKEN,
-    bundleId: "buzz.armada.app",
+    bundleId: "xyz.slothlee.wizardry",
     environment: "sandbox",
   });
   recordPushStatus.mockClear();
@@ -48,7 +48,7 @@ describe("apnsPushTarget", () => {
     expect(client.create).toHaveBeenCalledWith({
       method: "apn",
       token: TOKEN,
-      topic: "buzz.armada.app",
+      topic: "xyz.slothlee.wizardry",
       environment: "sandbox",
     });
     expect(client.set).toHaveBeenCalledTimes(2);
@@ -60,7 +60,7 @@ describe("apnsPushTarget", () => {
     const target = apnsPushTarget(client as unknown as NostrPush2Client, () => {});
     await target.set([], () => true);
     register.mockResolvedValue({
-      granted: true, token: "cd".repeat(32), bundleId: "buzz.armada.app", environment: "sandbox",
+      granted: true, token: "cd".repeat(32), bundleId: "xyz.slothlee.wizardry", environment: "sandbox",
     });
     await target.set([], () => true);
     expect(client.create).toHaveBeenCalledTimes(2);

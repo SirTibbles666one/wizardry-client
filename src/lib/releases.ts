@@ -24,19 +24,24 @@ export const RELEASE_RELAYS: string[] = DEPLOYMENT_RELAYS.length > 0
     .filter((url: string | undefined): url is string => Boolean(url));
 
 /** The NIP-82 application id (`d` of the 32267, `i` of each release). Overridable for forks. */
-export const RELEASE_APP_ID: string = config("RELEASE_APP_ID") || "buzz.armada.app";
+export const RELEASE_APP_ID: string = config("RELEASE_APP_ID") || "xyz.slothlee.wizardry";
 
 /**
  * Trusted release signers (hex). Build-time, so adding a signer goes through
- * code review: these events hand out executables.
+ * code review: these events hand out executables. Empty until Wizardry has a
+ * release key, so nothing — upstream's builds included — is trusted.
  */
-export const RELEASE_AUTHORS: string[] = (
-  config("RELEASE_AUTHORS") ||
-  "781a1527055f74c1f70230f10384609b34548f8ab6a0a6caa74025827f9fdae5"
-)
+export const RELEASE_AUTHORS: string[] = (config("RELEASE_AUTHORS") || "")
   .split(",")
   .map((pubkey: string) => pubkey.trim().toLowerCase())
   .filter((pubkey: string) => /^[0-9a-f]{64}$/.test(pubkey));
+
+/**
+ * Whether this build has apps to offer. With no trusted signer there are no
+ * releases, and the package and store listings in `downloads.ts` install
+ * upstream's Armada, so the download links stay hidden.
+ */
+export const APPS_PUBLISHED: boolean = RELEASE_AUTHORS.length > 0;
 
 /** One build output of a release (a kind-3063 asset). */
 export interface ReleaseArtifact {

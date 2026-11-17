@@ -64,7 +64,7 @@ describe("native push-to-talk hook", () => {
 describe("push-to-talk controller", () => {
   it("uses the portal for Wayland and Flatpak, but the native hook for X11", () => {
     expect(needsLinuxPortal({ XDG_SESSION_TYPE: "wayland" })).toBe(true);
-    expect(needsLinuxPortal({ FLATPAK_ID: "buzz.armada.app" })).toBe(true);
+    expect(needsLinuxPortal({ FLATPAK_ID: "xyz.slothlee.wizardry" })).toBe(true);
     expect(needsLinuxPortal({ XDG_SESSION_TYPE: "x11", DISPLAY: ":0" })).toBe(false);
   });
 

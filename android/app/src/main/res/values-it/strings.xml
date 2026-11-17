@@ -40,7 +40,7 @@
     <string name="notif_not_sent">⚠️ Non inviato: %1$s</string>
     <string name="notif_connected">Connesso per le notifiche istantanee</string>
     <string name="channel_service_name">Connessione in background</string>
-    <string name="channel_service_description">Mantiene Armada connesso per le notifiche istantanee</string>
+    <string name="channel_service_description">Mantiene Wizardry connesso per le notifiche istantanee</string>
     <string name="channel_messages_name">Notifiche</string>
     <string name="channel_messages_description">Menzioni, risposte, reazioni e messaggi diretti</string>
     <string name="channel_calls_name">Chiamate in arrivo</string>

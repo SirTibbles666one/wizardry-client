@@ -1,6 +1,7 @@
 import { Check, Sparkles } from "lucide-react";
 import { useState } from "react";
 
+import { accountsEnabled } from "@/account/session";
 import { ArmadaCrest, ArmadaCrestKeyframes } from "@/components/brand/ArmadaCrest";
 import { Dialog, ChromeDialogContent } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -79,10 +80,17 @@ function Punchline() {
       </TooltipTrigger>
       {/* Above the dialog (z-[250]), which the default tooltip layer is not. */}
       <TooltipContent className="z-[260] max-w-64 text-left text-xs leading-snug">
-        <FormattedMessage
-          id="accountStandingDialog.punchlineExplanation"
-          defaultMessage="Your identity is a key only you hold, not an account we control. A community can remove you from itself, but nobody can take your key or your identity away."
-        />
+        {accountsEnabled() ? (
+          <FormattedMessage
+            id="accountStandingDialog.punchlineExplanationWithAccount"
+            defaultMessage="Your identity is a key only you hold. Your email account keeps a locked copy we can't open: we could close it, but the key stays yours. A community can remove you from itself, but nobody can take your identity away."
+          />
+        ) : (
+          <FormattedMessage
+            id="accountStandingDialog.punchlineExplanation"
+            defaultMessage="Your identity is a key only you hold, not an account we control. A community can remove you from itself, but nobody can take your key or your identity away."
+          />
+        )}
       </TooltipContent>
     </Tooltip>
   );

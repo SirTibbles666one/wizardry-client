@@ -8,6 +8,12 @@
   "display": "standalone",
   "background_color": "#18271c",
   "theme_color": "#18271c",
+  "launch_handler": {
+    "client_mode": [
+      "navigate-existing",
+      "auto"
+    ]
+  },
   "icons": [
     {
       "src": "/logo-192.png",
@@ -40,6 +46,44 @@
       "purpose": "monochrome"
     }
   ],
+  "shortcuts": [
+    {
+      "name": "Messages",
+      "short_name": "Messages",
+      "url": "/dm",
+      "icons": [
+        {
+          "src": "/logo-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "short_name": "Notifications",
+      "url": "/notifications",
+      "icons": [
+        {
+          "src": "/logo-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "short_name": "Settings",
+      "url": "/settings",
+      "icons": [
+        {
+          "src": "/logo-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
   "share_target": {
     "action": "/share",
     "method": "POST",
@@ -51,11 +95,21 @@
       "files": [
         {
           "name": "files",
-          "accept": ["*/*", "image/*", "video/*", "audio/*", "application/pdf", "text/*"]
+          "accept": [
+            "*/*",
+            "image/*",
+            "video/*",
+            "audio/*",
+            "application/pdf",
+            "text/*"
+          ]
         }
       ]
     }
   },
-  "categories": ["social", "communication"],
+  "categories": [
+    "social",
+    "communication"
+  ],
   "lang": "en"
 }

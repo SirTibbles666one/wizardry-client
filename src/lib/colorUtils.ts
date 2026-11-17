@@ -123,11 +123,27 @@ function darken(hsl: string, amount: number): string {
 }
 
 /** Get a contrast foreground (white or near-black) for a given background. */
+const DARK_LABEL = "222.2 84% 4.9%";
+const LIGHT_LABEL = "0 0% 100%";
+
+function rgbOf(hsl: string): [number, number, number] {
+  const { h, s, l } = parseHsl(hsl);
+  return hslToRgb(h, s, l);
+}
+
+/** The label colour that contrasts more with `bgHsl`: a honey or amber fill takes dark text. */
 function contrastForeground(bgHsl: string): string {
-  const { h, s, l } = parseHsl(bgHsl);
-  const [r, g, b] = hslToRgb(h, s, l);
-  // Luminance midpoint 0.5 (not isDarkTheme's 0.2) so saturated mid-tones get readable text.
-  return getLuminance(r, g, b) > 0.5 ? "222.2 84% 4.9%" : "0 0% 100%";
+  const bg = rgbOf(bgHsl);
+  return getContrastRatio(rgbOf(DARK_LABEL), bg) >= getContrastRatio(rgbOf(LIGHT_LABEL), bg) ? DARK_LABEL : LIGHT_LABEL;
+}
+
+/** Moves `fgHsl` away from `surfaceHsl` until it reaches WCAG AA body contrast (4.5:1), keeping hue and saturation. */
+function ensureContrast(fgHsl: string, surfaceHsl: string, dark: boolean): string {
+  const fg = parseHsl(fgHsl);
+  const surface = rgbOf(surfaceHsl);
+  let l = fg.l;
+  while (getContrastRatio(hslToRgb(fg.h, fg.s, l), surface) < 4.5 && l > 0 && l < 100) l += dark ? 1 : -1;
+  return formatHsl(fg.h, fg.s, l);
 }
 
 /** Composite a translucent `overlay` at `alpha` over an opaque `base` (like `bg-black/30`). */
@@ -166,9 +182,14 @@ export function deriveTokensFromCore(
 
   // Scale saturation proportionally so muted text keeps the theme's hue.
   const fg = parseHsl(text);
-  const mutedFg = dark
-    ? formatHsl(fg.h, Math.max(fg.s * 0.7, 12), Math.max(fg.l - 30, 40))
-    : formatHsl(fg.h, Math.max(fg.s * 0.7, 18), Math.min(fg.l + 35, 55));
+  // Checked against `muted`, the busier of the two surfaces it sits on.
+  const mutedFg = ensureContrast(
+    dark
+      ? formatHsl(fg.h, Math.max(fg.s * 0.7, 12), Math.max(fg.l - 30, 40))
+      : formatHsl(fg.h, Math.max(fg.s * 0.7, 18), Math.min(fg.l + 35, 55)),
+    muted,
+    dark,
+  );
 
   const primaryFg = contrastForeground(primary);
 

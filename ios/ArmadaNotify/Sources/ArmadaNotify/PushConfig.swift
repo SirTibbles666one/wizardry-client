@@ -315,7 +315,7 @@ struct PushConfig {
 
         public static let fileName = "push-config.json"
 
-        public static func url(appGroup group: String = "group.buzz.armada.app") -> URL? {
+        public static func url(appGroup group: String = "group.xyz.slothlee.wizardry") -> URL? {
             FileManager.default
                 .containerURL(forSecurityApplicationGroupIdentifier: group)?
                 .appendingPathComponent(fileName)
@@ -349,7 +349,7 @@ struct PushConfig {
         /// ArmadaDB's file is present, since the store and this config share
         /// one container — if neither is there, the problem is the container,
         /// not the config.
-        public static func describe(appGroup group: String = "group.buzz.armada.app") -> String {
+        public static func describe(appGroup group: String = "group.xyz.slothlee.wizardry") -> String {
             guard let container = FileManager.default
                 .containerURL(forSecurityApplicationGroupIdentifier: group)
             else {

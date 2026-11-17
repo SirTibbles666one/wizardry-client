@@ -27,7 +27,7 @@ describe("Flatpak documentation", () => {
       (commands) =>
         commands.includes("flatpak install --user") &&
         commands.includes(
-          "https://pkg.soapbox.pub/flatpak/soapbox.pub/buzz.armada.app/buzz.armada.app.flatpakref",
+          "https://pkg.soapbox.pub/flatpak/soapbox.pub/xyz.slothlee.wizardry/xyz.slothlee.wizardry.flatpakref",
         ),
     );
     expect(installsRef).toBe(true);
@@ -68,14 +68,14 @@ describe("Flatpak documentation", () => {
     // The now-dead origin embedded in older self-hosted bundles is disabled,
     // not deleted, and the profile is preserved.
     expect(flatpakDocs).toContain(
-      'flatpak remote-modify --user --disable \\\n  "$(flatpak info --user --show-origin buzz.armada.app)"',
+      'flatpak remote-modify --user --disable \\\n  "$(flatpak info --user --show-origin xyz.slothlee.wizardry)"',
     );
     expect(flatpakDocs).toContain(
-      "sudo flatpak uninstall --system buzz.armada.app",
+      "sudo flatpak uninstall --system xyz.slothlee.wizardry",
     );
     expect(flatpakProse).toContain("Do not add `--delete-data`");
     expect(flatpakProse).toContain(
-      "keeps the profile under `~/.var/app/buzz.armada.app`",
+      "keeps the profile under `~/.var/app/xyz.slothlee.wizardry`",
     );
   });
 });

@@ -6,12 +6,13 @@ import { describe, expect, it } from "vitest";
 import {
   ANDROID_STORES,
   DOWNLOAD_PLATFORMS,
+  NPKG_HOST,
   PACKAGE_MANAGERS,
   detectOs,
   installCommand,
   isRepublishedPackage,
 } from "@/lib/downloads";
-import { artifactOs } from "@/lib/releases";
+import { APPS_PUBLISHED, artifactOs } from "@/lib/releases";
 
 /** Real user-agent strings, since the ordering bugs only show up in real ones. */
 const UA = {
@@ -106,7 +107,16 @@ describe("package repositories (pkg.soapbox.pub / npkg)", () => {
     );
   });
 
-  it("repeats the same commands and links in index.html's <noscript> fallback", () => {
+  it("offers none of these in index.html's <noscript> fallback while no apps are published", () => {
+    const html = readFileSync(resolve(process.cwd(), "index.html"), "utf8");
+    const noscript = html.slice(html.lastIndexOf("<noscript>"), html.lastIndexOf("</noscript>"));
+    expect(APPS_PUBLISHED).toBe(false);
+    expect(noscript).not.toContain(NPKG_HOST);
+    for (const store of ANDROID_STORES) expect(noscript).not.toContain(store.url);
+  });
+
+  // Restore this once APPS_PUBLISHED is true and the listings are Wizardry's.
+  it.skip("repeats the same commands and links in index.html's <noscript> fallback", () => {
     const html = readFileSync(resolve(process.cwd(), "index.html"), "utf8");
     const noscript = html.slice(html.lastIndexOf("<noscript>"), html.lastIndexOf("</noscript>"));
     for (const manager of PACKAGE_MANAGERS) {
@@ -134,9 +144,9 @@ describe("package repositories (pkg.soapbox.pub / npkg)", () => {
 describe("the CI workflow that publishes these files", () => {
   const workflow = readFileSync(resolve(process.cwd(), ".ngit/act/workflows/release.yml"), "utf8");
 
-  /** Every `Armada-...` artifact name the workflow stages for the release. */
+  /** Every `Wizardry-...` artifact name the workflow stages for the release. */
   const staged = [...new Set(
-    [...workflow.matchAll(/\bArmada-\$(?:TAG|\{TAG\}|VERSION_NAME|\{VERSION_NAME\})[\w.$-]*\.\w+/g)]
+    [...workflow.matchAll(/\bWizardry-\$(?:TAG|\{TAG\}|VERSION_NAME|\{VERSION_NAME\})[\w.$-]*\.\w+/g)]
       .map((match) => match[0].replace(/\$\{?(?:TAG|VERSION_NAME)\}?/g, "v1.2.3")),
   )];
 

@@ -208,7 +208,7 @@ function buildInfo(): Plugin {
  */
 function buildStamp(): Plugin {
   const stamp = new Date(BUILD_EPOCH * 1000).toISOString().slice(0, 19).replace("T", " ") + "Z";
-  let origin = "https://armada.buzz";
+  let origin = "https://wizardry.slothlee.xyz";
   return {
     name: "armada-build-stamp",
     configResolved(config) {

@@ -14,7 +14,7 @@
 	     ID in the developer portal. -->
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.buzz.armada.app</string>
+		<string>group.xyz.slothlee.wizardry</string>
 	</array>
 </dict>
 </plist>

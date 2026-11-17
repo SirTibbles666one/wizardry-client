@@ -99,7 +99,7 @@ export function routeParamToRelay(param: string): string | undefined {
 export const APP_NAME: string = config("APP_NAME") || "Wizardry";
 
 /** Where users reach the developers, including to report inappropriate activity (App Store 1.2). */
-export const SUPPORT_EMAIL = "support@soapbox.pub";
+export const SUPPORT_EMAIL = "support@slothlee.xyz";
 
 /**
  * Fork identifier namespacing the NIP-78 settings `d` tags (see
@@ -107,7 +107,7 @@ export const SUPPORT_EMAIL = "support@soapbox.pub";
  * the documents. Must match Android's `SelfState.DEFAULT_D_TAGS`
  * (asserted by `settingsDocs.test.ts`).
  */
-export const APP_ID: string = config("APP_ID") || "armada";
+export const APP_ID: string = config("APP_ID") || "wizardry";
 
 /**
  * iOS/iPadOS (iPadOS 13+ has a Mac UA, so Mac + touch counts). On iOS, Web Push

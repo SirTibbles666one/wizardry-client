@@ -200,7 +200,7 @@ After pushing, tell the user:
 - That CI will build and publish the artifacts: ngit-ci results and artifacts
   appear on gitworkshop.dev against the tagged commit, the AAB is published to
   Google Play (skipped if the Play service-account secret isn't provisioned),
-  and every installer is named by a NIP-82 release of `buzz.armada.app`,
+  and every installer is named by a NIP-82 release of `xyz.slothlee.wizardry`,
   which `/downloads`, the desktop updater, Zapstore and npkg all read
 - That the **macOS** `.dmg` and the GitLab Release/package links would come from
   the GitLab mirror pipeline, but we do NOT push to GitLab — the maintainer
@@ -246,7 +246,7 @@ build and shipped a release with no desktop installers.
    (`scripts/publish-release.mjs`), which desktop builds up to v0.64.13 update
    from; it goes out even when a platform failed. Then it runs
    `ngit release publish` with `.ngit/release.yaml`,
-   publishing all eight files as a NIP-82 release of `buzz.armada.app` (kinds
+   publishing all eight files as a NIP-82 release of `xyz.slothlee.wizardry` (kinds
    32267/30063/3063, also sent to the Zapstore relay; `docs/releases.md`). A
    tag with a `-` goes out on the `beta` channel. `needs: [android, desktop]`,
    so it is the single writer of an addressable event that has no
@@ -307,13 +307,13 @@ Optional (Google Play publish on tags, ngit-ci `release.yml`):
 
 | Variable | What |
 |----------|------|
-| `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON` | base64 (one line) of the Play Console service-account JSON key with release permission on `buzz.armada.app`. Unprovisioned → the Play publish is skipped, not failed. |
+| `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON` | base64 (one line) of the Play Console service-account JSON key with release permission on `xyz.slothlee.wizardry`. Unprovisioned → the Play publish is skipped, not failed. |
 
 Required (nsite deploy on push to `main`, ngit-ci `deploy-nsite.yml`; and the NIP-82 release, `release.yml`):
 
 | Variable | What |
 |----------|------|
-| `NSYTE_BUNKER` | `nbunksec1...` NIP-46 session on the Soapbox key. The signing pubkey **is** the site address, and it owns `buzz.armada.app`, so it also signs the NIP-82 release (`.ngit/release.yaml`'s `pubkey` refuses any other key before uploading). Unprovisioned → the job fails rather than skipping, since nothing else publishes the client. |
+| `NSYTE_BUNKER` | `nbunksec1...` NIP-46 session on the Soapbox key. The signing pubkey **is** the site address, and it owns `xyz.slothlee.wizardry`, so it also signs the NIP-82 release (`.ngit/release.yaml`'s `pubkey` refuses any other key before uploading). Unprovisioned → the job fails rather than skipping, since nothing else publishes the client. |
 
 Optional (GitLab mirror / macOS):
 

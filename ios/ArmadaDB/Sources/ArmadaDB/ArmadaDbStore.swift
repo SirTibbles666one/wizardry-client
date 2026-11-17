@@ -129,7 +129,7 @@ public final class ArmadaDbStore {
         /// was made before it was needed, and deliberately: it is not
         /// reversible after a release, since moving the file later would strand
         /// decrypted Concord and NIP-17 history that exists nowhere else.
-        public static let appGroup = "group.buzz.armada.app"
+        public static let appGroup = "group.xyz.slothlee.wizardry"
 
         public static let fileName = "armada-db.sqlite"
 

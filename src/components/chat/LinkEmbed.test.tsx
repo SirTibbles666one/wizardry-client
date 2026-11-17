@@ -181,7 +181,7 @@ describe("YouTubeEmbed", () => {
     const playerUrl = new URL(iframe.src);
     expect(playerUrl.origin).toBe("https://www.youtube-nocookie.com");
     expect(playerUrl.searchParams.get("origin")).toBeNull();
-    expect(iframe.outerHTML).not.toContain("buzz.armada.app");
+    expect(iframe.outerHTML).not.toContain("xyz.slothlee.wizardry");
   });
 
   it("keeps Capacitor Android on the HTTPS-referrer iframe path", () => {

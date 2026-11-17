@@ -5,7 +5,7 @@ import { parseSelfLink } from "@/lib/selfLink";
 
 /**
  * jsdom's own origin stands in for a self-hosted deployment here, and
- * `PUBLIC_WEB_ORIGIN` (armada.buzz, the default) for the public one — the two
+ * `PUBLIC_WEB_ORIGIN` (wizardry.slothlee.xyz, the default) for the public one — the two
  * halves of "ours" that a native-built link and a web-built link land on.
  */
 
@@ -14,7 +14,7 @@ const MSG = "9eb8fee9fc77aad33f7957bee461417b882b565958ada1f8f1d3bdccfe1e7da8";
 
 describe("parseSelfLink", () => {
   it("resolves a DM message link on the public origin", () => {
-    const link = parseSelfLink(`https://armada.buzz/dm/${NPUB}/m/${MSG}`);
+    const link = parseSelfLink(`https://wizardry.slothlee.xyz/dm/${NPUB}/m/${MSG}`);
     expect(link).toEqual({
       kind: "chat",
       route: { kind: "dm", peer: NPUB, messageId: MSG },
@@ -32,12 +32,12 @@ describe("parseSelfLink", () => {
   });
 
   it("keeps the search and hash on the routed path", () => {
-    const link = parseSelfLink("https://armada.buzz/c/abc123/general?x=1#y");
+    const link = parseSelfLink("https://wizardry.slothlee.xyz/c/abc123/general?x=1#y");
     expect(link).toMatchObject({ kind: "chat", path: "/c/abc123/general?x=1#y" });
   });
 
   it("reads a bare npub path as a profile", () => {
-    expect(parseSelfLink(`https://armada.buzz/${NPUB}`)).toEqual({
+    expect(parseSelfLink(`https://wizardry.slothlee.xyz/${NPUB}`)).toEqual({
       kind: "profile",
       pubkey: "0461fcbecc4c3374439932d6b8f11269ccdb7cc973ad7a50ae362db135a474dd",
     });
@@ -48,12 +48,12 @@ describe("parseSelfLink", () => {
   });
 
   it("refuses a path that names no chat location", () => {
-    expect(parseSelfLink("https://armada.buzz/settings")).toBeNull();
-    expect(parseSelfLink("https://armada.buzz/")).toBeNull();
+    expect(parseSelfLink("https://wizardry.slothlee.xyz/settings")).toBeNull();
+    expect(parseSelfLink("https://wizardry.slothlee.xyz/")).toBeNull();
   });
 
   it("refuses a protocol-relative path", () => {
-    expect(parseSelfLink("https://armada.buzz//evil.example/dm/x")).toBeNull();
+    expect(parseSelfLink("https://wizardry.slothlee.xyz//evil.example/dm/x")).toBeNull();
   });
 
   it("refuses a non-http scheme", () => {

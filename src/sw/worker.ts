@@ -28,6 +28,14 @@ import { deletePushState, readPushState, trimPushState, writePushState } from "@
 import type { PushScope } from "@/lib/pushSubscriptions";
 import type { SwPushConfig } from "@/lib/swPushConfig";
 import { receiveSharePost, SHARE_ACTION } from "@/lib/webShareInbox";
+import {
+  navigateOrOffline,
+  OFFLINE_ASSETS,
+  OFFLINE_SCRIPT,
+  offlineAssetOrNetwork,
+  precacheOffline,
+  pruneOfflineCaches,
+} from "@/sw/offline";
 import type { PreparedPush, PushData } from "@/sw/pushRuntime";
 
 declare const self: ServiceWorkerGlobalScope;
@@ -1233,15 +1241,23 @@ export function installServiceWorker(runtime: PushRuntime): void {
     // Take over immediately: this worker holds no per-build state, so there
     // is no old-build/new-build consistency to preserve across a swap.
     void self.skipWaiting();
-    // Static routing: GETs go straight to the network without starting this
-    // worker, so the share target's fetch handler costs page loads nothing.
+    event.waitUntil(precacheOffline(caches).catch(() => undefined));
+    // Static routing: page loads reach this worker only for the offline
+    // fallback; every other GET goes straight to the network without starting it.
     const routed = event as ExtendableEvent & {
       addRoutes?: (rules: unknown) => Promise<void>;
     };
     if (typeof routed.addRoutes === "function") {
       try {
         event.waitUntil(
-          routed.addRoutes({ condition: { requestMethod: "GET" }, source: "network" }).catch(() => undefined),
+          routed
+            .addRoutes([
+              { condition: { requestMode: "navigate" }, source: "fetch-event" },
+              // Requested only by the offline page, which needs it from the cache.
+              { condition: { urlPattern: OFFLINE_SCRIPT }, source: "fetch-event" },
+              { condition: { requestMethod: "GET" }, source: "network" },
+            ])
+            .catch(() => undefined),
         );
       } catch { /* unsupported condition: the handler below passes GETs through */ }
     }
@@ -1249,10 +1265,18 @@ export function installServiceWorker(runtime: PushRuntime): void {
 
   self.addEventListener("fetch", (event) => {
     const { request } = event;
-    if (request.method !== "POST") return;
     const url = new URL(request.url);
-    if (url.origin !== self.location.origin || url.pathname !== SHARE_ACTION) return;
-    event.respondWith(receiveSharePost(request, caches, self.location.origin));
+    if (url.origin !== self.location.origin) return;
+    if (request.method === "POST") {
+      if (url.pathname === SHARE_ACTION) event.respondWith(receiveSharePost(request, caches, self.location.origin));
+      return;
+    }
+    if (request.method !== "GET") return;
+    if (request.mode === "navigate") {
+      event.respondWith(navigateOrOffline(request, (r) => fetch(r), caches));
+    } else if (OFFLINE_ASSETS.includes(url.pathname)) {
+      event.respondWith(offlineAssetOrNetwork(request, (r) => fetch(r), caches));
+    }
   });
 
   self.addEventListener("activate", (event) => {
@@ -1266,6 +1290,7 @@ export function installServiceWorker(runtime: PushRuntime): void {
           .then((keys) =>
             Promise.all(keys.filter((k) => k.startsWith("armada-shell-")).map((k) => caches.delete(k))),
           ),
+        pruneOfflineCaches(caches).catch(() => undefined),
         self.clients.claim(),
       ]),
     );

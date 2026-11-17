@@ -119,7 +119,7 @@ public enum AvatarCache {
         /// container is unavailable (the same condition that makes the store
         /// and the config unreadable — see `PushConfigStore.describe`).
         public static func directory(
-            appGroup group: String = "group.buzz.armada.app"
+            appGroup group: String = "group.xyz.slothlee.wizardry"
         ) -> URL? {
             FileManager.default
                 .containerURL(forSecurityApplicationGroupIdentifier: group)?

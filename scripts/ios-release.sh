@@ -79,12 +79,13 @@ COMMON=(
 )
 
 if [ "${ARCHIVE:-}" = "1" ]; then
-  TEAM_ID=GZLTTH5DLM
-  DIST_IDENTITY="${IOS_DIST_IDENTITY:-6362D25BB1D97984B8C54157FB85BA02514DE489}"
-  APP_PROFILE="${IOS_APP_PROFILE:-Armada App Store buzz.armada.app 2026-11}"
-  EXT_PROFILE="${IOS_EXT_PROFILE:-Armada App Store buzz.armada.app.NotificationService 2026-11}"
-  ASC_KEY_ID="${ASC_KEY_ID:-Y9HH9P7CF6}"
-  ASC_ISSUER_ID="${ASC_ISSUER_ID:-4b9a9c95-0387-442a-b2f9-139c84570228}"
+  # Wizardry's own Apple team and App Store Connect key; there is no default.
+  TEAM_ID="${IOS_TEAM_ID:?set IOS_TEAM_ID to the Apple developer team}"
+  DIST_IDENTITY="${IOS_DIST_IDENTITY:?set IOS_DIST_IDENTITY to the SHA-1 of the distribution certificate}"
+  APP_PROFILE="${IOS_APP_PROFILE:-Wizardry App Store xyz.slothlee.wizardry}"
+  EXT_PROFILE="${IOS_EXT_PROFILE:-Wizardry App Store xyz.slothlee.wizardry.NotificationService}"
+  ASC_KEY_ID="${ASC_KEY_ID:?set ASC_KEY_ID}"
+  ASC_ISSUER_ID="${ASC_ISSUER_ID:?set ASC_ISSUER_ID}"
   ASC_KEY_PATH="${ASC_KEY_PATH:-$HOME/.appstoreconnect/private_keys/AuthKey_$ASC_KEY_ID.p8}"
   AUTH=(
     -allowProvisioningUpdates
@@ -116,8 +117,8 @@ if [ "${ARCHIVE:-}" = "1" ]; then
   <key>signingCertificate</key><string>$DIST_IDENTITY</string>
   <key>provisioningProfiles</key>
   <dict>
-    <key>buzz.armada.app</key><string>$APP_PROFILE</string>
-    <key>buzz.armada.app.NotificationService</key><string>$EXT_PROFILE</string>
+    <key>xyz.slothlee.wizardry</key><string>$APP_PROFILE</string>
+    <key>xyz.slothlee.wizardry.NotificationService</key><string>$EXT_PROFILE</string>
   </dict>
   <key>uploadSymbols</key><true/>
   <key>manageAppVersionAndBuildNumber</key><false/>
@@ -152,9 +153,9 @@ EOF
     fi
   }
   check "$APP" aps-environment production
-  check "$APP" com.apple.security.application-groups:0 group.buzz.armada.app
+  check "$APP" com.apple.security.application-groups:0 group.xyz.slothlee.wizardry
   check "$APP" get-task-allow false
-  check "$APP/PlugIns/NotificationService.appex" com.apple.security.application-groups:0 group.buzz.armada.app
+  check "$APP/PlugIns/NotificationService.appex" com.apple.security.application-groups:0 group.xyz.slothlee.wizardry
   rm -rf "$PAYLOAD"
   echo "Exported $(ls "$EXPORT_PATH"/*.ipa)"
 

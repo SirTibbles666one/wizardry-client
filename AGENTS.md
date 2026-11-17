@@ -150,11 +150,11 @@ constants so a normal build carries none of it: `VITE_PROFILE=1` on the web
 side (`src/lib/perfRuntime.ts`, `npm run build:profile`) and
 `-ParmadaProfile=true` for the Android notification service
 (`ServiceProfiler.java`, read through `adb shell dumpsys activity service
-buzz.armada.app.profile/buzz.armada.app.NotificationRelayService`). Keep new
+xyz.slothlee.wizardry.profile/buzz.armada.app.NotificationRelayService`). Keep new
 probes behind the same guards. `scripts/perf-profile.mjs` drives the web
 client headless over seeded DM and Concord data; `scripts/android-profile.sh`
 measures the service on a connected device. The profiling APK installs as
-`buzz.armada.app.profile`, beside the real app, never over it.
+`xyz.slothlee.wizardry.profile`, beside the real app, never over it.
 
 ### Performance rules that have regressed before
 
@@ -345,16 +345,18 @@ number doesn't exceed the previous one.
   `capacitor-secure-storage-plugin` write fails (`errSecMissingEntitlement`,
   surfacing as a bare `"error"`) — which is where the nsec lives. Xcode's
   default ad-hoc simulator signing is enough.
-- Signing is automatic against `DEVELOPMENT_TEAM = GZLTTH5DLM` (Soapbox
-  Technology LLC), set in `project.pbxproj`. The Team ID is also baked into the
-  `appIDs` of `public/.well-known/apple-app-site-association`, so a team change
-  means changing both or universal links silently stop associating.
+- **Wizardry's identity is `xyz.slothlee.wizardry`** (App Group
+  `group.xyz.slothlee.wizardry`). `DEVELOPMENT_TEAM` is empty in
+  `project.pbxproj` until Wizardry has an Apple team, and universal links are
+  off: the associated-domains entitlement is gone and
+  `apple-app-site-association` lists no app. Both come back together, once a
+  domain serves that file with `<TEAMID>.xyz.slothlee.wizardry`.
 - **Storage is ArmadaDB in Swift, in an App Group container.** `ios/ArmadaDB`
   is the engine; `ArmadaDbPlugin.swift` is the transport, registered from
   `ViewController.capacitorDidLoad()` rather than through
   `capacitor.config.json`'s `packageClassList`, which `cap sync` regenerates
   from npm packages and would drop an app-local plugin from. The file lives in
-  `group.buzz.armada.app`, NOT the app sandbox, because that is the only
+  `group.xyz.slothlee.wizardry`, NOT the app sandbox, because that is the only
   container a notification extension can also open — and the choice stops being
   reversible the moment a build ships, since moving it later strands decrypted
   Concord and NIP-17 history that exists nowhere else. `ArmadaDbLocation`
@@ -538,7 +540,7 @@ proxies `continue userActivity` to Capacitor, and `deepLinkUrl.ts` /
 the AASA must be served with `Content-Type: application/json` and **no
 redirect** (it is extensionless, so servers that key content type off the
 extension need an explicit rule for it), and its `appIDs` must be
-`<TEAMID>.buzz.armada.app`.
+`<TEAMID>.xyz.slothlee.wizardry`.
 There is still no `CFBundleURLTypes` entry, so the `armada://open<path>` scheme
 does not resolve — deliberately: per `deepLinkUrl.ts` that scheme is emitted
 ONLY by the Android notification service's PendingIntents, and iOS push taps
