@@ -39,6 +39,18 @@ Check afterwards: the site loads, a deep link such as `/settings` loads (not a 4
 `curl -sI https://wizardry.slothlee.xyz/.well-known/apple-app-site-association` says
 `content-type: application/json` with no redirect.
 
+## As an installed app
+
+Wizardry is installable from the browser (`public/manifest.webmanifest`): Chrome, Edge and Android
+offer it from the address bar or menu, and the app's own Install buttons (landing page,
+`/downloads`, Settings) open that dialog. Safari on iPhone and iPad has no dialog; `/downloads`
+says Share › Add to Home Screen. The offer is captured at boot (`src/lib/installPrompt.ts`),
+because the browser makes it once, early in page load.
+
+The service worker caches nothing of the app. It keeps only `offline.html` and `offline.js`, and
+shows that page when opening a page fails with no connection (`src/sw/offline.ts`); every other
+load goes to the network, so a deploy is live on the next load.
+
 ## Still Soapbox's
 
 - **The nsite.** `.nsite/config.json` still publishes the build as a Nostr site named `wizardry`

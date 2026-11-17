@@ -15,6 +15,7 @@ import {
 import { AsciiSea } from "@/components/landing/AsciiSea";
 import { Button } from "@/components/ui/button";
 import { useBackOrHome } from "@/hooks/useBackOrHome";
+import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import { useReleaseArtifacts, useReleases } from "@/hooks/useReleases";
 import { toast } from "@/hooks/useToast";
 import { common, defineMessages, FormattedMessage, t, useIntl, type IntlShape, type MessageDescriptor } from "@/i18n";
@@ -693,10 +694,11 @@ export function DownloadsPage() {
   return APPS_PUBLISHED ? <PublishedDownloads /> : <NoAppsYet />;
 }
 
-/** Until Wizardry publishes its own builds: the browser is the app. */
+/** Until Wizardry publishes its own builds: the browser is the app, installed from the browser. */
 function NoAppsYet() {
   const intl = useIntl();
   const back = useBackOrHome();
+  const { canInstall, install, isInstalled, needsManualInstall } = useInstallPrompt();
   return (
     <main className="relative flex-1 min-w-0 overflow-y-auto">
       <Button
@@ -719,18 +721,56 @@ function NoAppsYet() {
             />
           </h1>
           <p className="text-pretty text-sm text-muted-foreground sm:text-base">
-            <FormattedMessage
-              id="downloadsPage.noAppsBody"
-              defaultMessage="The desktop and phone apps aren't out yet. Use {app} in any browser in the meantime: your account works the same there."
-              values={{ app: APP_NAME }}
-            />
+            {isInstalled ? (
+              <FormattedMessage
+                id="downloadsPage.installedBody"
+                defaultMessage="{app} is installed on this device. Open it from your home screen, dock or app list."
+                values={{ app: APP_NAME }}
+              />
+            ) : (
+              <FormattedMessage
+                id="downloadsPage.installBody"
+                defaultMessage="Install it from your browser and it opens in its own window, with its own icon, like any other app. Your account works the same everywhere."
+              />
+            )}
           </p>
         </div>
-        <Button asChild>
-          <Link to="/">
-            <FormattedMessage id="downloadsPage.noAppsOpen" defaultMessage="Open {app}" values={{ app: APP_NAME }} />
-          </Link>
-        </Button>
+        {!isInstalled && (
+          <div className="flex flex-col items-center gap-3">
+            {canInstall ? (
+              <Button size="lg" onClick={() => void install()}>
+                <Download className="size-4" />
+                <FormattedMessage id="downloadsPage.installButton" defaultMessage="Install {app}" values={{ app: APP_NAME }} />
+              </Button>
+            ) : (
+              <p className="max-w-sm text-pretty text-sm text-foreground">
+                {needsManualInstall ? (
+                  <FormattedMessage
+                    id="downloadsPage.installIos"
+                    defaultMessage="In Safari, tap Share, then Add to Home Screen."
+                  />
+                ) : (
+                  <FormattedMessage
+                    id="downloadsPage.installOther"
+                    defaultMessage="Look for Install app or Add to Home Screen in your browser's menu or address bar."
+                  />
+                )}
+              </p>
+            )}
+            <Button asChild variant="ghost">
+              <Link to="/">
+                <FormattedMessage id="downloadsPage.continueInBrowser" defaultMessage="Keep using it in the browser" />
+              </Link>
+            </Button>
+          </div>
+        )}
+        {isInstalled && (
+          <Button asChild>
+            <Link to="/">
+              <FormattedMessage id="downloadsPage.noAppsOpen" defaultMessage="Open {app}" values={{ app: APP_NAME }} />
+            </Link>
+          </Button>
+        )}
       </section>
       <ArmadaCrestKeyframes />
     </main>

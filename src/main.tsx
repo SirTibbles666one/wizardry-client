@@ -17,6 +17,7 @@ import {
 } from "@/lib/desktop";
 import { installEmbedPause } from "@/lib/embedPause";
 import { installFullscreenHint } from "@/lib/fullscreenHint";
+import { installInstallPromptCapture } from "@/lib/installPrompt";
 import { installScreenShareAudioRestriction } from "@/lib/screenShareAudioRestriction";
 import { PUBLIC_WEB_ORIGIN } from "@/lib/shareOrigin";
 import { signalWebReady } from "@/lib/webReady";
@@ -43,6 +44,7 @@ installEmbedPause();
 
 // Electron shows no full-screen exit hint of its own.
 installFullscreenHint();
+installInstallPromptCapture();
 
 // Native: CSS switches off web-isms (selection, tap highlight, overscroll).
 if (Capacitor.isNativePlatform()) {

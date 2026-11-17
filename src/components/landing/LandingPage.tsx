@@ -1,6 +1,6 @@
 import { HardDriveDownload } from "lucide-react";
 import { memo, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { accountsEnabled } from "@/account/session";
 import { ArmadaCrest, ArmadaCrestKeyframes } from "@/components/brand/ArmadaCrest";
@@ -9,11 +9,12 @@ import { RelayLed } from "@/components/RelayLed";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { RELAY_DICTIONARY } from "@/concord/lib/stockRelays";
+import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import { defineMessage, defineMessages, FormattedMessage, useIntl } from "@/i18n";
 import { isDesktop } from "@/lib/desktop";
 import { ANDROID_STORES } from "@/lib/downloads";
 import { APPS_PUBLISHED } from "@/lib/releases";
-import { DEPLOYMENT_RELAYS, isNativeRuntime, relayToHttpUrl } from "@/lib/platform";
+import { APP_NAME, DEPLOYMENT_RELAYS, isNativeRuntime, relayToHttpUrl } from "@/lib/platform";
 
 import { AsciiSea } from "./AsciiSea";
 import { EncryptionQuiz } from "./EncryptionQuiz";
@@ -53,6 +54,8 @@ export const LandingPage = memo(function LandingPage({
   const intl = useIntl();
   const statementRef = useRef<HTMLElement>(null);
   const deckRef = useRef<HTMLDivElement>(null);
+  const install = useInstallPrompt();
+  const navigate = useNavigate();
   usePauseOffscreenAnimations(deckRef, scrollRef);
 
   const scrollToStatement = () => {
@@ -70,6 +73,19 @@ export const LandingPage = memo(function LandingPage({
       </div>
 
       <div ref={deckRef} className="relative z-10">
+        {!INSTALLED_APP && !APPS_PUBLISHED && !install.isInstalled && (
+          <div className="absolute right-3 top-3 z-20 safe-area-top">
+            <button
+              type="button"
+              onClick={() => (install.canInstall ? void install.install() : navigate("/downloads"))}
+              className="inline-flex h-10 items-center gap-2 px-3 font-mono text-sm lowercase tracking-tight text-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            >
+              <HardDriveDownload className="size-4 shrink-0 text-[hsl(var(--accent2,180_90%_55%))]" />
+              <FormattedMessage id="landingPage.installApp" defaultMessage="install {app}" values={{ app: APP_NAME.toLowerCase() }} />
+            </button>
+          </div>
+        )}
+
         {!INSTALLED_APP && APPS_PUBLISHED && (
           <div className="absolute right-3 top-3 z-20 safe-area-top">
             <Link
