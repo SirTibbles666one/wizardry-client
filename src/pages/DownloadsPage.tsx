@@ -808,7 +808,11 @@ export function DownloadsPage() {
         <section ref={targetsRef} className="mx-auto max-w-2xl scroll-mt-6 space-y-4 px-4 pb-12 pt-4 sm:px-6">
           <div className="vessel-lift">
             <div className={cn(PANEL, "space-y-6 p-4 sm:p-6")}>
-              <PlatformPicker value={selectedOs} onChange={setSelectedOs} />
+              {/* A platform picker over an empty list invites a choice that
+                  leads nowhere, so it only appears when there is a build. */}
+              {(pending || latest) && (
+                <PlatformPicker value={selectedOs} onChange={setSelectedOs} />
+              )}
 
               {pending ? (
                 <PanelSkeleton />
