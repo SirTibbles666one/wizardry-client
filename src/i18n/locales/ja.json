@@ -1844,6 +1844,8 @@
   "downloadsPage.ios.testflightTitle": "TestFlight でベータに参加",
   "downloadsPage.linux.repoHint": "ターミナルに貼り付けてください。以降のアップデートはシステムの他の部分と一緒に {host} から届きます。",
   "downloadsPage.noBuild": "このリリースにはこのプラットフォーム向けのビルドがありません。",
+  "downloadsPage.noBuilds": "ビルドはまだありません",
+  "downloadsPage.noBuildsDescription": "{app} はまだインストールできるビルドを公開していません。今のところ Web アプリがリリースです。ブラウザで開き、ホーム画面に追加してください。",
   "downloadsPage.noReleases": "リリースが見つかりません",
   "downloadsPage.noReleasesDescription": "{app} のリリースを配信しているリレーが応答しませんでした。ほとんどの場合、接続の問題です。",
   "downloadsPage.otherPlatforms": "その他のプラットフォーム",

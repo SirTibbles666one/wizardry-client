@@ -814,7 +814,7 @@ export function DownloadsPage() {
                 <PanelSkeleton />
               ) : latest ? (
                 <PlatformPanel key={selectedOs} os={selectedOs} artifacts={byOs.get(selectedOs) ?? []} />
-              ) : (
+              ) : releases.isError ? (
                 // No compiled-in fallback list; explain rather than render an empty page.
                 <div className="space-y-3 py-4 text-center">
                   <p className="font-mono text-sm lowercase tracking-tight text-foreground">
@@ -836,6 +836,21 @@ export function DownloadsPage() {
                     <RefreshCw className={cn("size-4", releases.isFetching && "animate-spin")} />
                     <FormattedMessage {...common.tryAgain} />
                   </Button>
+                </div>
+              ) : (
+                // The relays answered and carry nothing from us: nothing is
+                // published yet, which is not a connection problem.
+                <div className="space-y-3 py-4 text-center">
+                  <p className="font-mono text-sm lowercase tracking-tight text-foreground">
+                    <FormattedMessage id="downloadsPage.noBuilds" defaultMessage="no builds yet" />
+                  </p>
+                  <p className="mx-auto max-w-md text-sm leading-relaxed text-muted-foreground">
+                    <FormattedMessage
+                      id="downloadsPage.noBuildsDescription"
+                      defaultMessage="{app} hasn't published an installable build. The web app is the release for now — open it in any browser and add it to your home screen."
+                      values={{ app: APP_NAME }}
+                    />
+                  </p>
                 </div>
               )}
             </div>

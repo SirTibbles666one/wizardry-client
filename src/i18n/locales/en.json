@@ -1844,6 +1844,8 @@
   "downloadsPage.ios.testflightTitle": "Join the beta on TestFlight",
   "downloadsPage.linux.repoHint": "Paste into a terminal. Updates then arrive with the rest of your system, from {host}.",
   "downloadsPage.noBuild": "This release has no build for this platform.",
+  "downloadsPage.noBuilds": "no builds yet",
+  "downloadsPage.noBuildsDescription": "{app} hasn't published an installable build. The web app is the release for now — open it in any browser and add it to your home screen.",
   "downloadsPage.noReleases": "no releases found",
   "downloadsPage.noReleasesDescription": "The relays that carry {app}'s releases didn't answer. This is almost always a connection problem.",
   "downloadsPage.otherPlatforms": "Other platforms",

@@ -1844,6 +1844,8 @@
   "downloadsPage.ios.testflightTitle": "Doe mee aan de bèta via TestFlight",
   "downloadsPage.linux.repoHint": "Plak in een terminal. Updates komen daarna samen met de rest van je systeem binnen, vanaf {host}.",
   "downloadsPage.noBuild": "Deze release heeft geen build voor dit platform.",
+  "downloadsPage.noBuilds": "nog geen builds",
+  "downloadsPage.noBuildsDescription": "{app} heeft nog geen installeerbare versie gepubliceerd. Voorlopig is de webapp de release: open hem in een browser en zet hem op je beginscherm.",
   "downloadsPage.noReleases": "geen releases gevonden",
   "downloadsPage.noReleasesDescription": "De relays met de releases van {app} reageerden niet. Dit is bijna altijd een verbindingsprobleem.",
   "downloadsPage.otherPlatforms": "Andere platforms",

@@ -1844,6 +1844,8 @@
   "downloadsPage.ios.testflightTitle": "Rejoindre la bêta sur TestFlight",
   "downloadsPage.linux.repoHint": "Collez dans un terminal. Les mises à jour arriveront ensuite avec le reste de votre système, depuis {host}.",
   "downloadsPage.noBuild": "Cette version n’a pas de build pour cette plateforme.",
+  "downloadsPage.noBuilds": "pas encore de build",
+  "downloadsPage.noBuildsDescription": "{app} n’a pas encore publié de version installable. Pour l’instant, la version web fait office de version : ouvrez-la dans n’importe quel navigateur et ajoutez-la à votre écran d’accueil.",
   "downloadsPage.noReleases": "aucune version trouvée",
   "downloadsPage.noReleasesDescription": "Les relais qui diffusent les versions de {app} n’ont pas répondu. C’est presque toujours un problème de connexion.",
   "downloadsPage.otherPlatforms": "Autres plateformes",

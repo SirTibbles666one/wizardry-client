@@ -29,10 +29,14 @@ export const RELEASE_APP_ID: string = config("RELEASE_APP_ID") || "buzz.armada.a
 /**
  * Trusted release signers (hex). Build-time, so adding a signer goes through
  * code review: these events hand out executables.
+ *
+ * The default is Wizardry's own release identity, deliberately NOT the key that
+ * signs the nsite: one leak would otherwise be able to publish both the site and
+ * an executable the app installs. `RELEASE_AUTHORS` overrides it.
  */
 export const RELEASE_AUTHORS: string[] = (
   config("RELEASE_AUTHORS") ||
-  "781a1527055f74c1f70230f10384609b34548f8ab6a0a6caa74025827f9fdae5"
+  "23218301f8990b2bbe2d9df8dc314be3ee1d7a84f73b7cb68c41e973a646b317"
 )
   .split(",")
   .map((pubkey: string) => pubkey.trim().toLowerCase())

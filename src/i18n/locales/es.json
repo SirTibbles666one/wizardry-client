@@ -1844,6 +1844,8 @@
   "downloadsPage.ios.testflightTitle": "Únete a la beta en TestFlight",
   "downloadsPage.linux.repoHint": "Pégalo en un terminal. Las actualizaciones llegarán junto con el resto de tu sistema, desde {host}.",
   "downloadsPage.noBuild": "Esta versión no tiene compilación para esta plataforma.",
+  "downloadsPage.noBuilds": "aún no hay compilaciones",
+  "downloadsPage.noBuildsDescription": "{app} todavía no ha publicado una versión instalable. Por ahora la versión es la web: ábrela en cualquier navegador y añádela a tu pantalla de inicio.",
   "downloadsPage.noReleases": "no se encontraron versiones",
   "downloadsPage.noReleasesDescription": "Los relays que publican las versiones de {app} no respondieron. Casi siempre se trata de un problema de conexión.",
   "downloadsPage.otherPlatforms": "Otras plataformas",

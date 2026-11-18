@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   ASSET_KIND,
+  RELEASE_AUTHORS,
   RELEASE_KIND,
   artifactLabel,
   artifactOs,
@@ -255,5 +256,18 @@ describe("foldReleases", () => {
     ]);
     expect(folded.map((r) => r.version)).toEqual(["1.1.0", "1.0.0"]);
     expect(folded.find((r) => r.version === "1.0.0")?.id).toBe("republished");
+  });
+});
+
+describe("trusted release signers", () => {
+  // A merge that takes upstream's releases.ts wholesale re-points this at
+  // upstream's key, and the app would then offer their executables as ours.
+  it("defaults to Wizardry's own release identity, not upstream's", () => {
+    expect(RELEASE_AUTHORS).toEqual([
+      "23218301f8990b2bbe2d9df8dc314be3ee1d7a84f73b7cb68c41e973a646b317",
+    ]);
+    expect(RELEASE_AUTHORS).not.toContain(
+      "781a1527055f74c1f70230f10384609b34548f8ab6a0a6caa74025827f9fdae5",
+    );
   });
 });
