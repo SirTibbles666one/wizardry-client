@@ -212,7 +212,7 @@ export function BackupKeyDialog({ open, onOpenChange, nsec, pubkey, onLogout }: 
         description: t(
           {
             id: "backupKeyDialog.encryptedSaved.description",
-            defaultMessage: "Saved to {location}. You'll need today's password to use it.",
+            defaultMessage: "Saved to {location}. You'll need that password to use it.",
           },
           { location: result.location },
         ),

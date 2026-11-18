@@ -9,10 +9,12 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/useToast";
 import { common, FormattedMessage, t, useIntl } from "@/i18n";
 import { writeClipboardText } from "@/lib/clipboard";
-import { saveNsec } from "@/lib/credentialManager";
+import { saveNsec, exportNcryptsec } from "@/lib/credentialManager";
 import { desktopSecretsStatus, isDesktop } from "@/lib/desktop";
 import { clearKeyBackupPending } from "@/lib/keyBackup";
+import { encryptNsecToNcryptsec, keySecurityFor } from "@/lib/nip49";
 import { share } from "@/lib/share";
+import { keyStorageTier } from "@/lib/secureStorage";
 
 import type { SecretsStatus } from "@/lib/desktop";
 
@@ -69,11 +71,19 @@ interface KeyBackupSettingsProps {
   pubkey: string;
 }
 
+/** Same floor the backup dialog uses for a NIP-49 password. */
+const MIN_PASSWORD_LENGTH = 8;
+
 /** Reveal/copy/download the secret key. Only rendered for nsec logins. */
 export function KeyBackupSettings({ nsec, pubkey }: KeyBackupSettingsProps) {
   const intl = useIntl();
   const [showKey, setShowKey] = useState(false);
   const [copied, setCopied] = useState<"nsec" | "npub" | null>(null);
+  const [encryptOpen, setEncryptOpen] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmation, setConfirmation] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [encrypting, setEncrypting] = useState(false);
   const npub = nip19.npubEncode(pubkey);
 
   const copy = async (text: string, which: "nsec" | "npub") => {
@@ -111,6 +121,85 @@ export function KeyBackupSettings({ nsec, pubkey }: KeyBackupSettingsProps) {
         description: t({ id: "keyBackupSettings.backupFailedDescription", defaultMessage: "Could not save the key. Please copy it manually." }),
         variant: "destructive",
       });
+    }
+  };
+
+  /**
+   * NIP-49: the key leaves this device already encrypted, so the saved file (or
+   * the shared text on a phone) is worthless to whoever finds it.
+   */
+  const backUpEncrypted = async () => {
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      setPasswordError(
+        t(
+          { id: "backupKeyDialog.passwordTooShort", defaultMessage: "Use at least {count} characters." },
+          { count: MIN_PASSWORD_LENGTH },
+        ),
+      );
+      return;
+    }
+    if (password !== confirmation) {
+      setPasswordError(t({ id: "backupKeyDialog.passwordMismatch", defaultMessage: "The two passwords don't match." }));
+      return;
+    }
+
+    setPasswordError("");
+    setEncrypting(true);
+    try {
+      const keySecurity = keySecurityFor(await keyStorageTier());
+      const ncryptsec = await encryptNsecToNcryptsec(nsec, password, { keySecurity });
+
+      if (Capacitor.isNativePlatform()) {
+        await share({
+          title: t({ id: "keyBackupSettings.shareTitleEncrypted", defaultMessage: "Wizardry encrypted key" }),
+          text: ncryptsec,
+          dialogTitle: t({
+            id: "keyBackupSettings.shareDialogTitleEncrypted",
+            defaultMessage: "Back up your encrypted key",
+          }),
+        });
+        toast({
+          title: t({ id: "backupKeyDialog.encryptedSaved.title", defaultMessage: "Encrypted key saved" }),
+        });
+      } else {
+        const result = await exportNcryptsec(ncryptsec);
+        if (result.status === "cancelled") return;
+        if (result.status === "failed") {
+          toast({
+            title: t({ id: "keyBackupSettings.backupFailed", defaultMessage: "Backup failed" }),
+            description: t({
+              id: "backupKeyDialog.encryptedSaveFailed",
+              defaultMessage: "Saving failed. Copy the encrypted key and store it somewhere safe.",
+            }),
+            variant: "destructive",
+          });
+          return;
+        }
+        toast({
+          title: t({ id: "backupKeyDialog.encryptedSaved.title", defaultMessage: "Encrypted key saved" }),
+          description: t(
+            {
+              id: "backupKeyDialog.encryptedSaved.description",
+              defaultMessage: "Saved to {location}. You'll need that password to use it.",
+            },
+            { location: result.location },
+          ),
+        });
+      }
+
+      setPassword("");
+      setConfirmation("");
+      setEncryptOpen(false);
+      // An encrypted backup is a backup: the reminder stops asking.
+      clearKeyBackupPending(pubkey);
+    } catch {
+      toast({
+        title: t({ id: "keyBackupSettings.backupFailed", defaultMessage: "Backup failed" }),
+        description: t({ id: "backupKeyDialog.encryptFailed", defaultMessage: "Couldn't encrypt this key. Try again." }),
+        variant: "destructive",
+      });
+    } finally {
+      setEncrypting(false);
     }
   };
 
@@ -183,6 +272,71 @@ export function KeyBackupSettings({ nsec, pubkey }: KeyBackupSettingsProps) {
               <FormattedMessage id="keyBackupSettings.backUp" defaultMessage="Back up" />
             </Button>
           </div>
+
+          {/* NIP-49: hand the key over encrypted, so a copied file is worthless. */}
+          <Button
+            variant="secondary"
+            className="w-full clip-corner-lg"
+            onClick={() => setEncryptOpen((open) => !open)}
+            aria-expanded={encryptOpen}
+          >
+            <Lock className="size-4" />
+            <FormattedMessage id="backupKeyDialog.encryptWithPassword" defaultMessage="Back up with a password" />
+          </Button>
+
+          {encryptOpen && (
+            <div className="space-y-2 pt-1">
+              <p className="text-xs text-muted-foreground">
+                <FormattedMessage
+                  id="backupKeyDialog.encryptedDescription"
+                  defaultMessage="Pick a password for the backup. The file it saves is useless without it — and so is the backup if you forget it."
+                />
+              </p>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (passwordError) setPasswordError("");
+                }}
+                placeholder={intl.formatMessage({ id: "backupKeyDialog.password", defaultMessage: "Password" })}
+                aria-label={intl.formatMessage({ id: "backupKeyDialog.password", defaultMessage: "Password" })}
+                autoComplete="new-password"
+                className="bg-background/40 border-transparent"
+              />
+              <Input
+                type="password"
+                value={confirmation}
+                onChange={(e) => {
+                  setConfirmation(e.target.value);
+                  if (passwordError) setPasswordError("");
+                }}
+                placeholder={intl.formatMessage({ id: "backupKeyDialog.confirmPassword", defaultMessage: "Confirm password" })}
+                aria-label={intl.formatMessage({ id: "backupKeyDialog.confirmPassword", defaultMessage: "Confirm password" })}
+                autoComplete="new-password"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    void backUpEncrypted();
+                  }
+                }}
+                className="bg-background/40 border-transparent"
+              />
+              {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}
+              <Button
+                className="w-full clip-corner-lg"
+                onClick={backUpEncrypted}
+                disabled={encrypting || !password || !confirmation}
+              >
+                <Lock className="size-4" />
+                {encrypting ? (
+                  <FormattedMessage id="backupKeyDialog.encrypting" defaultMessage="Encrypting…" />
+                ) : (
+                  <FormattedMessage id="backupKeyDialog.encryptKey" defaultMessage="Encrypt key" />
+                )}
+              </Button>
+            </div>
+          )}
         </div>
       </SettingsRow>
 
