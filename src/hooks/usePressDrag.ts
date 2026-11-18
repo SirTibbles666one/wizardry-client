@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { cancelPressUnder, isCancellingPress } from "@/lib/cancelPress";
+import { closeOpenMenuSheets } from "@/hooks/useMenuSheet";
 import { holdTimeout } from "@/lib/holdTimeout";
 import { impact } from "@/lib/haptics";
 
@@ -75,6 +76,12 @@ export interface PressDragOptions<T> {
     * server list does. Released still, the menu stays open and the press does not click.
     */
   heldTouchOpensMenu?: boolean;
+  /**
+   * Whether the container carries the blocking touchmove canceller. A blocking listener makes
+   * every scroll of the container wait on the main thread, so a caller whose presses all come
+   * from `touch-action: none` grips (which cancel their own moves) passes false.
+   */
+  containerTouchMove?: boolean;
 }
 
 /**
@@ -98,6 +105,7 @@ export function usePressDrag<T>({
   pickupOnMove = "mouse",
   touchHold = "drag",
   heldTouchOpensMenu = false,
+  containerTouchMove = true,
 }: PressDragOptions<T>) {
   const [source, setSource] = useState<T | null>(null);
   /** The entry a touch may drag under `touchHold: "menu"`; ref for listeners. */
@@ -214,10 +222,10 @@ export function usePressDrag<T>({
       containerRef.current?.removeEventListener("pointerdown", onContainerPointerDown, true);
       if (containerRef.current !== el) stopFling();
       containerRef.current = el;
-      el?.addEventListener("touchmove", onTouchMove, { passive: false });
+      if (containerTouchMove) el?.addEventListener("touchmove", onTouchMove, { passive: false });
       el?.addEventListener("pointerdown", onContainerPointerDown, true);
     },
-    [containerRef, onTouchMove, onContainerPointerDown, stopFling],
+    [containerRef, onTouchMove, onContainerPointerDown, stopFling, containerTouchMove],
   );
 
   /** For a {@link panFrom} surface outside the container. */
@@ -541,6 +549,8 @@ function openMenuAt(target: EventTarget | null, clientX: number, clientY: number
 function closeOpenMenu() {
   const menu = document.querySelector("[role='menu'][data-state='open']");
   menu?.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true }));
+  // On touch the menu is a sheet.
+  closeOpenMenuSheets();
 }
 
 /** Radix `asChild` Slots don't reliably forward React pointer props. */

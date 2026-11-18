@@ -14,6 +14,8 @@ import {
   TRIM_SLACK,
   WINDOW_STEP,
 } from "@/components/chat/timelineWindow";
+import { formatDayLabel, isSameDay } from "@/components/chat/dayLabel";
+import { FloatingDateBadge } from "@/components/chat/FloatingDateBadge";
 import { flashRow } from "@/components/chat/rowFlash";
 import {
   captureScrollAnchor,
@@ -31,7 +33,7 @@ import { useMutedWordFilter } from "@/hooks/useMutedWords";
 import { usePerfMilestone } from "@/hooks/usePerfMilestone";
 import { SettingsOverlayContext } from "@/lib/settingsOverlay";
 import { cn } from "@/lib/utils";
-import { FormattedMessage, useIntl, type IntlShape } from "@/i18n";
+import { FormattedMessage, useIntl } from "@/i18n";
 
 import { isGitContinuation, timelineEntryAuthor, type ChannelTimelineEntry } from "@/components/chat/channelTimeline";
 import type { ChatMsg, ChatTransport } from "@/components/chat/transport";
@@ -65,7 +67,13 @@ const UNDERFILL_DRY_LIMIT = 2;
 
 const AT_BOTTOM_PX = 60;
 
+/** Quiet time after a lifted touch scroll's last scroll event before momentum counts as over. */
+const MOMENTUM_IDLE_MS = 150;
+
 const JUMP_PILL_PX = 300;
+
+/** Quiet time (no reader scroll, no new message) before "Jump to present" fades out. */
+const JUMP_PILL_IDLE_MS = 3000;
 
 const JUMP_CONTEXT = 15;
 
@@ -81,34 +89,6 @@ const UNRENDERED_BELOW_PX = 1_000_000;
 
 /** Rows per commit as a conversation opens, one step per frame; the switch click's commit mounts none. */
 const OPENING_RAMP = [0, FIRST_PAINT_WINDOW, INITIAL_WINDOW];
-
-export function isSameDay(a: number, b: number): boolean {
-  const da = new Date(a * 1000);
-  const db = new Date(b * 1000);
-  return (
-    da.getFullYear() === db.getFullYear() &&
-    da.getMonth() === db.getMonth() &&
-    da.getDate() === db.getDate()
-  );
-}
-
-function formatDayLabel(ts: number, intl: IntlShape): string {
-  const date = new Date(ts * 1000);
-  const now = new Date();
-  if (isSameDay(ts, Math.floor(now.getTime() / 1000))) {
-    return intl.formatMessage({ id: "messageTimeline.today", defaultMessage: "Today" });
-  }
-  const yesterday = new Date(now);
-  yesterday.setDate(now.getDate() - 1);
-  if (isSameDay(ts, Math.floor(yesterday.getTime() / 1000))) {
-    return intl.formatMessage({ id: "messageTimeline.yesterday", defaultMessage: "Yesterday" });
-  }
-  // intl memoizes its formatters, so this doesn't build an Intl.DateTimeFormat per call.
-  return intl.formatDate(date, date.getFullYear() === now.getFullYear() ? DAY_FORMAT : DAY_YEAR_FORMAT);
-}
-
-const DAY_FORMAT: Intl.DateTimeFormatOptions = { month: "long", day: "numeric" };
-const DAY_YEAR_FORMAT: Intl.DateTimeFormatOptions = { month: "long", day: "numeric", year: "numeric" };
 
 /** Discord-style day separator. Memoized: the list re-renders on most page renders. */
 export const DateSeparator = memo(function DateSeparator({ ts }: { ts: number }) {
@@ -286,6 +266,22 @@ type TimelineItem =
   | { type: "entry"; entry: NonChatEntry; related?: readonly NonChatEntry[]; key: string };
 
 type NonChatEntry = Exclude<ChannelTimelineEntry, { type: "chat" }>;
+
+/** The day a row belongs to, for the floating date badge; dividers have none of their own. */
+function rowTimestamp(item: TimelineItem): number | undefined {
+  switch (item.type) {
+    case "date":
+      return item.ts;
+    case "message":
+      return item.msg.created_at;
+    case "flood":
+      return item.msgs[0]?.created_at;
+    case "entry":
+      return item.entry.createdAt;
+    default:
+      return undefined;
+  }
+}
 
 /**
  * A Git group head plus its same-day continuations (which emit no row).
@@ -566,6 +562,14 @@ export function MessageTimeline({
   /** Reveal steps chained since the reader last scrolled up. */
   const chainedRevealsRef = useRef(0);
   const maybeExtendRef = useRef<() => void>(() => {});
+  // A touch scroll in progress: finger down, or momentum until scroll events stop.
+  // iOS momentum overrides scrollTop writes, so the anchor restore a row prepended
+  // above would need is lost and the reader is thrown back by the new rows' height.
+  // Prepends wait for it to end; `touchSettle` re-runs what was held.
+  const touchDownRef = useRef(false);
+  const touchIdleRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [touchSettle, setTouchSettle] = useState(0);
+  const touchScrolling = useCallback(() => touchDownRef.current || touchIdleRef.current != null, []);
 
   const listVisible = !isLoading && !transientEmpty && timelineEntries.length > 0;
   // The scroller remounts at `scrollTop: 0` after the skeleton, so the next
@@ -573,6 +577,21 @@ export function MessageTimeline({
   if (!listVisible) pinBottomRef.current = true;
 
   const [showJumpPill, setShowJumpPill] = useState(false);
+  // The pill fades while the reader is still; a scroll or a new message brings it back.
+  const [jumpPillIdle, setJumpPillIdle] = useState(false);
+  const jumpPillTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const holdJumpPill = useCallback(() => {
+    if (jumpPillTimerRef.current != null) clearTimeout(jumpPillTimerRef.current);
+    jumpPillTimerRef.current = null;
+    setJumpPillIdle(false);
+  }, []);
+  const wakeJumpPill = useCallback(() => {
+    holdJumpPill();
+    jumpPillTimerRef.current = setTimeout(() => {
+      jumpPillTimerRef.current = null;
+      setJumpPillIdle(true);
+    }, JUMP_PILL_IDLE_MS);
+  }, [holdJumpPill]);
   // "Jump to unread": shown while the NEW divider sits above the viewport (or
   // outside the rendered window), until the reader reaches it once.
   const [showUnreadPill, setShowUnreadPill] = useState(false);
@@ -880,7 +899,8 @@ export function MessageTimeline({
       return;
     }
     const backfill = backfillRevealRef.current;
-    if (backfill) {
+    // Held through a touch scroll: the page lands outside the window, so nothing moves.
+    if (backfill && !touchScrolling()) {
       // The boundary entry can vanish in the same commit (expiry, delete); fall back
       // to the slice top rather than stranding a reader at scrollTop 0.
       const found = timelineEntries.findIndex((entry) => entry.id === backfill.boundaryId);
@@ -923,7 +943,7 @@ export function MessageTimeline({
     }
     stickToBottom();
     // `listVisible`: the scroller this effect moves may only just have mounted.
-  }, [items, listVisible, anchorLost, timelineEntries, backfillPulse, captureReadingAnchor, setWindowStart, isFolded, revealUp, jumpToRow, pinToBottomNow, holdJumpTarget, restoreReadingAnchor, stickToBottom]);
+  }, [items, listVisible, anchorLost, timelineEntries, backfillPulse, touchSettle, captureReadingAnchor, setWindowStart, isFolded, revealUp, jumpToRow, pinToBottomNow, holdJumpTarget, restoreReadingAnchor, stickToBottom, touchScrolling]);
 
   // Content growth and container reflows (thread panel, composer swap) land here.
   useLayoutEffect(() => {
@@ -975,7 +995,7 @@ export function MessageTimeline({
     if (distanceRef.current <= AT_BOTTOM_PX) return;
     const start = startIndexRef.current;
     if (start > 0) {
-      if (clampedScrollTop(el) >= REVEAL_TRIGGER_PX) return;
+      if (clampedScrollTop(el) >= REVEAL_TRIGGER_PX || touchScrolling()) return;
       const nextIndex = stepBackRows(entriesRef.current, start, WINDOW_STEP, isFolded);
       if (!entriesRef.current[nextIndex]) return;
       extendLockRef.current = true;
@@ -1003,7 +1023,7 @@ export function MessageTimeline({
       loadingOlderRef.current = false;
       setBackfillPulse((pulse) => pulse + 1);
     });
-  }, [paused, loadOlder, hasMore, isLoadingOlder, captureReadingAnchor, isFolded, revealUp]);
+  }, [paused, loadOlder, hasMore, isLoadingOlder, captureReadingAnchor, isFolded, revealUp, touchScrolling]);
 
   /**
    * Near the window's bottom while newer loaded rows are unrendered: reveal a
@@ -1031,13 +1051,27 @@ export function MessageTimeline({
     if (end >= all.length) return;
     if (distanceFromBottom(el) >= REVEAL_TRIGGER_PX) return;
     const nextEnd = stepForwardRows(all, end, WINDOW_STEP, isFolded);
+    const trimAbove = countRows(all, startIndexRef.current, nextEnd, isFolded) > MAX_WINDOW + TRIM_SLACK;
+    // Trimming above needs an anchor restore, which a touch scroll would override.
+    if (trimAbove && touchScrolling()) return;
     extendLockRef.current = true;
     captureReadingAnchor();
-    if (countRows(all, startIndexRef.current, nextEnd, isFolded) > MAX_WINDOW + TRIM_SLACK) {
-      setWindowStart(all[stepBackRows(all, nextEnd, MAX_WINDOW, isFolded)].id);
-    }
+    if (trimAbove) setWindowStart(all[stepBackRows(all, nextEnd, MAX_WINDOW, isFolded)].id);
     setWindowEndId(nextEnd >= all.length ? null : all[nextEnd - 1].id);
-  }, [paused, captureReadingAnchor, isFolded, setWindowStart, hasNewer, loadNewer, isLoadingNewer]);
+  }, [paused, captureReadingAnchor, isFolded, setWindowStart, hasNewer, loadNewer, isLoadingNewer, touchScrolling]);
+  const maybeExtendDownRef = useRef(maybeExtendDown);
+  maybeExtendDownRef.current = maybeExtendDown;
+
+  /** (Re)start the wait for a lifted touch scroll's momentum to end, then run what it held. */
+  const armTouchIdle = useCallback(() => {
+    if (touchIdleRef.current != null) clearTimeout(touchIdleRef.current);
+    touchIdleRef.current = setTimeout(() => {
+      touchIdleRef.current = null;
+      setTouchSettle((n) => n + 1);
+      maybeExtendRef.current();
+      maybeExtendDownRef.current();
+    }, MOMENTUM_IDLE_MS);
+  }, []);
   // Called via ref from the earlier-declared layout effect. Cancel on unmount.
   maybeExtendRef.current = maybeExtend;
 
@@ -1130,11 +1164,54 @@ export function MessageTimeline({
     setShowJumpPill(distanceRef.current > JUMP_PILL_PX);
     checkUnreadPill();
     if (el.scrollTop === top) captureReadingAnchor();
+    // Momentum is still running while the reader's scroll keeps moving after lift.
+    if ((movingUp || movingDown) && !touchDownRef.current && touchIdleRef.current != null) armTouchIdle();
+    // Our own scroll writes record their offset first, so only the reader's move here.
+    if (movingUp || movingDown) wakeJumpPill();
     if (movingUp) {
       chainedRevealsRef.current = 0;
       maybeExtend();
     } else if (movingDown) maybeExtendDown();
-  }, [captureReadingAnchor, readerDistance, maybeExtend, maybeExtendDown, checkUnreadPill]);
+  }, [captureReadingAnchor, readerDistance, maybeExtend, maybeExtendDown, checkUnreadPill, armTouchIdle, wakeJumpPill]);
+
+  const newestEntryId = timelineEntries[timelineEntries.length - 1]?.id;
+  useEffect(() => {
+    if (showJumpPill) wakeJumpPill();
+  }, [showJumpPill, newestEntryId, wakeJumpPill]);
+  useEffect(
+    () => () => {
+      if (jumpPillTimerRef.current != null) clearTimeout(jumpPillTimerRef.current);
+    },
+    [],
+  );
+
+  useLayoutEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const down = () => {
+      touchDownRef.current = true;
+      if (touchIdleRef.current != null) clearTimeout(touchIdleRef.current);
+      touchIdleRef.current = null;
+    };
+    const up = () => {
+      touchDownRef.current = false;
+      armTouchIdle();
+    };
+    el.addEventListener("touchstart", down, { passive: true });
+    el.addEventListener("touchend", up, { passive: true });
+    el.addEventListener("touchcancel", up, { passive: true });
+    return () => {
+      el.removeEventListener("touchstart", down);
+      el.removeEventListener("touchend", up);
+      el.removeEventListener("touchcancel", up);
+    };
+  }, [listVisible, armTouchIdle]);
+  useEffect(
+    () => () => {
+      if (touchIdleRef.current != null) clearTimeout(touchIdleRef.current);
+    },
+    [],
+  );
 
   // After the pin-to-bottom layout settles, so a divider already in view counts as reached.
   useEffect(() => {
@@ -1160,12 +1237,15 @@ export function MessageTimeline({
     };
   }, [items, expandedFloods]);
 
-  // Rows land above a bottom-pinned reader, so nothing moves.
+  // Rows land above a bottom-pinned reader, so nothing moves — unless they started a
+  // touch scroll first, which holds the ramp like any other prepend.
   useEffect(() => {
     if (rampStep >= OPENING_RAMP.length - 1 || timelineEntries.length === 0) return;
-    const frame = requestAnimationFrame(() => setRampStep((step) => step + 1));
+    const frame = requestAnimationFrame(() => {
+      if (!touchScrolling()) setRampStep((step) => step + 1);
+    });
     return () => cancelAnimationFrame(frame);
-  }, [rampStep, timelineEntries.length]);
+  }, [rampStep, timelineEntries.length, touchSettle, touchScrolling]);
 
   // Back at the bottom: trim to the newest (bounds a long session's DOM).
   useEffect(() => {
@@ -1279,6 +1359,8 @@ export function MessageTimeline({
                 <div
                   key={item.key}
                   data-scroll-anchor={item.key}
+                  data-ts={rowTimestamp(item)}
+                  data-day-start={item.type === "date" || undefined}
                   className="timeline-row relative hover:z-10 focus-within:z-10"
                 >
                   {item.type === "date" ? (
@@ -1313,6 +1395,7 @@ export function MessageTimeline({
               <div className="h-4" aria-hidden />
             </div>
           </div>
+          <FloatingDateBadge scrollRef={scrollRef} contentRef={contentRef} belowPill={showUnreadPill} />
           {showUnreadPill && (
             <div className="absolute top-3 inset-x-0 z-10 flex justify-center pointer-events-none">
               <button
@@ -1330,7 +1413,12 @@ export function MessageTimeline({
               <button
                 type="button"
                 onClick={returnToPresent}
-                className="pointer-events-auto inline-flex items-center gap-2 clip-corner-lg bg-secondary/90 backdrop-blur px-5 py-2.5 text-sm font-medium text-foreground shadow-lg hover:bg-secondary transition-colors"
+                onPointerEnter={holdJumpPill}
+                onPointerLeave={wakeJumpPill}
+                onFocus={holdJumpPill}
+                onBlur={wakeJumpPill}
+                data-idle={jumpPillIdle || undefined}
+                className="pointer-events-auto inline-flex items-center gap-2 clip-corner-lg bg-secondary/90 backdrop-blur px-5 py-2.5 text-sm font-medium text-foreground shadow-lg hover:bg-secondary transition-[color,background-color,opacity] duration-300 data-[idle]:opacity-0 data-[idle]:pointer-events-none"
                 aria-label={intl.formatMessage({
                   id: "messageTimeline.jumpToLatest",
                   defaultMessage: "Jump to the latest messages",

@@ -32,6 +32,7 @@ import {
   type ImagePointer,
 } from "@/concord/lib/types";
 import { useUploadFile } from "@/hooks/useUploadFile";
+import { encryptedUploadFailureReason } from "@/lib/blossomPreflight";
 import { toast } from "@/hooks/useToast";
 import { cn } from "@/lib/utils";
 import { common, FormattedMessage, t, useIntl } from "@/i18n";
@@ -151,7 +152,7 @@ export function CreateCommunityWizard({ onClose }: { onClose: () => void }) {
       if (field === "icon") setIcon(staged);
       else setBanner(staged);
     } catch (e) {
-      setError(e instanceof Error ? e.message : t({ id: "createCommunityWizard.uploadFailed", defaultMessage: "Upload failed." }));
+      setError(encryptedUploadFailureReason(e) ?? (e instanceof Error ? e.message : t({ id: "createCommunityWizard.uploadFailed", defaultMessage: "Upload failed." })));
     } finally {
       setUploading(null);
     }
@@ -529,7 +530,7 @@ function VoiceServerListEditor({
             placeholder="voice.example.com"
             aria-label={intl.formatMessage({ id: "createCommunityWizard.voice.add", defaultMessage: "Add voice server" })}
             autoComplete="off"
-            className="bg-background/40 border-transparent text-base md:text-sm"
+            className="text-base md:text-sm"
           />
           <Button type="submit" disabled={!draft.trim()} className="clip-corner-lg shrink-0">
             <Plus className="size-4 mr-1.5" /> <FormattedMessage {...common.add} />

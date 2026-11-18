@@ -9,7 +9,7 @@ import { appEventStore } from "@/lib/db/mainEventStore";
 import { queryDm17Thread } from "@/lib/nip17/dm17Store";
 import { fetchProfiles } from "@/sw/profileFetch";
 
-import { communityAvatarShown, openConcord, openDm, preparePush, pushScope } from "./pushRuntime";
+import { openConcord, openDm, preparePush, pushScope } from "./pushRuntime";
 
 // No sockets in the suite: profile lookups answer from whatever a test sets.
 vi.mock("@/sw/profileFetch", () => ({ fetchProfiles: vi.fn(async () => []) }));
@@ -966,6 +966,37 @@ describe("preparePush — showing nothing on purpose", () => {
     expect((await preparePush({ scope: "c2", event: wrapFrom(manager, 9, "news") as never }, config))?.drop).not.toBe(true);
   });
 
+  it("opens a restricted Channel's writer address and rings only its writers (CORD-03 §1)", async () => {
+    const CHANNEL = "5b".repeat(32);
+    const COMMUNITY = "7b".repeat(32);
+    const writerSk = generateSecretKey();
+    const writerPk = getPublicKey(writerSk);
+    const convKey = getConversationKey(generateSecretKey(), getPublicKey(generateSecretKey()));
+    const wrapFrom = (authorSk: Uint8Array, wepoch: string[][]) => {
+      const rumor = { pubkey: getPublicKey(authorSk), kind: 9, content: "post", tags: [["channel", CHANNEL], ["epoch", "1"], ...wepoch], created_at: now() };
+      const withId = { ...rumor, id: getEventHash(rumor as Parameters<typeof getEventHash>[0]) };
+      const sealed = finalizeEvent({ kind: 20013, content: nip44Encrypt(JSON.stringify(withId), convKey), tags: [], created_at: rumor.created_at }, authorSk);
+      return finalizeEvent({ kind: 1059, content: nip44Encrypt(JSON.stringify(sealed), convKey), tags: [["p", getPublicKey(generateSecretKey())]], created_at: now() }, writerSk);
+    };
+    const [writer, revoked] = [generateSecretKey(), generateSecretKey()];
+    const writerStream = { pk: writerPk, convKey: bytesToHex(convKey), epoch: "1", wepoch: "2", communityId: COMMUNITY, channelId: CHANNEL, postAuthors: [getPublicKey(writer)] };
+    const config = { policy: "generic" as const, self: getPublicKey(generateSecretKey()), knownPeers: [], concord: [writerStream] };
+
+    expect(openConcord(wrapFrom(writer, [["wepoch", "2"]]) as never, [writerStream])).toBeTruthy();
+    expect(openConcord(wrapFrom(writer, []) as never, [writerStream])).toBeUndefined();
+    expect(openConcord(wrapFrom(writer, [["wepoch", "3"]]) as never, [writerStream])).toBeUndefined();
+    expect(openConcord(wrapFrom(writer, [["wepoch", "02"]]) as never, [writerStream])).toBeUndefined();
+    expect(openConcord(wrapFrom(writer, [["wepoch", "2"], ["wepoch", "2"]]) as never, [writerStream])).toBeUndefined();
+
+    const rang = await preparePush({ scope: "c2", event: wrapFrom(writer, [["wepoch", "2"]]) as never }, config);
+    expect(rang?.drop).not.toBe(true);
+    expect(rang?.line).toContain("post");
+    // A holder of the writer key the Roster no longer lets post.
+    expect((await preparePush({ scope: "c2", event: wrapFrom(revoked, [["wepoch", "2"]]) as never }, config))?.drop).toBe(true);
+    // One that won't open names no author to judge, so it rings nobody either.
+    expect((await preparePush({ scope: "c2", event: wrapFrom(writer, []) as never }, config))?.drop).toBe(true);
+  });
+
   it("drops a Concord message sent before this membership began", async () => {
     const CHANNEL = "9a".repeat(32);
     const COMMUNITY = "9b".repeat(32);
@@ -1155,26 +1186,6 @@ describe("napp.push.payload: the plane read off the event", () => {
     const forged = { ...JSON.parse(JSON.stringify(event(9, [["h", "general"]]))), content: "not what was signed" };
     const prepared = await preparePush({ event: forged, relays: ["wss://relay-a.example"] }, cfg());
     expect(prepared?.drop).toBe(true);
-  });
-});
-
-describe("communityAvatarShown", () => {
-  it("shows a community sender's avatar only for a known peer", () => {
-    const known = "a".repeat(64);
-    const cfg = { policy: "generic", self: "c".repeat(64), knownPeers: [known] } as SwPushConfig;
-    expect(communityAvatarShown(known, cfg)).toBe(true);
-    expect(communityAvatarShown("f".repeat(64), cfg)).toBe(false);
-    expect(communityAvatarShown(known, null)).toBe(false);
-  });
-
-  it("shows every sender's avatar when the reader loads everyone's media", () => {
-    const cfg = {
-      policy: "generic",
-      self: "c".repeat(64),
-      knownPeers: [],
-      mediaPolicy: { proxy: "", allCommunityAvatars: true },
-    } as SwPushConfig;
-    expect(communityAvatarShown("f".repeat(64), cfg)).toBe(true);
   });
 });
 

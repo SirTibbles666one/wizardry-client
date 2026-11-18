@@ -333,7 +333,13 @@ const ConversationRow = memo(function ConversationRow({
           ) : null}
         </button>
       </ContextMenuTrigger>
-      <ContextMenuContent className="w-44">
+      <ContextMenuContent
+        className="w-44"
+        sheetIdentity={{
+          lead: <DmAvatar peers={peers} selfPubkey={selfPubkey} sizePx={40} className="size-10" anonymous={request} />,
+          title: noteToSelf || group ? name : <DisplayName pubkey={peers[0]} name={name} />,
+        }}
+      >
         {request ? (
           // No accept: replying is accepting (the composer notice says so).
           <>
@@ -525,7 +531,7 @@ function DmLegacyFallbackNotice({
   onEnable: () => void;
 }) {
   return (
-    <div className="mx-gutter mb-3 clip-hairline-lg [--fill:var(--muted)/0.4] [--fill-hover:var(--muted)/0.4] px-4 py-3 text-sm">
+    <div className="mx-gutter mb-[max(0.75rem,var(--bottom-chrome-pad))] sidebar:mb-3 clip-hairline-lg [--fill:var(--muted)/0.4] [--fill-hover:var(--muted)/0.4] px-4 py-3 text-sm">
       <div className="flex items-start gap-2.5">
         <Lock className="size-4 mt-0.5 shrink-0 text-muted-foreground" aria-hidden />
         <div className="min-w-0 space-y-2">
@@ -1038,7 +1044,7 @@ const Conversation = memo(function Conversation({
             <TooltipContent>{callTooltip}</TooltipContent>
           </Tooltip>
         )}
-        <DropdownMenu>
+        <DropdownMenu touchSheet>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
@@ -1055,7 +1061,16 @@ const Conversation = memo(function Conversation({
               <FormattedMessage id="dmsPage.searchMessages" defaultMessage="Search messages" />
             </DropdownMenuItem>
             <DropdownMenuSub>
-              <DropdownMenuSubTrigger>
+              <DropdownMenuSubTrigger
+                value={(() => {
+                  const lvl = dmLevel(conversation);
+                  return lvl === "nothing"
+                    ? intl.formatMessage({ id: "dmsPage.notifications.nothing", defaultMessage: "Nothing" })
+                    : lvl === "mentions"
+                      ? intl.formatMessage({ id: "dmsPage.notifications.mentions", defaultMessage: "Only @mentions" })
+                      : intl.formatMessage({ id: "dmsPage.notifications.all", defaultMessage: "All messages" });
+                })()}
+              >
                 {(() => {
                   const lvl = dmLevel(conversation);
                   const Icon = lvl === "nothing" ? BellOff : lvl === "mentions" ? AtSign : Bell;
@@ -2404,7 +2419,8 @@ export function ConversationList({
                 defaultMessage: "Search messages or people…",
               })}
               aria-label={searchLabel}
-              className="h-8 touch:h-10 flex-1 border-0 bg-transparent px-1 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+              variant="bare"
+              className="h-8 touch:h-10 flex-1 px-1"
             />
             <Button
               variant="ghost"

@@ -158,9 +158,9 @@ export function openConcord(
     if (ev.sealKind !== KIND_SEAL_ENCRYPTED) return undefined;
     const epoch = BigInt(stream.epoch);
     checkChannelBinding(ev, stream.channelId, epoch);
-    // Only read addresses are listened on here, and a `wepoch` there is forged (CORD-03 §3):
-    // stored, the timeline would stand it as a writer's post.
-    if (ev.tags.some((t) => t[0] === "wepoch")) return undefined;
+    // A writer address's rumor commits its writer epoch, and a `wepoch` at a read address is
+    // forged (CORD-03 §3): stored, the timeline would stand it as a writer's post.
+    if (!writerBound(ev.tags, stream.wepoch)) return undefined;
     // Another plane's kind re-sealed onto a chat stream is not chat (CORD-02 §5).
     if (PLANE_KINDS.has(ev.kind)) return undefined;
     return { opened: { ...ev, channelIdHex: stream.channelId, epoch }, stream };
@@ -170,6 +170,13 @@ export function openConcord(
     // not ours, spliced, or otherwise malformed
     return undefined;
   }
+}
+
+/** Exactly one canonical `wepoch` equal to the writer address's, or none at a read address (`checkWriterBinding`). */
+function writerBound(tags: string[][], wepoch: string | undefined): boolean {
+  const found = tags.filter((t) => t[0] === "wepoch");
+  if (wepoch === undefined) return found.length === 0;
+  return found.length === 1 && /^(0|[1-9][0-9]*)$/.test(found[0][1] ?? "") && found[0][1] === wepoch;
 }
 
 /** The one value of `name`, or undefined when absent or repeated (CORD-01). */
@@ -299,8 +306,6 @@ async function present(
   policy: MediaPolicy,
   /** Relays to ask for a kind 0 this device doesn't hold. */
   profileRelays: string[],
-  /** Show the sender's avatar; false = the room icon or the app's. */
-  showAvatar = true,
   /** The name the sender goes by in this Community (CORD-04 §10), over their profile's. */
   nickname?: string,
 ): Promise<PreparedPush> {
@@ -317,7 +322,7 @@ async function present(
   const full: NotificationMessage = {
     ...msg,
     authorName: name,
-    authorAvatar: showAvatar ? avatar : undefined,
+    authorAvatar: avatar,
     roomTitle: room.title,
     roomImage: room.image,
     mentionNames,
@@ -407,7 +412,7 @@ async function prepareDm(
   const unwrapped = await openDm(wrap, cfg.sk, cfg.self);
   if (!unwrapped) return undefined;
   // A push is delivered as the message is published: time it by its arrival where the sender's clock was off.
-  const opened = withArrival(unwrapped, Math.floor(Date.now() / 1000));
+  const opened = withArrival(unwrapped, Math.floor(Date.now() / 1000), cfg.self);
 
   // Persist first (including own sent copies from other devices).
   await writeDm17Rumors(cfg.self, [opened]).catch(() => undefined);
@@ -493,7 +498,7 @@ async function prepareConcord(
 
   // A post its readers collapse rings nobody (CORD-04 §8): no SEND here, or inside a running Timeout.
   if (stream.sendDenied?.includes(opened.author)) return DROP;
-  // At a restricted Channel's read address a post stands only from those who manage it (CORD-03 §1).
+  // In a restricted Channel a post rings only from the authors its address takes (CORD-03 §1).
   if (stream.postAuthors && opened.kind !== KIND_REACTION && !stream.postAuthors.includes(opened.author)) return DROP;
   const nowMs = Date.now() + (stream.clockOffsetMs ?? 0);
   if (stream.timeouts?.some((t) => t.pk === opened.author && t.until * 1000 > nowMs && opened.ms >= t.fromSecs * 1000 && opened.ms < t.until * 1000)) return DROP;
@@ -554,20 +559,8 @@ async function prepareConcord(
     },
     policy,
     profileRelaysFor(cfg, relays),
-    communityAvatarShown(opened.author, cfg),
     stream.nicknames?.[opened.author],
   );
-}
-
-/**
- * Whether a community sender's avatar may be the notification icon. Anyone with
- * the key can post (CORD-04 §1), so unless the reader loads everyone's media only
- * a known peer's face reaches the lock screen — the worker has no view of the
- * in-app trust graph (`mediaTrust.ts`).
- */
-export function communityAvatarShown(author: string, cfg: SwPushConfig | null): boolean {
-  if (cfg?.mediaPolicy?.allCommunityAvatars === true) return true;
-  return Boolean(cfg?.knownPeers?.includes(author));
 }
 
 /**
@@ -575,8 +568,9 @@ export function communityAvatarShown(author: string, cfg: SwPushConfig | null): 
  * lack, a splice). Nothing inside is known, but the room is, as on native.
  */
 async function opaqueConcord(stream: SwConcordStream, policy: MediaPolicy): Promise<PreparedPush> {
-  // Muted, or mentions-only with no readable mention to go on.
-  if (stream.muted || stream.mentionOnly) return DROP;
+  // Muted, or mentions-only with no readable mention to go on. In a restricted Channel only
+  // some authors' posts ring (CORD-03 §1), and an unopened wrap names none.
+  if (stream.muted || stream.mentionOnly || stream.postAuthors) return DROP;
 
   const room = await concordRoomIdentity(stream.communityId, stream.channelId);
   const image = room.iconPointer ? await imageDataUrl(room.iconPointer, policy) : undefined;

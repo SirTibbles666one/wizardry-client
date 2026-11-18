@@ -20,7 +20,7 @@ import { verifyEventOnce } from "@/lib/verifyCache";
 import { preferPortableRelays, unusableRelaysReason } from "@/lib/relayUsability";
 import { channelKeysToWire, isLive, nextChannelEpoch, toJoinMaterial, rehydrateCommunity, type CommunityListEntry, type JoinMaterial } from "@/concord/lib/communityList";
 import { channelsView, mintCommunity, visibleChannels } from "@/concord/lib/community";
-import { openChannelSeal, sealChannelMetadata } from "@/concord/lib/channelSeal";
+import { CHANNEL_TOPIC_MAX_BYTES, openChannelSeal, sealChannelMetadata } from "@/concord/lib/channelSeal";
 import { rekeyOrder } from "@/concord/lib/rankKey";
 import { planCreateCategory, planRenameCategory, planSync } from "@/concord/lib/rankedWrites";
 import { maySwapOverwrites } from "@/concord/lib/roster";
@@ -724,7 +724,13 @@ export function useCommunityActions() {
                   : t({ id: "useCommunityActions.joinFailed.unfinished", defaultMessage: "Couldn't finish joining {name}" }, { name }),
           description: rejected
             ? (e instanceof Error ? e.message : t({ id: "useCommunityActions.inviteDidntWork", defaultMessage: "The invite didn't work." }))
-            : t({ id: "useCommunityActions.willRetry", defaultMessage: "Wizardry will try again the next time it starts." }),
+            : e instanceof Error && e.message
+              ? t(
+                  { id: "useCommunityActions.willRetryReason", defaultMessage: "{reason}. Wizardry will try again the next time it starts." },
+                  // The catalog supplies the sentence's punctuation.
+                  { reason: e.message.trim().replace(/[.。]+$/, "") },
+                )
+              : t({ id: "useCommunityActions.willRetry", defaultMessage: "Wizardry will try again the next time it starts." }),
           ...(rejected ? { variant: "destructive" as const } : {}),
         });
       });
@@ -928,12 +934,12 @@ export function useCommunityManagement(community: Community | undefined) {
   };
 
   /** Members a Private Channel lets in once private, its creator counted (CORD-03 §2, CORD-04 §8). */
-  const privateAudience = (channelIdHex: string, creator: string): string[] => {
-    if (!folded || !community) return [];
-    const roster = { ...folded.roster, creators: { ...folded.roster.creators, [channelIdHex]: creator } };
-    const candidates = new Set([folded.ownerHex, creator, ...roster.grants.map((g) => g.member)]);
+  const privateAudience = (view: FoldedControl | undefined, channelIdHex: string, creator: string): string[] => {
+    if (!view || !community) return [];
+    const roster = { ...view.roster, creators: { ...view.roster.creators, [channelIdHex]: creator } };
+    const candidates = new Set([view.ownerHex, creator, ...roster.grants.map((g) => g.member)]);
     for (const o of roster.overwrites ?? []) if (o.target.kind === "member") candidates.add(o.target.id);
-    return [...candidates].filter((pk) => (channelPermissions(roster, folded.ownerHex, pk, channelIdHex, true) & Permissions.VIEW_CHANNEL) !== 0n);
+    return [...candidates].filter((pk) => (channelPermissions(roster, view.ownerHex, pk, channelIdHex, true) & Permissions.VIEW_CHANNEL) !== 0n);
   };
 
   const leave = useMutation<void, Error, void>({
@@ -1137,6 +1143,23 @@ export function useCommunityManagement(community: Community | undefined) {
     },
   });
 
+  /** Set or clear a Channel's topic (CORD-03 §2); empty removes it (Vector `edit_channel_details`). */
+  const setChannelTopic = useMutation<void, Error, { channelIdHex: string; topic: string }>({
+    mutationFn: async ({ channelIdHex, topic }) => {
+      if (!user || !community) throw new Error(t({ id: "useCommunityActions.notReady", defaultMessage: "Not ready." }));
+      const trimmed = topic.trim();
+      if (utf8Len(trimmed) > CHANNEL_TOPIC_MAX_BYTES) {
+        throw new Error(t({ id: "useCommunityActions.topicTooLong", defaultMessage: "A channel topic can be at most {max} bytes." }, { max: CHANNEL_TOPIC_MAX_BYTES }));
+      }
+      // Round-trip untouched metadata (CORD-02 §6).
+      await writeChannel(channelIdHex, (meta) => {
+        const { topic: _topic, ...rest } = meta;
+        return trimmed ? { ...rest, topic: trimmed } : rest;
+      });
+      invalidateControl(queryClient, community.idHex);
+    },
+  });
+
   /**
    * Convert Public → Private on ranked roles (CORD-03 §2): mint a key at the next
    * channel epoch (stored before the edition), deliver it, and seal the details.
@@ -1209,7 +1232,8 @@ export function useCommunityManagement(community: Community | undefined) {
           key: minted.key,
           prevEpoch: minted.epoch - 1n,
           prevCommit: bytesToHex(epochKeyCommitment(minted.epoch - 1n, community.root)),
-          recipients: privateAudience(channelIdHex, user.pubkey),
+          // The store's fold: an overwrite written a moment ago decides who is let in.
+          recipients: privateAudience(now, channelIdHex, user.pubkey),
           authority: citationFor(community, now, user.pubkey),
         });
         await publishEdition(
@@ -1474,8 +1498,8 @@ export function useCommunityManagement(community: Community | undefined) {
    * just the channels naming them. Refuses channels not yet in the fold, since
    * editing a default metadata would blank the name and make a private channel public.
    */
-  const setChannelCategory = useMutation<void, Error, { channelIdHex: string; category: string | undefined }>({
-    mutationFn: async ({ channelIdHex, category }) => {
+  const setChannelCategory = useMutation<void, Error, { channelIdHex: string; category: string | undefined; follow?: boolean }>({
+    mutationFn: async ({ channelIdHex, category, follow = true }) => {
       if (!user || !community) throw new Error(t({ id: "useCommunityActions.notReady", defaultMessage: "Not ready." }));
       const trimmed = category?.trim();
       if (trimmed && utf8Len(trimmed) > NAME_MAX_BYTES) {
@@ -1498,7 +1522,8 @@ export function useCommunityManagement(community: Community | undefined) {
         const { category: _category, ...rest } = meta;
         return catId ? { ...rest, category: catId } : rest;
       });
-      await followCategory([channelIdHex], catId);
+      // The channel editor writes the sync it shows instead.
+      if (follow) await followCategory([channelIdHex], catId);
       invalidateControl(queryClient, community.idHex);
     },
   });
@@ -1616,6 +1641,8 @@ export function useCommunityManagement(community: Community | undefined) {
     createChannel: createChannel.mutateAsync,
     isAddingChannel: createChannel.isPending,
     renameChannel: renameChannel.mutateAsync,
+    setChannelTopic: setChannelTopic.mutateAsync,
+    isSettingTopic: setChannelTopic.isPending,
     setChannelCategory: setChannelCategory.mutateAsync,
     isFiling: setChannelCategory.isPending,
     nameCategory: nameCategory.mutateAsync,

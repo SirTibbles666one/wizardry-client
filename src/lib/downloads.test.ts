@@ -106,15 +106,16 @@ describe("package repositories (pkg.soapbox.pub / npkg)", () => {
     );
   });
 
-  it("repeats the same commands and links in index.html's <noscript> fallback", () => {
+  it("advertises no third-party package source in index.html's <noscript> fallback", () => {
     const html = readFileSync(resolve(process.cwd(), "index.html"), "utf8");
     const noscript = html.slice(html.lastIndexOf("<noscript>"), html.lastIndexOf("</noscript>"));
+    // Until Wizardry publishes its own builds, the fallback must not hand out
+    // upstream's packages: it says JavaScript is required and nothing else.
+    expect(noscript).not.toContain("pkg.soapbox.pub");
     for (const manager of PACKAGE_MANAGERS) {
-      for (const line of [...manager.setup, manager.install]) expect(noscript).toContain(line);
+      for (const line of [...manager.setup, manager.install]) expect(noscript).not.toContain(line);
     }
-    for (const store of ANDROID_STORES.filter((s) => s.label !== "Google Play")) {
-      expect(noscript).toContain(store.url);
-    }
+    expect(noscript).toContain("JavaScript");
   });
 
   it("lists the npkg F-Droid repository among the Android sources", () => {

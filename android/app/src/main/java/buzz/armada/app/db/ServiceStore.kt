@@ -247,7 +247,10 @@ object ServiceStore {
 
     /** Whether a DM that arrived at [at] keeps that as its time — [Dm17.arrivalCounts] for Java. */
     @JvmStatic
-    fun dm17ArrivalCounts(kind: Int, createdAt: Long, at: Long): Boolean = Dm17.arrivalCounts(kind, createdAt, at)
+    fun dm17ArrivalCounts(rumor: JSONObject, at: Long): Boolean {
+        val parsed = Rumor.parse(rumor) ?: return false
+        return Dm17.arrivalCounts(parsed.kind, parsed.tags, parsed.createdAt, at)
+    }
 
     /** The participants a conversation key names — [Dm17.convPeers] for Java. */
     @JvmStatic
@@ -348,14 +351,17 @@ object ServiceStore {
     }
 
     @JvmStatic
+    @JvmOverloads
     fun storeConcordRumor(
         context: Context,
         communityIdHex: String,
         sealKind: Int,
         rumor: JSONObject,
+        /** The writer epoch of the address that opened it, at a restricted Channel's writer address. */
+        wepoch: String? = null,
     ) {
         val opened = Rumor.parse(rumor) ?: return
-        if (!Concord.storable(communityIdHex, sealKind, opened, System.currentTimeMillis() / 1000)) {
+        if (!Concord.storable(communityIdHex, sealKind, opened, System.currentTimeMillis() / 1000, wepoch)) {
             Log.w(TAG, "refusing a Concord chat rumor the chat plane may not carry")
             return
         }

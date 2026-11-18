@@ -4,6 +4,105 @@ All notable changes to Armada are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and releases are tagged
 `vX.Y.Z`.
 
+## [0.69.8] - 2026-11-18
+
+Call audio settings open as a bottom sheet on touch, profile pictures fade in
+as they load, and text fields get a cleaner look. Edited direct messages keep
+their place, channel messages stay in the right order, and opening
+communities is quicker.
+
+### Changed
+- Call audio settings open as a bottom sheet on touch, with each device picker on its own page showing the current choice
+- Avatars pulse while their picture loads and fade in when ready
+- Text fields have a borderless look with a cut corner
+- Channel drag handles in settings show on touch only in Reorder mode
+- Community notifications show each sender's avatar, and channel notifications show the community's image
+- Profile share links can be pasted into the invite people picker
+- Reply previews of a quoted note show its text instead of an identifier
+- Opening communities, switching pages and opening the member list are faster
+
+### Fixed
+- An edited direct message stays where the original was instead of jumping to the bottom
+- Your own direct messages are always ordered by when you sent them
+- Messages in a channel keep their correct order alongside Git, timer and calendar entries
+- Timeline messages can't be tapped through an open dialog or menu
+- Profile names display consistently on the user page, share dialog, settings and Discover
+
+## [0.69.7] - 2026-11-17
+
+Channel settings get one editor for a channel or category, with a review of
+who gains or loses access before a change is saved. The timeline shows the
+date of what you're reading while you scroll, menus open as bottom sheets on
+touch, and private channels pick up newly granted keys faster.
+
+### Added
+- Edit a channel's or category's name, topic, type, privacy and permissions in one editor, beside the channel list or as a sheet on touch
+- Before a channel, category or role change is saved, a review shows who gains or loses access
+- The date of the messages in view floats over the timeline while scrolling, with a setting to turn it off
+- Bot commands show their arguments in the timeline
+
+### Changed
+- Context menus and action menus open as a bottom sheet on touch, with submenus as pages
+- The new channel dialog has a cleaner layout with a type picker and a private switch
+- Channel settings you can't change are disabled with the reason shown beside each
+- Settings channels are reordered by a drag handle
+- The Jump to present button fades after a few seconds without scrolling or new messages
+- Private channels and their history open within seconds once you're given access
+
+### Fixed
+- Text in the message box lines up correctly on iPhone and iPad
+- The folder tooltip's community count is translated
+
+## [0.69.6] - 2026-11-16
+
+Private channels follow role changes reliably and much faster: a member given
+a role gets its channels back in seconds, a member losing one is cut once, and
+channels no longer rotate their keys over and over. Plus fixes for creating a
+private community's first invite link, Discover listings and bot commands.
+
+### Changed
+- Giving or removing a role moves the private channel keys it affects right away, all channels at once, and a member gets a channel's key before its older history
+- Private channel keys keep working when some of a community's relays are slow, unreliable or down
+- A bot command whose only argument is free text fills the message box when picked, ready to type
+
+### Fixed
+- Private channels no longer rotate their keys every few minutes while a manager is signed in
+- Creating a private community's first invite link works even when the browser has blocked confirmation pop-ups
+- Discover shows one card per community, never a link that no longer works, and counts all of a community's boosts
+- Invite links you create always appear in your list of live links
+- Joining a community no longer gives up early when a signer extension can't encrypt
+
+## [0.69.5] - 2026-11-14
+
+Stickers and emoji are grouped by pack, relay settings show response times,
+files can be shared into the installed web app, and a round of fixes for
+channels, notifications, touch menus and fullscreen video.
+
+### Added
+- Stickers, and a Buzz workspace's emoji, are grouped into one section per pack
+- Settings › Relays shows each relay's and media server's response time, with an amber "slow" state and a legend
+- Share files into Armada from other apps when it is installed as a web app
+- bitcoin: and lightning: links in messages open your wallet app
+- Quoted magazines and issues show as a cover, and quoted ebooks are labelled
+- A sound plays when a screen share ends
+- A private or restricted channel's composer placeholder names the channel
+
+### Changed
+- Settings › Relays opens on Messages until your account has messaging relays set
+- Links in messages handle parentheses and angle brackets the way markdown does
+
+### Fixed
+- A channel's history reloads when your access to older messages changes
+- Notifications for channels only some members can post in, including in the background
+- Long-press menus open reliably on touch devices when the app is busy
+- The emoji picker no longer confuses custom emoji with standard ones, and drops ones that no longer exist
+- Fullscreen video controls stay above Android's gesture bar, and the chat keeps its place when leaving fullscreen
+- Reactions and reply counts in relay-hosted groups update as new messages scroll into view
+- A clearer message when a media server refuses a community image upload
+- The call audio settings menu fits on screen
+- Notices that replace the message box are no longer hidden behind the bottom edge on phones
+- Switching between communities is lighter on memory
+
 ## [0.69.4] - 2026-11-12
 
 Quicker ways to manage roles and channel permissions, sturdier direct

@@ -67,7 +67,10 @@ export function mintCommunity(name: string, ownerPubkeyHex: string, relays: stri
 export function deletedChannels(community: Community, folded: FoldedControl | undefined): Channel[] {
   const dead = [...(folded?.channels.values() ?? [])].filter((d) => d.deleted);
   if (!folded || dead.length === 0) return [];
-  return channelsView(community, { ...folded, channels: new Map(dead.map((d) => [d.channelIdHex, { ...d, deleted: false }])) });
+  // channelsView also lists held keys the map doesn't name; those Channels are live.
+  const ids = new Set(dead.map((d) => d.channelIdHex));
+  return channelsView(community, { ...folded, channels: new Map(dead.map((d) => [d.channelIdHex, { ...d, deleted: false }])) })
+    .filter((c) => ids.has(c.idHex));
 }
 
 /**
@@ -108,15 +111,16 @@ export function channelsView(community: Community, folded: FoldedControl | undef
     const cat = typeof meta.category === "string" ? folded?.categories?.get(meta.category) : undefined;
     const live = cat && !cat.deleted ? cat : undefined;
     // A legacy Roster files under Vector's Category id when it names one, else Armada's conventions.
+    const topic = typeof meta.topic === "string" ? { topic: meta.topic } : {};
     if (!ranked) {
       return live
-        ? { category: live.name || live.idHex.slice(0, 8), categoryId: live.idHex, position: channelPosition(meta) }
-        : { category: channelCategory(meta), position: channelPosition(meta) };
+        ? { category: live.name || live.idHex.slice(0, 8), categoryId: live.idHex, position: channelPosition(meta), ...topic }
+        : { category: channelCategory(meta), position: channelPosition(meta), ...topic };
     }
     return {
       ...(live ? { category: live.name || live.idHex.slice(0, 8), categoryId: live.idHex } : {}),
       ...(isRankKey(meta.position) ? { positionKey: meta.position } : {}),
-      ...(typeof meta.topic === "string" ? { topic: meta.topic } : {}),
+      ...topic,
     };
   };
 

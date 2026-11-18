@@ -52,6 +52,9 @@
  *                   community has stored by the window's end. --later <n> (10) more
  *                   reach the relay between the cold boot and the warm reload, which
  *                   is measured the same way
+ *   concord-live    messages arriving live in an open #general (--live-messages <n>, 30
+ *                   each): main-thread cost per arrival with the default window, then
+ *                   again after paging back has grown it to the whole history
  *   dm-many      the seeded account (40 conversations) back after 30 minutes away,
  *                20 DMs waiting on its two DM relays, one answering 3s late (and also
  *                one of its own relays, where it keeps no contact list): a cold boot into the DM list, then a
@@ -77,6 +80,14 @@
  *                     community open and nothing touched
  *     --offline       after settling, answer every REQ locally: the switch cost
  *                     against what is on disk, with no history paging behind it
+ *     live-open-touch with `--only …,live-open-touch`: then a phone-sized touch
+ *                     launch into the community's channel list, tapping each of
+ *                     --open-channels <a,b,…> (general,announcements,armada,general)
+ *                     after --open-wait <s> (8): each frame's header/skeleton/rows
+ *     --more-invites <file>  join these too first (one invite per line), so the
+ *                     community shares the app with others catching up
+ *     --trace         write the app's sync trace for the run to live-trace.log
+ *   concord-open-touch  the same taps on the seeded community
  *
  * Offline except `discover`: the seeds go straight into the app's own
  * ArmadaDB through the production writers (`e2e/screenshotSeed.ts`,
@@ -125,7 +136,7 @@ const OUT = resolve(root, "perf-reports");
 /** Messages in the seeded community's #general. */
 const CONCORD_BIG = 3000;
 
-const LIVE = ["live-switch", "live-boot", "live-idle", "account-hop", "account-storage"];
+const LIVE = ["live-switch", "live-boot", "live-idle", "live-open-touch", "account-hop", "account-storage"];
 const wants = (name) => (ONLY.length === 0 && !LIVE.includes(name)) || ONLY.includes(name);
 
 // ─── Build + serve ──────────────────────────────────────────────────────────
@@ -419,28 +430,47 @@ function installInPageRelay() {
         }
         return { events, byAuthor };
       }));
+  const matches = (e, f) =>
+    (!f.ids || f.ids.includes(e.id)) &&
+    (!f.authors || f.authors.includes(e.pubkey)) &&
+    (!f.kinds || f.kinds.includes(e.kind)) &&
+    (f.since === undefined || e.created_at >= f.since) &&
+    (f.until === undefined || e.created_at <= f.until) &&
+    Object.entries(f)
+      .filter(([k]) => k.startsWith("#"))
+      .every(([k, vals]) => e.tags.some((t) => t[0] === k.slice(1) && vals.includes(t[1])));
   const answer = ({ events, byAuthor }, filters) => {
     const out = new Map();
     for (const f of filters) {
       const pool = f.authors ? f.authors.flatMap((a) => byAuthor.get(a) ?? []) : events;
-      const tags = Object.entries(f).filter(([k]) => k.startsWith("#"));
-      let evs = pool.filter(
-        (e) =>
-          (!f.ids || f.ids.includes(e.id)) &&
-          (!f.kinds || f.kinds.includes(e.kind)) &&
-          (f.since === undefined || e.created_at >= f.since) &&
-          (f.until === undefined || e.created_at <= f.until) &&
-          tags.every(([k, vals]) => e.tags.some((t) => t[0] === k.slice(1) && vals.includes(t[1]))),
-      );
+      let evs = pool.filter((e) => matches(e, f));
       evs.sort((a, b) => b.created_at - a.created_at);
       if (f.limit !== undefined) evs = evs.slice(0, f.limit);
       for (const e of evs) out.set(e.id, e);
     }
     return [...out.values()];
   };
+  /** Open sockets, for `__armadaRelayPush`. */
+  const sockets = new Set();
+  /** Deliver `events` live, as a relay does to its open subscriptions, and keep them for later REQs. */
+  window.__armadaRelayPush = async (events) => {
+    const d = await load();
+    for (const e of events) {
+      d.events.push(e);
+      if (!d.byAuthor.has(e.pubkey)) d.byAuthor.set(e.pubkey, []);
+      d.byAuthor.get(e.pubkey).push(e);
+    }
+    for (const socket of sockets) {
+      for (const [sub, filters] of socket.subs) {
+        for (const e of events) if (filters.some((f) => matches(e, f))) socket.reply(["EVENT", sub, e]);
+      }
+    }
+  };
   class InPageRelay extends EventTarget {
     constructor(url) {
       super();
+      this.subs = new Map();
+      sockets.add(this);
       Object.assign(this, { url, readyState: 0, protocol: "", extensions: "", binaryType: "blob", bufferedAmount: 0 });
       Object.assign(this, { onopen: null, onmessage: null, onclose: null, onerror: null });
       void load().then(() => {
@@ -469,6 +499,7 @@ function installInPageRelay() {
       }
       if (msg[0] === "REQ") {
         const [, sub, ...filters] = msg;
+        this.subs.set(sub, filters);
         for (const f of filters) {
           if (f.kinds?.includes(1059) && f.authors) {
             (window.__armadaReqLog ??= []).push({ t: Math.round(performance.now()), live: f.limit === undefined, authors: f.authors, since: f.since });
@@ -480,11 +511,14 @@ function installInPageRelay() {
         });
       } else if (msg[0] === "EVENT") {
         this.reply(["OK", msg[1].id, true, ""]);
+      } else if (msg[0] === "CLOSE") {
+        this.subs.delete(msg[1]);
       }
     }
     close(code = 1000, reason = "") {
       if (this.readyState >= 2) return;
       this.readyState = 3;
+      sockets.delete(this);
       setTimeout(() => this.emit(new CloseEvent("close", { code, reason, wasClean: true })), 0);
     }
   }
@@ -764,6 +798,58 @@ const softNavigate = (page, path) =>
     history.pushState({}, "", p);
     dispatchEvent(new PopStateEvent("popstate"));
   }, path);
+
+/**
+ * Phone-sized with touch: load `root` (a community's channel list), then tap each of
+ * `names` in turn from the list, going Back between them. Records each frame's state
+ * for 12 s after a tap as `title|skel|rows|composer` transitions, ms after the tap.
+ */
+async function touchOpens(page, cdp, root, names, { firstWaitMs = 8000 } = {}) {
+  await page.setViewportSize({ width: 412, height: 915 });
+  await cdp.send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 5 });
+  const tapOn = async (loc) => {
+    const box = await loc.boundingBox();
+    const x = box.x + box.width / 2;
+    const y = box.y + box.height / 2;
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] });
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+  };
+  const opens = [];
+  const bootAt = Date.now();
+  for (const [round, name] of names.entries()) {
+    if (round === 0) await page.goto(root);
+    else await tapOn(page.locator("main header button[aria-label]").first());
+    const link = page.getByText(name, { exact: true }).first();
+    await link.waitFor({ state: "visible", timeout: 90_000 });
+    const listedMs = round === 0 ? Date.now() - bootAt : undefined;
+    await page.waitForTimeout(round === 0 ? firstWaitMs : 1500);
+    await page.evaluate(() => {
+      window.__openStates = [];
+      const t0 = performance.now();
+      let last = "";
+      const tick = () => {
+        const header = document.querySelector("main header h1");
+        const title = header?.textContent ?? "-";
+        const skel = document.querySelectorAll("main .animate-pulse").length;
+        const rows = document.querySelectorAll("main [data-scroll-anchor]").length;
+        const composer = document.querySelectorAll("main textarea").length;
+        const s = `${title}|skel=${skel}|rows=${rows}|composer=${composer}`;
+        if (s !== last) window.__openStates.push(`${Math.round(performance.now() - t0)} ${s}`);
+        last = s;
+        if (performance.now() - t0 < 12_000) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+    await tapOn(link);
+    await page.waitForTimeout(12_500);
+    const states = await page.evaluate(() => window.__openStates);
+    console.log(`  ${name}${listedMs !== undefined ? ` (list up ${listedMs}ms after load)` : ""}: ${states.join("  →  ")}`);
+    opens.push({ name, listedMs, states });
+  }
+  await cdp.send("Emulation.setTouchEmulationEnabled", { enabled: false });
+  await page.setViewportSize({ width: 1280, height: 800 });
+  return opens;
+}
 
 const results = {};
 
@@ -1187,7 +1273,7 @@ try {
     });
   }
 
-  const concordScenarios = ["concord-boot", "concord-idle", "concord-scroll", "concord-switch", "concord-type", "concord-type-touch", "leak"];
+  const concordScenarios = ["concord-boot", "concord-idle", "concord-scroll", "concord-switch", "concord-open-touch", "concord-type", "concord-type-touch", "leak"];
   if (concordScenarios.some(wants)) {
     // Seed a community: a 3000-message #general and seven small channels.
     await page.goto("/e2e/concordSeed.html");
@@ -1304,6 +1390,13 @@ try {
         errors: errorsSince(mark),
         report: await report(page),
       });
+    }
+
+    if (wants("concord-open-touch")) {
+      console.log("▶ concord-open-touch (tap a channel from the list on a phone)");
+      mark = errors.length;
+      const opens = await touchOpens(page, cdp, `/c/${concord.communityId}`, ["general", "channel-1", "channel-2", "general", "channel-3", "general"]);
+      save("concord-open-touch", { opens, errors: errorsSince(mark) });
     }
 
     for (const touch of [false, true]) {
@@ -1445,6 +1538,86 @@ try {
   }
 
 
+  if (wants("concord-live")) {
+    // Messages arriving live in an open #general: the main thread each costs with the
+    // default window, then again once paging back has grown it to the whole history.
+    const LIVE_EACH = Number(opt("live-messages", "30"));
+    await installInPageScripts();
+    relayBody = "[]";
+    await page.goto("/e2e/concordSeed.html");
+    await page.evaluate(() => localStorage.setItem("perf-inpage-relay", "1"));
+    await page.waitForFunction(() => Boolean(window.__armadaSeedConcordMany), null, { timeout: 60_000 });
+    const live = await page.evaluate((p) => window.__armadaSeedConcordMany(p), {
+      sk: Buffer.from(world.me.sk).toString("hex"),
+      communities: 1,
+      members: 40,
+      messages: CONCORD_BIG,
+      missed: 0,
+      later: LIVE_EACH * 2,
+      laterInMs: 30_000,
+      lines: LINES,
+    });
+    relayBody = JSON.stringify(live.wraps);
+    const [c] = live.communities;
+    console.log(`\n▶ concord-live (${LIVE_EACH} arrivals per window size)`);
+    const mark = errors.length;
+    await page.goto(`/c/${c.communityId}/${c.channelIds[0]}`);
+    await perfReady(page);
+    await page.waitForTimeout(10_000);
+    /** Push each wrap once its date has passed (none: the same windows idle); main-thread ms over a settle. */
+    const arrive = async (wraps) => {
+      const out = [];
+      for (const w of wraps) {
+        const due = w ? w.created_at * 1000 + 1000 - Date.now() : 0;
+        if (due > 0) await page.waitForTimeout(due);
+        const a = await metrics(cdp);
+        const t = Date.now();
+        if (w) await page.evaluate((e) => window.__armadaRelayPush([e]), w);
+        await page.waitForTimeout(1500);
+        const b = await metrics(cdp);
+        out.push({ busyMs: Math.round((b.TaskDuration - a.TaskDuration) * 1000), scriptMs: Math.round((b.ScriptDuration - a.ScriptDuration) * 1000), wallMs: Date.now() - t });
+      }
+      return out;
+    };
+    const median = (xs) => [...xs].sort((x, y) => x - y)[Math.floor(xs.length / 2)];
+    const summary = (xs) => ({ medianBusyMs: median(xs.map((x) => x.busyMs)), medianScriptMs: median(xs.map((x) => x.scriptMs)), busyMs: xs.map((x) => x.busyMs).join(" ") });
+    /** The open channel's cached rows, as KB of query data. */
+    const channelKB = () => page.evaluate(() => window.__armadaPerf.memory?.()?.queries?.find((q) => q.family === "concord/channel/…")?.dataKB ?? null);
+    const toBottom = async () => {
+      for (let i = 0; i < 8; i++) {
+        await page.evaluate(() => {
+          const row = document.querySelector("[data-scroll-anchor]");
+          let el = row?.parentElement ?? null;
+          while (el && !(el.scrollHeight > el.clientHeight + 10 && /(auto|scroll)/.test(getComputedStyle(el).overflowY))) el = el.parentElement;
+          if (el) el.scrollTop = el.scrollHeight;
+        });
+        await page.waitForTimeout(750);
+      }
+    };
+    const baseline = await arrive(new Array(LIVE_EACH / 2).fill(null));
+    const kbSmall = await channelKB();
+    const firstWraps = live.laterWraps.slice(0, LIVE_EACH);
+    await resetCounters(page);
+    const { result: small } = await cpuProfile("concord-live-small", () => arrive(firstWraps));
+    const smallReport = await report(page);
+    const shownSmall = await page.getByText(`(#c0-later-${LIVE_EACH - 1})`, { exact: false }).count();
+    const steps = await scrollBack();
+    await toBottom();
+    const kbBig = await channelKB();
+    const baselineBig = await arrive(new Array(LIVE_EACH / 2).fill(null));
+    // The saved report covers these arrivals only.
+    await resetCounters(page);
+    const { result: big, hot } = await cpuProfile("concord-live-big", () => arrive(live.laterWraps.slice(LIVE_EACH)));
+    const shownBig = await page.getByText(`(#c0-later-${2 * LIVE_EACH - 1})`, { exact: false }).count();
+    console.log(`  idle, default window (${kbSmall} KB cached): ${JSON.stringify(summary(baseline))}`);
+    console.log(`  arrivals, default window: ${JSON.stringify(summary(small))}`);
+    console.log(`  idle, after paging back (${kbBig} KB cached): ${JSON.stringify(summary(baselineBig))}`);
+    console.log(`  arrivals, after paging back: ${JSON.stringify(summary(big))}`);
+    console.log(`  last arrival shown: ${shownSmall > 0} / ${shownBig > 0}`);
+    save("concord-live", { baseline: summary(baseline), small: summary(small), baselineBig: summary(baselineBig), big: summary(big), cachedKB: [kbSmall, kbBig], scrollSteps: steps, shown: [shownSmall > 0, shownBig > 0], hot, errors: errorsSince(mark), smallReport, report: await report(page) });
+    await page.evaluate(() => localStorage.removeItem("perf-inpage-relay"));
+  }
+
   if (wants("concord-many") || wants("concord-hop")) {
     // Many joined communities with real Guestbooks: how long a boot takes to paint
     // the open channel, and to subscribe every community's chat on the wire.
@@ -1577,6 +1750,8 @@ try {
       const a = await metrics(cdp);
       const t = Date.now();
       const hops = [];
+      // One floor per lap of the ring: a leak across hops is a rising floor.
+      const floors = [await memoryFloor(cdp)];
       const { hot } = await cpuProfile("concord-hop", async () => {
         for (let i = 1; i <= HOPS; i++) {
           const ci = i % ring.length;
@@ -1610,12 +1785,28 @@ try {
             [`/c/${c.communityId}/${c.channelIds[0]}`, `(#c${index}-`],
           ));
           await page.waitForTimeout(2000);
+          if (i % ring.length === 0) {
+            floors.push(await memoryFloor(cdp));
+            // With --heap-snapshot: the second lap against the last, to diff what the hops retained.
+            const lap = i / ring.length;
+            if (flag("heap-snapshot") && lap === 2) await writeHeapSnapshot(cdp, "concord-hop-early.heapsnapshot");
+            if (flag("heap-snapshot") && i + ring.length > HOPS) await writeHeapSnapshot(cdp, "concord-hop-late.heapsnapshot");
+          }
         }
       });
       const b = await metrics(cdp);
       const shown = hops.map((h) => h.shownMs);
       console.log(`  shown ms: ${shown.join(" ")}; long-task ms per hop: ${hops.map((h) => h.busyMs).join(" ")}`);
-      save("concord-hop", { hops, hot, cost: cost(a, b, (Date.now() - t) / 1000), errors: errorsSince(hopMark), report: await report(page) });
+      const growth = {
+        heapMBPerLap: slope(floors.map((f) => f.heapMB)),
+        domNodesPerLap: slope(floors.map((f) => f.domNodes)),
+        listenersPerLap: slope(floors.map((f) => f.listeners)),
+        census: censusGrowth(floors[0].census, floors.at(-1).census),
+      };
+      console.log(`  floor per lap: heap ${floors.map((f) => f.heapMB).join(" ")} MB; DOM ${floors.map((f) => f.domNodes).join(" ")}; listeners ${floors.map((f) => f.listeners).join(" ")}`);
+      console.log(`  growth: ${JSON.stringify(growth, null, 2)}`);
+      const heapDiff = flag("heap-snapshot") ? runHeapDiff("concord-hop-early.heapsnapshot", "concord-hop-late.heapsnapshot", "concord-hop-diff") : undefined;
+      save("concord-hop", { hops, floors: floors.map(({ census, ...f }) => f), growth, heapDiff: heapDiff?.error ? heapDiff : undefined, hot, cost: cost(a, b, (Date.now() - t) / 1000), errors: errorsSince(hopMark), report: await report(page) });
     }
     const span = (ws) => (ws.length ? `${Math.min(...ws.map((w) => w.created_at))}..${Math.max(...ws.map((w) => w.created_at))}` : "none");
     const relaySpans = { later: span(many.laterWraps), planes: span(many.wraps.filter((w) => !many.communities.some((c) => c.chatPks.includes(w.pubkey)))) };
@@ -1883,13 +2074,44 @@ try {
     } else {
       console.log("\n▶ live-switch (join a real community, then switch in and out of it)");
       const mark = errors.length;
-      const invite = new URL(INVITE);
-      await page.goto(invite.pathname + invite.hash);
-      const accept = page.getByRole("button", { name: /accept invite/i });
-      await until(page, () => accept.isVisible(), 90_000);
-      await accept.click();
-      await until(page, async () => /^\/c\/[^/]+/.test(new URL(page.url()).pathname), 90_000);
-      const communityPath = new URL(page.url()).pathname.match(/^\/c\/[^/]+/)[0];
+      // `--trace`: the app's sync trace for the whole run (`localStorage.debugSync`), ms since
+      // the first join, in `live-trace.log`. Off by default: the logging costs main-thread time.
+      const liveT0 = Date.now();
+      const traceLines = [];
+      if (flag("trace")) {
+        page.on("console", (m) => {
+          const text = m.text();
+          if (text.includes("[sync")) traceLines.push(`${Date.now() - liveT0} ${text.replace(/%c/g, "").replace(/color:\S+/g, "")}`);
+        });
+      }
+      const join = async (url) => {
+        if (flag("trace")) await page.evaluate(() => localStorage.setItem("debugSync", "1")).catch(() => undefined);
+        const invite = new URL(url);
+        await page.goto(invite.pathname + invite.hash);
+        const accept = page.getByRole("button", { name: /accept invite/i });
+        if (!(await until(page, () => accept.isVisible(), 90_000))) throw new Error(`no Accept for ${invite.pathname}`);
+        await accept.click();
+        if (!(await until(page, async () => /^\/c\/[^/]+/.test(new URL(page.url()).pathname), 90_000))) throw new Error("join never landed");
+        return new URL(page.url()).pathname.match(/^\/c\/[^/]+/)[0];
+      };
+      const communityPath = await join(INVITE);
+      // `--more-invites <file>`: further communities to join (one invite per line), so the
+      // measured one shares the app with others catching up, as on a real account.
+      const more = opt("more-invites", "");
+      if (more) {
+        let joined = 0;
+        for (const url of readFileSync(more, "utf8").split("\n").map((l) => l.trim()).filter(Boolean)) {
+          try {
+            await join(url);
+            joined++;
+          } catch (e) {
+            console.log(`  skipped an invite: ${e.message}`);
+          }
+        }
+        console.log(`  joined ${joined} more communities`);
+        // Settle in the measured community, so its channel is on disk as a regular's is.
+        await page.goto(communityPath);
+      }
       // Let the join's sweeps settle: this is the community as a member has
       // it on disk, which is what switching back into it reads.
       const settleSec = Number(opt("settle", "45"));
@@ -1911,24 +2133,40 @@ try {
       const rounds = Number(opt("rounds", "6"));
       /** Time from the navigation to the first frame after it with a message row rendered. */
       const switchInMs = [];
+      let switchAt0 = 0;
       const { hot } = await cpuProfile("live-switch", async () => {
         for (let round = 0; round < rounds; round++) {
+          if (round === 0) switchAt0 = Date.now();
           const ms = await page.evaluate(
             (path) =>
               new Promise((done) => {
                 const start = performance.now();
                 history.pushState({}, "", path);
                 dispatchEvent(new PopStateEvent("popstate"));
+                // Each frame's state as it changes, ms after the navigation.
+                const states = [];
+                let last = "";
                 const check = () => {
-                  if (document.querySelector("main [data-scroll-anchor]")) done(Math.round(performance.now() - start));
-                  else if (performance.now() - start > 15_000) done(-1);
+                  const title = document.querySelector("main header h1")?.textContent ?? "-";
+                  const main = document.querySelector("main");
+                  const body = (main?.textContent ?? "").replace(main?.querySelector("header")?.textContent ?? "", "").replace(/\s+/g, " ");
+                  const s = `${title}|skel=${document.querySelectorAll("main .animate-pulse").length}|rows=${document.querySelectorAll("main [data-scroll-anchor]").length}|text=${body.slice(0, 160)}`;
+                  if (s !== last) states.push(`${Math.round(performance.now() - start)} ${s}`);
+                  last = s;
+                  if (document.querySelector("main [data-scroll-anchor]")) done({ ms: Math.round(performance.now() - start), states });
+                  else if (performance.now() - start > 15_000) done({ ms: -1, states });
                   else requestAnimationFrame(check);
                 };
                 requestAnimationFrame(check);
               }),
             communityPath,
           );
-          switchInMs.push(ms);
+          switchInMs.push(ms.ms);
+          console.log(`  switch-in ${round}: ${ms.states.join("  →  ")}`);
+          if (round === 0 && flag("trace")) {
+            traceLines.push(`${switchAt0 - liveT0} ==== switch-in 0 starts`);
+            writeFileSync(resolve(OUT, "live-trace.log"), traceLines.join("\n"));
+          }
           await page.waitForTimeout(3000);
           await softNavigate(page, away);
           await page.waitForTimeout(1500);
@@ -1969,6 +2207,18 @@ try {
           errors: errorsSince(bootMark),
           report: await report(page),
         });
+      }
+
+      if (wants("live-open-touch")) {
+        // The video's path on a phone: launch into the community's channel list, tap a
+        // channel, Back, tap another. `--open-wait <s>` is how long the list sits first.
+        console.log("▶ live-open-touch (cold launch into the channel list, then tap channels)");
+        const openMark = errors.length;
+        const names = opt("open-channels", "general,announcements,armada,general").split(",");
+        const { result: opens, hot: openHot } = await cpuProfile("live-open-touch", () =>
+          touchOpens(page, cdp, communityPath, names, { firstWaitMs: Number(opt("open-wait", "8")) * 1000 }),
+        );
+        save("live-open-touch", { opens, hot: openHot, errors: errorsSince(openMark), report: await report(page) });
       }
 
       if (wants("live-idle")) {

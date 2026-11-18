@@ -281,7 +281,7 @@ export function BackupKeyDialog({ open, onOpenChange, nsec, pubkey, onLogout }: 
                     value={ncryptsec}
                     readOnly
                     aria-label={intl.formatMessage({ id: "backupKeyDialog.encryptedKey", defaultMessage: "Encrypted key" })}
-                    className="pr-10 font-mono bg-background border-transparent"
+                    className="pr-10 font-mono"
                   />
                   {showKey ? (
                     <Button
@@ -360,7 +360,7 @@ export function BackupKeyDialog({ open, onOpenChange, nsec, pubkey, onLogout }: 
                   aria-label={intl.formatMessage({ id: "backupKeyDialog.password", defaultMessage: "Password" })}
                   autoComplete="new-password"
                   autoFocus
-                  className="bg-background border-transparent"
+                  
                 />
                 <Input
                   type="password"
@@ -378,7 +378,7 @@ export function BackupKeyDialog({ open, onOpenChange, nsec, pubkey, onLogout }: 
                       void encryptKey();
                     }
                   }}
-                  className="bg-background border-transparent"
+                  
                 />
                 {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}
 
@@ -420,7 +420,7 @@ export function BackupKeyDialog({ open, onOpenChange, nsec, pubkey, onLogout }: 
                   type={showKey ? "text" : "password"}
                   value={nsec}
                   readOnly
-                  className="pr-10 font-mono bg-background border-transparent"
+                  className="pr-10 font-mono"
                 />
                 {showKey ? (
                   <Button

@@ -35,9 +35,9 @@ final class StoreTests: XCTestCase {
         return (decoded as? [[String: Any]]) ?? []
     }
 
-    private func dm(kind: Int = 14, tags: [[String]] = [], content: String = "hi") -> OpenedDm {
+    private func dm(kind: Int = 14, tags: [[String]] = [], content: String = "hi", author: String? = nil) -> OpenedDm {
         OpenedDm(
-            rumorId: String(repeating: "1", count: 64), author: peer, kind: kind,
+            rumorId: String(repeating: "1", count: 64), author: author ?? peer, kind: kind,
             content: content, tags: tags, createdAt: now, peers: [peer]
         )
     }
@@ -83,6 +83,18 @@ final class StoreTests: XCTestCase {
 
     func testRecordsNoArrivalWithinTheSkew() throws {
         try store.writeDm(dm(), self: self_, now: now, arrivedAt: now + 2)
+        XCTAssertNil(store.kvGet("dm17at:\(self_):\(String(repeating: "1", count: 64))"))
+    }
+
+    func testRecordsNoArrivalForAnEdit() throws {
+        // An edit's replacement is dated at the original on purpose (buildDmEditRumors).
+        try store.writeDm(dm(tags: [["edited", String(now + 120)]]), self: self_, now: now, arrivedAt: now + 120)
+        XCTAssertNil(store.kvGet("dm17at:\(self_):\(String(repeating: "1", count: 64))"))
+    }
+
+    func testRecordsNoArrivalForTheViewersOwnMessage() throws {
+        // Its gap to arrival is only how long the send took (withArrival in dm17Store.ts).
+        try store.writeDm(dm(author: self_), self: self_, now: now, arrivedAt: now + 120)
         XCTAssertNil(store.kvGet("dm17at:\(self_):\(String(repeating: "1", count: 64))"))
     }
 
@@ -452,6 +464,23 @@ final class StorelessTests: XCTestCase {
         XCTAssertEqual(prepared(["00" + String(repeating: "1", count: 62)]), true, "a post nobody vouches for")
     }
 
+    /// A wrap a restricted Channel's stream can't open names no author to judge, so it rings nobody.
+    func testAnUnopenedWrapInARestrictedChannelRingsNobody() {
+        let concord = vectorObject("concord")
+        let wrap: [AnyHashable: Any] = napp(concord["wrap"] as! [String: Any])
+        func prepared(_ posters: Set<String>?) -> PreparedPush? {
+            let stream = ConcordStream(
+                pubkey: concord["streamPk"] as! String, conversationKey: String(repeating: "ab", count: 32),
+                epoch: concord["epoch"] as! String, communityId: "cc", channelId: concord["channelId"] as! String,
+                banned: [], postAuthors: posters
+            )
+            let config = PushConfig(policy: .generic, selfPubkey: self_, knownPeers: [], secretKey: nil, nip46: nil, concord: [stream])
+            return PushProcessor(store: nil, config: config, now: 1_700_000_600).prepare(userInfo: wrap)
+        }
+        XCTAssertNotEqual(prepared(nil)?.drop, true, "an unrestricted Channel keeps its fallback")
+        XCTAssertEqual(prepared([vectorString("bobPk")])?.drop, true)
+    }
+
     /// A Community sender is named by the Nickname they go by there (CORD-04 §10, Vector `sender_in`).
     func testNamesTheSenderByTheirNickname() {
         let concord = vectorObject("concord")
@@ -633,23 +662,6 @@ final class SenderIdentityTests: XCTestCase {
             knownConversations: knownConversations, mutedPeers: mutedPeers,
             secretKey: nil, nip46: nil, concord: []
         )
-    }
-
-    func testCommunityAvatarOnlyForKnownPeers() {
-        let stranger = String(repeating: "f", count: 64)
-        let cfg = config(knownPeers: [peer])
-        XCTAssertTrue(PushProcessor.communityAvatarShown(author: peer, config: cfg))
-        XCTAssertFalse(
-            PushProcessor.communityAvatarShown(author: stranger, config: cfg),
-            "anyone with a community's key can post; their face stays off the lock screen"
-        )
-        let all = PushConfig(
-            policy: .generic, directMessages: true, dmLevels: [:],
-            selfPubkey: self_, knownPeers: [], knownConversations: [], mutedPeers: [],
-            secretKey: nil, nip46: nil, concord: [],
-            mediaPolicy: MediaPolicy(allCommunityAvatars: true)
-        )
-        XCTAssertTrue(PushProcessor.communityAvatarShown(author: stranger, config: all))
     }
 
     func testGroupTrustAndTapStayScopedToTheExactConversation() {

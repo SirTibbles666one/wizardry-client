@@ -39,6 +39,7 @@ const h = vi.hoisted(() => ({
   user: undefined as unknown,
   folded: new Map<string, unknown>(),
   store: Promise.resolve({ query: async () => [], event: async () => undefined }),
+  toasts: [] as Array<{ title?: unknown; description?: unknown }>,
 }));
 
 vi.mock("@nostrify/react", () => ({
@@ -67,10 +68,13 @@ vi.mock("@/hooks/useEventStore", () => ({
 vi.mock("@/hooks/useRemoveRailKey", () => ({
   useRemoveRailKey: () => () => undefined,
 }));
-vi.mock("@/hooks/useToast", () => ({ toast: () => undefined }));
+vi.mock("@/hooks/useToast", () => ({
+  toast: (t: { title?: unknown; description?: unknown }) => h.toasts.push(t),
+}));
 // On-disk state is this map; it outlives `vi.resetModules()` (process death).
 vi.mock("@/lib/foldedCache", () => ({
   readFolded: async (key: string) => h.folded.get(key),
+  readFoldedShared: async (key: string) => h.folded.get(key),
   writeFolded: async (key: string, value: unknown) => {
     h.folded.set(key, structuredClone(value));
   },
@@ -114,6 +118,7 @@ function wrapper({ children }: { children: ReactNode }) {
 
 beforeEach(() => {
   h.folded = new Map();
+  h.toasts = [];
   bundleQueries = 0;
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-09-01T12:00:00Z"));
@@ -188,6 +193,36 @@ async function coldStartLive(): Promise<string[]> {
   return ids;
 }
 
+describe("a pending join retried within one session", () => {
+  // A session retries on every return to the tab. Counting each of those toward the
+  // bound gave up on the join within minutes of tab switching, dropping the community
+  // the member was reading for "You don't have access" (a signer whose NIP-44 failed).
+  it("is not given up on however many times the tab is revisited", { timeout: 30_000 }, async () => {
+    h.relay = downRelay;
+    const communityId = await clickJoin();
+    const { useResumePendingJoins } = await import("@/concord/hooks/useCommunityActions");
+    const { useLiveCommunities } = await import("@/concord/hooks/useCommunityList");
+    const session = renderHook(
+      () => {
+        useResumePendingJoins();
+        return useLiveCommunities();
+      },
+      { wrapper },
+    );
+
+    for (let i = 0; i < 40; i++) {
+      const before = bundleQueries;
+      document.dispatchEvent(new Event("visibilitychange"));
+      await waitFor(() => expect(bundleQueries).toBeGreaterThan(before));
+      await new Promise((r) => setTimeout(r, 20));
+    }
+
+    expect(session.result.current.map((e) => e.community_id)).toContain(communityId);
+    expect(await persistedIds()).toContain(communityId);
+    session.unmount();
+  });
+});
+
 describe.each([
   ["the invite bundle is no longer on its relays", () => bundleGoneRelay],
   ["every relay is unreachable", () => downRelay],
@@ -207,5 +242,17 @@ describe.each([
 
     expect(await persistedIds(), "pending join dropped from disk").not.toContain(communityId);
     expect(await coldStartLive(), "pending join no longer on the rail").not.toContain(communityId);
+  });
+});
+
+describe("a click whose join chain fails transiently", () => {
+  it("names the failure in the retry toast", async () => {
+    h.relay = bundleGoneRelay;
+    await clickJoin();
+    await waitFor(() => expect(h.toasts).toHaveLength(1));
+    expect(h.toasts[0].title).toBe("Couldn't finish joining Fleet");
+    expect(h.toasts[0].description).toBe(
+      "Couldn't find that invite on its relays. Wizardry will try again the next time it starts.",
+    );
   });
 });

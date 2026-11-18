@@ -235,14 +235,6 @@ struct PushProcessor {
 
     // MARK: - DM
 
-    /// Whether a Concord sender's avatar may appear on the notification. Anyone
-    /// with the key can post (CORD-04 §1), so unless the reader loads everyone's
-    /// media only a known peer's face reaches the lock screen; mirrors
-    /// `communityAvatarShown` in `pushRuntime.ts`.
-    static func communityAvatarShown(author: String, config: PushConfig) -> Bool {
-        config.mediaPolicy.allCommunityAvatars || config.knownPeers.contains(author)
-    }
-
     static func dmConversationKey(peers: [String]) -> String {
         peers.joined(separator: ",")
     }
@@ -422,7 +414,9 @@ struct PushProcessor {
         }
         guard case .chat(let opened) = read else {
             trace("c2-open-failed")
-            return nil
+            // In a restricted Channel only some authors' posts ring (CORD-03 §1),
+            // and an unopened wrap names none.
+            return stream.postAuthors == nil ? nil : dropped
         }
 
         // Store it either way: a message we won't announce is still a message,
@@ -457,7 +451,7 @@ struct PushProcessor {
         // A post its readers collapse rings nobody (CORD-04 §8): no SEND in this open
         // Channel, or inside a running Timeout's window.
         if stream.sendDenied.contains(opened.author) { return dropped }
-        // At a restricted Channel's read address a post stands only from those who manage it (CORD-03 §1).
+        // In a restricted Channel a post rings only from the authors its address takes (CORD-03 §1).
         if let posters = stream.postAuthors, opened.kind != Concord.kindReaction, !posters.contains(opened.author) { return dropped }
         if let t = stream.timeouts[opened.author],
            t.until * 1000 > now * 1000 + stream.clockOffsetMs,
@@ -533,8 +527,7 @@ struct PushProcessor {
             sender: PreparedPush.Sender(
                 id: opened.author,
                 name: profile?.name ?? strings.anonymous,
-                avatarUrl: Self.communityAvatarShown(author: opened.author, config: config)
-                    ? config.mediaPolicy.resolve(profile?.picture) : nil,
+                avatarUrl: config.mediaPolicy.resolve(profile?.picture),
                 groupName: message.roomTitle
             )
         )

@@ -18,6 +18,8 @@ import {
   planMoveCategory,
   planMemberRoles,
   planMoveRole,
+  maySync,
+  overwriteReach,
   planOverwrite,
   planRenameCategory,
   planReorder,
@@ -25,9 +27,10 @@ import {
   planSetEveryone,
   planStockTier,
   planSync,
+  scopeUnkeyed,
   rankedOrder,
 } from "@/concord/lib/rankedWrites";
-import { EVERYONE_DEFAULT, Permissions, RANKED_ADMIN_ALL, roleToJSON, stockTierOf, type Role } from "@/concord/lib/roles";
+import { EVERYONE_DEFAULT, OVERWRITABLE, Permissions, RANKED_ADMIN_ALL, roleToJSON, stockTierOf, type Role } from "@/concord/lib/roles";
 import type { OpenedEvent } from "@/concord/lib/stream";
 import type { NostrRumor } from "@/lib/nostrRumor";
 import { eidHex, headFloor, heldCommunity, hexKey, rankedCommunity, TestCommunity } from "@/test/concordEditions";
@@ -264,6 +267,53 @@ describe("Channel rules (Vector set_overwrite, set_channel_sync)", () => {
     const sync = planSync(one.folded, c.id, c.owner, new Set(), general, cat.idHex);
     expect(after(c, one.all, [sync]).folded.roster.syncs?.[general]).toBe(cat.idHex);
   });
+
+  it("says ahead of the write which bits an author may set, as planOverwrite will judge them", () => {
+    const { c, admin, adminRole, grant, general, base, folded } = setup();
+    const cite = { entityId: grant.entityId, version: grant.version, editionHash: grant.selfHash };
+    const everyone = { kind: "everyone" } as const;
+
+    const reach = overwriteReach(folded, admin, general, everyone);
+    expect(reach).toEqual({ bits: MANAGER & OVERWRITABLE });
+    expect((reach.bits & Permissions.MANAGE_MESSAGES) === 0n).toBe(true);
+    expect(() => planOverwrite(folded, c.id, admin, new Set(), general, everyone, Permissions.SEND_MESSAGES, 0n, cite)).not.toThrow();
+    expect(() => planOverwrite(folded, c.id, admin, new Set(), general, everyone, Permissions.MANAGE_MESSAGES, 0n, cite)).toThrow();
+
+    // Their own Role isn't beneath them, and the owner is nobody's to overwrite.
+    expect(overwriteReach(folded, admin, general, { kind: "role", id: adminRole })).toEqual({ bits: 0n, refusal: "rank" });
+    expect(overwriteReach(folded, c.owner, general, { kind: "member", id: c.owner })).toEqual({ bits: 0n, refusal: "rank" });
+    expect(overwriteReach(folded, c.owner, general, { kind: "role", id: adminRole })).toEqual({ bits: OVERWRITABLE });
+
+    // A rule carrying a bit they lack is closed whole: clearing another bit of it would restate that one.
+    const beyond = planOverwrite(folded, c.id, c.owner, new Set(), general, everyone, Permissions.MANAGE_MESSAGES | Permissions.SEND_MESSAGES, 0n);
+    const closed = after(c, base, [beyond]).folded;
+    expect(overwriteReach(closed, admin, general, everyone)).toEqual({ bits: 0n, refusal: "bits" });
+    expect(() => planOverwrite(closed, c.id, admin, new Set(), general, everyone, Permissions.MANAGE_MESSAGES, 0n, cite)).toThrow();
+  });
+
+  it("says ahead of the write whether a sync is the author's to make", () => {
+    const { c, admin, grant, general, base, folded } = setup();
+    const cite = { entityId: grant.entityId, version: grant.version, editionHash: grant.selfHash };
+    const cat = planCreateCategory(folded, c.id, c.owner, "Text");
+    const one = after(c, base, [cat.rumor]);
+    expect(maySync(one.folded, admin, general, cat.idHex)).toBe(true);
+    expect(maySync(one.folded, hexKey(), general, cat.idHex)).toBe(false);
+
+    const beyond = planOverwrite(one.folded, c.id, c.owner, new Set(), cat.idHex, { kind: "everyone" }, Permissions.MANAGE_MESSAGES, 0n);
+    const two = after(c, one.all, [beyond]);
+    expect(maySync(two.folded, admin, general, cat.idHex)).toBe(false);
+    expect(() => planSync(two.folded, c.id, admin, new Set(), general, cat.idHex, cite)).toThrow();
+    expect(maySync(two.folded, c.owner, general, cat.idHex)).toBe(true);
+  });
+
+  it("finds the private Channel under a scope that this device can't key", () => {
+    const s = rankedCommunity(MANAGER);
+    const secret = random32();
+    const ch = s.c.edition({ vsk: "2", eid: secret, author: s.c.owner, content: { name: "x", private: true } });
+    const folded = foldControlState([...s.base, ch], s.c.id, s.c.owner);
+    expect(scopeUnkeyed(folded, new Set(), bytesToHex(secret))).toBe(true);
+    expect(scopeUnkeyed(folded, new Set([bytesToHex(secret)]), bytesToHex(secret))).toBe(false);
+  });
 });
 
 describe("Categories (Vector create/rename/move/delete_category)", () => {
@@ -350,16 +400,14 @@ describe("keys follow a rule change (CORD-03 §5, Vector `settle_access`, done b
     expect(duty(deny.folded, c.owner, secret, [member], carried)?.cut).toEqual([member]);
   });
 
-  it("settling a change rotates away a holder it shut out, with no evidence of how they got the key", () => {
-    // A Direct Invite leaves no trace on the access plane or in a rotation, so only the
-    // change itself says they held it (Vector `settle_access`: `was && !now`).
+  it("never cuts without evidence that they hold the current epoch: the change's actor cuts inline", () => {
+    // A cut remembered from an older Roster would repeat at every epoch it never reached,
+    // rotating the same set forever (Vector `access_duty` cuts on evidence alone).
     const { c, all, folded, secret, member } = privateChannel();
     const allow = after(c, all, [planOverwrite(folded, c.id, c.owner, new Set([secret]), secret, { kind: "member", id: member }, Permissions.VIEW_CHANNEL, 0n)]);
     const deny = after(c, allow.all, [planOverwrite(allow.folded, c.id, c.owner, new Set([secret]), secret, { kind: "member", id: member }, 0n, Permissions.VIEW_CHANNEL)]);
-    const settle = (me: string) =>
-      planChannelDuty({ control: deny.folded, me, channelIdHex: secret, epoch: 1n, candidates: [member], deliveries: [], minted: [], prior: [], settledFrom: allow.folded });
-    expect(settle(c.owner)?.cut).toEqual([member]);
-    expect(duty(deny.folded, c.owner, secret, [member]), "a periodic pass still needs evidence").toBeUndefined();
+    expect(duty(deny.folded, c.owner, secret, [member])).toBeUndefined();
+    void allow;
   });
 
   it("carries Armada's sidebar across as Categories and rank keys, and drops the old fields", () => {

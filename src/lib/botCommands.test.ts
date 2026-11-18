@@ -3,9 +3,11 @@ import { describe, expect, it } from "vitest";
 import {
   addressedBots,
   argReason,
+  botCommandPick,
   botTag,
   buildInvocationText,
   commandLine,
+  draftNamesCommand,
   invocationTags,
   normalizeUser,
   parseBotManifest,
@@ -321,6 +323,48 @@ describe("buildInvocationText", () => {
   });
 });
 
+describe("botCommandPick (what a menu pick does)", () => {
+  const command = (args: Record<string, unknown>[]) =>
+    parseBotManifest(JSON.stringify({ v: 1, commands: [{ name: "model", args }] }))!.commands[0];
+
+  it("sends a command that declares no arguments", () => {
+    expect(botCommandPick(command([]))).toEqual({ kind: "send" });
+  });
+
+  it("drafts a command whose only argument is free text, required or not", () => {
+    for (const required of [false, true]) {
+      expect(botCommandPick(command([{ name: "name", type: "string", required }])))
+        .toEqual({ kind: "draft", text: "/model " });
+    }
+  });
+
+  it("opens typed fields for a single typed argument or several arguments", () => {
+    expect(botCommandPick(command([{ name: "n", type: "int" }]))).toEqual({ kind: "fields" });
+    expect(botCommandPick(command([{ name: "a", type: "string" }, { name: "b", type: "string" }])))
+      .toEqual({ kind: "fields" });
+    const roll = parseBotManifest(JSON.stringify(concordiaManifest))!.commands.find((c) => c.name === "roll")!;
+    expect(botCommandPick(roll)).toEqual({ kind: "fields" });
+  });
+});
+
+describe("draftNamesCommand (whether a menu pick still routes the draft)", () => {
+  it("holds while the draft still begins with the picked command", () => {
+    expect(draftNamesCommand("/model ", "model")).toBe(true);
+    expect(draftNamesCommand("/model gpt-5", "model")).toBe(true);
+    expect(draftNamesCommand("/Model gpt-5", "model")).toBe(true);
+    expect(draftNamesCommand("/model", "model")).toBe(true);
+  });
+
+  it("lapses once the draft names something else", () => {
+    expect(draftNamesCommand("", "model")).toBe(false);
+    expect(draftNamesCommand("/", "model")).toBe(false);
+    expect(draftNamesCommand("/mode", "model")).toBe(false);
+    expect(draftNamesCommand("/models", "model")).toBe(false);
+    expect(draftNamesCommand("/poll Lunch?", "model")).toBe(false);
+    expect(draftNamesCommand("model", "model")).toBe(false);
+  });
+});
+
 describe("argReason", () => {
   const arg = (over: Record<string, unknown>) =>
     parseBotManifest(manifestWith({ name: "a", ...over }))!.commands[0].args[0];
@@ -533,13 +577,13 @@ describe("interoperability with the reference implementation", () => {
 describe("commandLine (how an invocation renders in the timeline)", () => {
   const tagged = [botTag(BOT_A)];
 
-  it("reads an addressed invocation as an action, without its arguments", () => {
+  it("reads an addressed invocation as an action, with its arguments as written", () => {
     const line = commandLine(`/greet nostr:${NPUB} pirate 1`, tagged);
-    expect(line).toEqual({ name: "greet", bot: BOT_A });
+    expect(line).toEqual({ name: "greet", bot: BOT_A, args: `nostr:${NPUB} pirate 1` });
   });
 
   it("reads a bare command as an action even when it names no bot", () => {
-    expect(commandLine("/ping", [])).toEqual({ name: "ping", bot: undefined });
+    expect(commandLine("/ping", [])).toEqual({ name: "ping", bot: undefined, args: "" });
   });
 
   it("NEVER hides text a person actually wrote", () => {
@@ -551,14 +595,14 @@ describe("commandLine (how an invocation renders in the timeline)", () => {
     expect(commandLine("no slash at all", [])).toBeUndefined();
   });
 
-  it("still collapses arguments once a bot is named, since they were meant for it", () => {
-    expect(commandLine("/roll 20", tagged)).toEqual({ name: "roll", bot: BOT_A });
+  it("reads arguments as part of the action once a bot is named, since they were meant for it", () => {
+    expect(commandLine("/roll 20", tagged)).toEqual({ name: "roll", bot: BOT_A, args: "20" });
   });
 
   it("folds the command word, so a valid invocation cannot render as prose", () => {
     // The parser accepts `/PING`, so the renderer must recognise it too.
-    expect(commandLine("/PING", [])).toEqual({ name: "ping", bot: undefined });
-    expect(commandLine("/Roll 20", tagged)).toEqual({ name: "roll", bot: BOT_A });
+    expect(commandLine("/PING", [])).toEqual({ name: "ping", bot: undefined, args: "" });
+    expect(commandLine("/Roll 20", tagged)).toEqual({ name: "roll", bot: BOT_A, args: "20" });
   });
 
   // A 1:1 DM sends invocations untagged, so the timeline recognises them by the
@@ -566,11 +610,11 @@ describe("commandLine (how an invocation renders in the timeline)", () => {
   const known = new Set(["announce", "roll"]);
 
   it("promotes an untagged invocation with arguments when the bot declares it", () => {
-    expect(commandLine("/announce meow meowers", [], known)).toEqual({ name: "announce", bot: undefined });
+    expect(commandLine("/announce meow meowers", [], known)).toEqual({ name: "announce", bot: undefined, args: "meow meowers" });
   });
 
   it("folds the command word against the known set too", () => {
-    expect(commandLine("/Announce hello", [], known)).toEqual({ name: "announce", bot: undefined });
+    expect(commandLine("/Announce hello", [], known)).toEqual({ name: "announce", bot: undefined, args: "hello" });
   });
 
   it("still hides nothing: an undeclared /word with prose stays text", () => {
