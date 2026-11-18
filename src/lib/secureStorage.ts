@@ -7,13 +7,16 @@ import {
   isDesktop,
 } from "@/lib/desktop";
 import { perfMark } from "@/lib/perf";
+import { parseDeviceEnvelope, sealText, unsealText } from "@/lib/deviceSeal";
 
 import type { NLoginStorage } from "@nostrify/react/login";
 
 /**
  * Login-state storage for `NostrLoginProvider` (holds nsecs): OS keystore on
  * Capacitor (migrating legacy localStorage copies), safeStorage-encrypted
- * localStorage on desktop, plain localStorage on the web.
+ * localStorage on desktop, and on the web a device-sealed envelope whose key
+ * the browser holds unexportably ({@link "@/lib/deviceSeal"}) — plaintext only
+ * where sealing is unavailable.
  */
 
 /**
@@ -59,6 +62,20 @@ function isEmptyList(value: string): boolean {
   }
 }
 
+/**
+ * Park an unreadable blob out of the way of the next write, keeping the
+ * earliest parked copy. It is very likely the only copy of the identity key.
+ */
+function parkUnreadable(key: string, raw: string): void {
+  try {
+    if (localStorage.getItem(lockedKey(key)) === null) {
+      localStorage.setItem(lockedKey(key), raw);
+    }
+  } catch {
+    // best-effort
+  }
+}
+
 async function desktopGetItem(key: string): Promise<string | null> {
   const raw = localStorage.getItem(key);
   if (raw === null) {
@@ -91,13 +108,7 @@ async function desktopGetItem(key: string): Promise<string | null> {
   // Undecryptable (store reset, profile copied, old shell): likely the only copy
   // of the user's key, and the signed-out UI's next write would overwrite it —
   // park it first, keeping the earliest parked copy.
-  try {
-    if (localStorage.getItem(lockedKey(key)) === null) {
-      localStorage.setItem(lockedKey(key), raw);
-    }
-  } catch {
-    // best-effort
-  }
+  parkUnreadable(key, raw);
   perfMark("login.read done", "locked");
   return null;
 }
@@ -120,10 +131,68 @@ async function desktopSetItem(key: string, value: string): Promise<void> {
 }
 
 /**
+ * The web has no OS keystore to ask, so the login is sealed with a key this
+ * browser holds unexportably (see `lib/deviceSeal`). It stays transparent: the
+ * same key survives a reload without a password, which is why the session does.
+ */
+async function webGetItem(key: string): Promise<string | null> {
+  const raw = localStorage.getItem(key);
+  if (raw === null) {
+    perfMark("login.read done", "absent");
+    return null;
+  }
+
+  // `[]` must stay literal: the boot script tests `!== "[]"` synchronously.
+  if (isEmptyList(raw)) {
+    perfMark("login.read done", "localStorage");
+    return raw;
+  }
+
+  if (parseDeviceEnvelope(raw)) {
+    const plaintext = await unsealText(raw);
+    if (plaintext !== null) {
+      perfMark("login.read done", "sealed");
+      return plaintext;
+    }
+    parkUnreadable(key, raw);
+    perfMark("login.read done", "locked");
+    return null;
+  }
+
+  // Plaintext written before sealing existed: seal it in place on the way past.
+  const sealed = await sealText(raw);
+  if (sealed) {
+    try {
+      localStorage.setItem(key, sealed);
+      perfMark("login.read done", "sealed plaintext");
+    } catch {
+      perfMark("login.read done", "localStorage (plaintext)");
+    }
+  } else {
+    perfMark("login.read done", "localStorage (plaintext)");
+  }
+  return raw;
+}
+
+async function webSetItem(key: string, value: string): Promise<void> {
+  if (isEmptyList(value)) {
+    localStorage.setItem(key, value);
+    return;
+  }
+
+  const sealed = await sealText(value);
+  // No sealing available (private mode, old browser): plaintext beats no login.
+  localStorage.setItem(key, sealed ?? value);
+}
+
+/**
  * How this platform holds the login at rest. A NIP-49 backup records it in the
- * key-security byte, so it has to be the truth rather than a guess: the web
- * build keeps the nsec in plain localStorage, and desktop only counts as
- * encrypted while `safeStorage` actually answers.
+ * key-security byte, so it has to be the truth rather than a guess: desktop
+ * only counts as encrypted while `safeStorage` actually answers.
+ *
+ * The web reports `plaintext` even though the login is now sealed, because every
+ * key that already lives in a browser was stored in the clear before sealing
+ * existed — under-claiming is the safe direction for a flag about the past.
  */
 export async function keyStorageTier(): Promise<"os-keystore" | "safe-storage" | "plaintext"> {
   if (Capacitor.isNativePlatform()) return "os-keystore";
@@ -138,9 +207,7 @@ export const secureStorage: NLoginStorage = {
     perfMark("login.read start", key);
     if (!Capacitor.isNativePlatform()) {
       if (isDesktop()) return desktopGetItem(key);
-      const web = localStorage.getItem(key);
-      perfMark("login.read done", "localStorage");
-      return web;
+      return webGetItem(key);
     }
 
     try {
@@ -164,8 +231,7 @@ export const secureStorage: NLoginStorage = {
   async setItem(key: string, value: string): Promise<void> {
     if (!Capacitor.isNativePlatform()) {
       if (isDesktop()) return desktopSetItem(key, value);
-      localStorage.setItem(key, value);
-      return;
+      return webSetItem(key, value);
     }
 
     await SecureStoragePlugin.set({ key, value });

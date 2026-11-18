@@ -12,6 +12,43 @@ vi.mock("@capacitor/core", () => ({
   },
 }));
 
+/**
+ * The web sealer, faked the same way `safeStorage` is below: it really encodes,
+ * so "the stored blob does not hold the nsec" is a claim about the adapter
+ * writing cipher output. The real WebCrypto path is `deviceSeal.test.ts`.
+ */
+const seal = vi.hoisted(() => {
+  const encode = (text: string) => `SEALED:${btoa(text)}`;
+  const decode = (blob: string) => (blob.startsWith("SEALED:") ? atob(blob.slice(7)) : null);
+  return {
+    unavailable: { value: false },
+    envelope: (plaintext: string) =>
+      JSON.stringify({ v: 1, enc: "device", data: encode(plaintext) }),
+    encode,
+    decode,
+  };
+});
+
+vi.mock("@/lib/deviceSeal", () => ({
+  parseDeviceEnvelope: (raw: string) => {
+    try {
+      const parsed = JSON.parse(raw) as { v?: number; enc?: string; data?: string };
+      return parsed?.v === 1 && parsed.enc === "device" && typeof parsed.data === "string"
+        ? parsed
+        : null;
+    } catch {
+      return null;
+    }
+  },
+  sealText: async (plaintext: string) =>
+    seal.unavailable.value ? null : seal.envelope(plaintext),
+  unsealText: async (raw: string) => {
+    if (seal.unavailable.value) return null;
+    const parsed = JSON.parse(raw) as { data?: string };
+    return typeof parsed.data === "string" ? seal.decode(parsed.data) : null;
+  },
+}));
+
 vi.mock("capacitor-secure-storage-plugin", () => ({
   SecureStoragePlugin: {
     get: vi.fn(async () => {
@@ -81,6 +118,7 @@ const rawStored = (key = KEY) => localStorage.getItem(key);
 
 beforeEach(() => {
   localStorage.clear();
+  seal.unavailable.value = false;
 });
 
 afterEach(() => {
@@ -89,14 +127,54 @@ afterEach(() => {
 });
 
 describe("secureStorage on the web (no desktop bridge)", () => {
-  it("stores and reads the login list as plaintext", async () => {
+  it("seals the login list at rest", async () => {
     await secureStorage.setItem(KEY, LOGINS);
-    expect(rawStored()).toBe(LOGINS);
+
+    const stored = rawStored();
+    expect(stored).not.toBeNull();
+    expect(stored).not.toContain("nsec1test");
+    expect(JSON.parse(stored!)).toMatchObject({ v: 1, enc: "device" });
+  });
+
+  it("round-trips the value through the envelope", async () => {
+    await secureStorage.setItem(KEY, LOGINS);
     await expect(secureStorage.getItem(KEY)).resolves.toBe(LOGINS);
+  });
+
+  it("keeps an empty list as literal plaintext for the boot splash", async () => {
+    await secureStorage.setItem(KEY, "[]");
+    expect(rawStored()).toBe("[]");
+    await expect(secureStorage.getItem(KEY)).resolves.toBe("[]");
+  });
+
+  it("seals a legacy plaintext list in place on first read", async () => {
+    localStorage.setItem(KEY, LOGINS);
+
+    await expect(secureStorage.getItem(KEY)).resolves.toBe(LOGINS);
+    expect(rawStored()).not.toContain("nsec1test");
+    expect(JSON.parse(rawStored()!)).toMatchObject({ enc: "device" });
   });
 
   it("returns null for an absent key", async () => {
     await expect(secureStorage.getItem(KEY)).resolves.toBeNull();
+  });
+
+  it("parks a blob it cannot open, and reports signed out rather than empty", async () => {
+    const unreadable = JSON.stringify({ v: 1, enc: "device", data: "not-this-profiles-key" });
+    localStorage.setItem(KEY, unreadable);
+
+    await expect(secureStorage.getItem(KEY)).resolves.toBeNull();
+    expect(rawStored()).toBe(unreadable);
+    expect(rawStored(LOCKED)).toBe(unreadable);
+  });
+
+  it("falls back to plaintext when this browser cannot seal", async () => {
+    seal.unavailable.value = true;
+    await secureStorage.setItem(KEY, LOGINS);
+
+    // No key must never cost somebody their login.
+    expect(rawStored()).toBe(LOGINS);
+    await expect(secureStorage.getItem(KEY)).resolves.toBe(LOGINS);
   });
 });
 
