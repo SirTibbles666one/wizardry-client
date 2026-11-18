@@ -2553,8 +2553,6 @@
   "kickMembersDialog.skipped": "{count, plural, one {# geselecteerd lid wordt overgeslagen. Je staat niet hoger dan dit lid.} other {# geselecteerde leden worden overgeslagen. Je staat niet hoger dan hen.}}",
   "kickMembersDialog.titleMany": "Leden verwijderen",
   "kickMembersDialog.titleOne": "Lid verwijderen",
-  "landingPage.allDownloads": "alle downloads",
-  "landingPage.alsoOn": "ook voor macOS, Linux & Windows",
   "landingPage.closerBody": "Desktop, telefoon of browser. Je sleutel is overal je account.",
   "landingPage.closerTitle": "Alles, op elk dek",
   "landingPage.feature.calls": "Spraak- & video-oproepen",

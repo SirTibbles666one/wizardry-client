@@ -2553,8 +2553,6 @@
   "kickMembersDialog.skipped": "{count, plural, one {# membro selecionado foi ignorado. Seu cargo não é superior ao dele.} other {# membros selecionados foram ignorados. Seu cargo não é superior ao deles.}}",
   "kickMembersDialog.titleMany": "Expulsar membros",
   "kickMembersDialog.titleOne": "Expulsar membro",
-  "landingPage.allDownloads": "todos os downloads",
-  "landingPage.alsoOn": "também no macOS, Linux e Windows",
   "landingPage.closerBody": "Computador, celular ou navegador. Sua chave é sua conta em todos eles.",
   "landingPage.closerTitle": "Tudo, em todo convés",
   "landingPage.feature.calls": "Chamadas de voz e vídeo",

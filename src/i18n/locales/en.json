@@ -2553,8 +2553,6 @@
   "kickMembersDialog.skipped": "{count, plural, one {# selected member is skipped. You don't outrank them.} other {# selected members are skipped. You don't outrank them.}}",
   "kickMembersDialog.titleMany": "Kick members",
   "kickMembersDialog.titleOne": "Kick member",
-  "landingPage.allDownloads": "all downloads",
-  "landingPage.alsoOn": "also on macOS, Linux & Windows",
   "landingPage.closerBody": "Desktop, phone or browser. Your key is your account on all of them.",
   "landingPage.closerTitle": "Everything, on every deck",
   "landingPage.feature.calls": "Voice & video calls",

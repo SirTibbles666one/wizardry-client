@@ -2553,8 +2553,6 @@
   "kickMembersDialog.skipped": "{count, plural, one {# ausgewähltes Mitglied wird übersprungen. Du stehst nicht über ihm.} other {# ausgewählte Mitglieder werden übersprungen. Du stehst nicht über ihnen.}}",
   "kickMembersDialog.titleMany": "Mitglieder entfernen",
   "kickMembersDialog.titleOne": "Mitglied entfernen",
-  "landingPage.allDownloads": "alle Downloads",
-  "landingPage.alsoOn": "auch für macOS, Linux & Windows",
   "landingPage.closerBody": "Desktop, Handy oder Browser. Dein Schlüssel ist überall dein Konto.",
   "landingPage.closerTitle": "Alles, auf jedem Deck",
   "landingPage.feature.calls": "Sprach- & Videoanrufe",

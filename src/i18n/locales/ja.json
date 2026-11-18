@@ -2553,8 +2553,6 @@
   "kickMembersDialog.skipped": "{count, plural, other {選択したメンバーのうち # 人はスキップされます。あなたより下位ではありません。}}",
   "kickMembersDialog.titleMany": "メンバーをキック",
   "kickMembersDialog.titleOne": "メンバーをキック",
-  "landingPage.allDownloads": "すべてのダウンロード",
-  "landingPage.alsoOn": "macOS、Linux、Windows にも対応",
   "landingPage.closerBody": "デスクトップでも、スマホでも、ブラウザでも。あなたの鍵がどこでもあなたのアカウントです。",
   "landingPage.closerTitle": "すべてを、どの甲板でも",
   "landingPage.feature.calls": "音声・ビデオ通話",
