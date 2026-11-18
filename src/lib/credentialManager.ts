@@ -64,8 +64,10 @@ export async function saveToKeyring(npub: string, nsec: string): Promise<Keyring
   return "unavailable";
 }
 
-/** Filename for the exported key file. */
+/** Filename for the exported plaintext key file. */
 const KEY_FILENAME = "armada-secret-key.txt";
+/** Filename for a NIP-49 password-encrypted key. Says so, so it is not mistaken for an nsec. */
+const NCRYPTSEC_FILENAME = "armada-secret-key-encrypted.txt";
 
 /** File System Access API "Save as…"; not in `lib.dom` and absent in Firefox/Safari. */
 interface SaveFilePicker {
@@ -84,9 +86,22 @@ interface SaveFilePicker {
  * `"cancelled"` only for a dismissed save dialog.
  */
 export async function exportNsec(nsec: string): Promise<ExportResult> {
+  return saveTextFile(KEY_FILENAME, nsec);
+}
+
+/**
+ * Save a NIP-49 password-encrypted key (`ncryptsec`) as a text file. It goes to
+ * a file, never the keyring: the keyring is keyed by npub and unlocked by the
+ * OS, which would store a backup nobody needs a password for.
+ */
+export async function exportNcryptsec(ncryptsec: string): Promise<ExportResult> {
+  return saveTextFile(NCRYPTSEC_FILENAME, ncryptsec);
+}
+
+async function saveTextFile(filename: string, content: string): Promise<ExportResult> {
   if (Capacitor.getPlatform() === "android") {
     try {
-      const { location } = await ArmadaCredential.saveToFile({ filename: KEY_FILENAME, content: nsec });
+      const { location } = await ArmadaCredential.saveToFile({ filename, content });
       return { status: "saved", location };
     } catch {
       return { status: "failed" };
@@ -98,12 +113,12 @@ export async function exportNsec(nsec: string): Promise<ExportResult> {
     try {
       const { Filesystem, Directory, Encoding } = await import("@capacitor/filesystem");
       await Filesystem.writeFile({
-        path: KEY_FILENAME,
-        data: nsec,
+        path: filename,
+        data: content,
         directory: Directory.Documents,
         encoding: Encoding.UTF8,
       });
-      return { status: "saved", location: t({ id: "credentialManager.iosLocation", defaultMessage: "the Wizardry folder in Files ({filename})" }, { filename: KEY_FILENAME }) };
+      return { status: "saved", location: t({ id: "credentialManager.iosLocation", defaultMessage: "the Wizardry folder in Files ({filename})" }, { filename }) };
     } catch {
       return { status: "failed" };
     }
@@ -113,11 +128,11 @@ export async function exportNsec(nsec: string): Promise<ExportResult> {
   if (picker) {
     try {
       const handle = await picker({
-        suggestedName: KEY_FILENAME,
+        suggestedName: filename,
         types: [{ description: t({ id: "credentialManager.textFile", defaultMessage: "Text file" }), accept: { "text/plain": [".txt"] } }],
       });
       const writable = await handle.createWritable();
-      await writable.write(nsec);
+      await writable.write(content);
       await writable.close();
       return { status: "saved", location: handle.name };
     } catch (err) {
@@ -126,8 +141,8 @@ export async function exportNsec(nsec: string): Promise<ExportResult> {
     }
   }
 
-  downloadTextFile(KEY_FILENAME, nsec);
-  return { status: "saved", location: t({ id: "credentialManager.downloadsLocation", defaultMessage: "your downloads ({filename})" }, { filename: KEY_FILENAME }) };
+  downloadTextFile(filename, content);
+  return { status: "saved", location: t({ id: "credentialManager.downloadsLocation", defaultMessage: "your downloads ({filename})" }, { filename }) };
 }
 
 export type ExportResult =

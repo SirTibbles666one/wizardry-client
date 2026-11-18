@@ -119,6 +119,19 @@ async function desktopSetItem(key: string, value: string): Promise<void> {
   localStorage.setItem(key, JSON.stringify(envelope));
 }
 
+/**
+ * How this platform holds the login at rest. A NIP-49 backup records it in the
+ * key-security byte, so it has to be the truth rather than a guess: the web
+ * build keeps the nsec in plain localStorage, and desktop only counts as
+ * encrypted while `safeStorage` actually answers.
+ */
+export async function keyStorageTier(): Promise<"os-keystore" | "safe-storage" | "plaintext"> {
+  if (Capacitor.isNativePlatform()) return "os-keystore";
+  if (!isDesktop()) return "plaintext";
+  const probe = await desktopEncryptSecret("key-storage-probe");
+  return probe === null ? "plaintext" : "safe-storage";
+}
+
 export const secureStorage: NLoginStorage = {
   async getItem(key: string): Promise<string | null> {
     // NostrLoginProvider renders nothing until this resolves, so it's on the boot critical path.

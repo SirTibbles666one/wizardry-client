@@ -3,7 +3,7 @@
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { AlertTriangle, Check, ChevronDown, Copy, ExternalLink, FileUp, Loader2, QrCode } from 'lucide-react';
+import { AlertTriangle, Check, ChevronDown, Copy, ExternalLink, FileUp, Loader2, Lock, QrCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArmadaKey } from '@/components/brand/ArmadaCrest';
@@ -36,6 +36,7 @@ import { writeClipboardText } from '@/lib/clipboard';
 import { common, FormattedMessage, t, useIntl, type IntlShape } from '@/i18n';
 import { accountReady, accountsEnabled, skipAccountGate, useAccountState, useKeyInstead } from '@/account/session';
 import { AccountGate } from '@/components/account/AccountGate';
+import { decryptNcryptsecToNsec, isNcryptsec, NcryptsecError, readNcryptsec } from '@/lib/nip49';
 
 interface LoginScreenProps {
   isOpen: boolean;
@@ -53,9 +54,12 @@ const validateNsec = (nsec: string) => {
 
 // Input starting with nsec1 is almost always a truncated paste; say so.
 const nsecRejectionMessage = (input: string) => {
+  if (input.startsWith('ncryptsec1')) {
+    return t({ id: "loginScreen.incompleteNcryptsec", defaultMessage: "That doesn't look like a complete encrypted key. Check you copied the whole ncryptsec1… value." });
+  }
   return input.startsWith('nsec1')
     ? t({ id: "loginScreen.incompleteNsec", defaultMessage: "That doesn't look like a complete secret key. Check you copied the whole nsec." })
-    : t({ id: "loginScreen.enterKey", defaultMessage: "Enter a secret key starting with nsec1, or a bunker:// URI." });
+    : t({ id: "loginScreen.enterKey", defaultMessage: "Enter a secret key starting with nsec1, an encrypted key starting with ncryptsec1, or a bunker:// URI." });
 };
 
 // A phone's browser is backgrounded while the signer runs, and it has a callback
@@ -95,6 +99,11 @@ const KeyLoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, 
   const [isFileLoading, setIsFileLoading] = useState(false);
   const [loginInput, setLoginInput] = useState('');
   const [loginError, setLoginError] = useState('');
+  // NIP-49: an `ncryptsec1…` pasted above needs its password before it is a key.
+  const [backupPassword, setBackupPassword] = useState('');
+  // The pasted value is a usable password-encrypted key, so ask for its password.
+  const encryptedBackup = isNcryptsec(loginInput);
+  const backupHeader = encryptedBackup ? readNcryptsec(loginInput) : null;
   const [extensionError, setExtensionError] = useState('');
   const [nostrConnectParams, setNostrConnectParams] = useState<NostrConnectParams | null>(null);
   const [nostrConnectUri, setNostrConnectUri] = useState<string>('');
@@ -281,7 +290,44 @@ const KeyLoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, 
     }, 50);
   };
 
-  // An nsec logs in locally; a bunker:// URI connects a NIP-46 signer.
+  /**
+   * NIP-49: a password-encrypted key is decrypted here, in the page, and never
+   * leaves it — the result is the same nsec a paste would have given, so the
+   * rest of the login (and what is stored) is unchanged.
+   */
+  const unlockEncryptedKey = async (ncryptsec: string) => {
+    if (!backupPassword) {
+      setLoginError(t({ id: "loginScreen.ncryptsecNeedsPassword", defaultMessage: "This key is encrypted. Enter the password you set when you exported it." }));
+      return;
+    }
+
+    setIsLoading(true);
+    setLoginError('');
+    try {
+      const nsec = await decryptNcryptsecToNsec(ncryptsec, backupPassword);
+      setBackupPassword('');
+      try {
+        await login.nsec(nsec);
+      } catch {
+        setLoginError(t({ id: "loginScreen.nsecFailed", defaultMessage: "Failed to login with this key. Please check that it's correct." }));
+        return;
+      }
+      setLoginInput('');
+      onLogin();
+      onClose();
+    } catch (error) {
+      setLoginError(
+        error instanceof NcryptsecError && /wrong password/i.test(error.message)
+          ? t({ id: "loginScreen.ncryptsecWrongPassword", defaultMessage: "Wrong password for this backup. Check it and try again." })
+          : t({ id: "loginScreen.ncryptsecFailed", defaultMessage: "Couldn't unlock this backup. Check the password, or that you pasted the whole key." }),
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // An nsec logs in locally; an ncryptsec is decrypted here first; a
+  // bunker:// URI connects a NIP-46 signer.
   const handleLogin = async () => {
     const input = loginInput.trim();
     if (!input) {
@@ -306,6 +352,11 @@ const KeyLoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, 
       return;
     }
 
+    if (isNcryptsec(input)) {
+      await unlockEncryptedKey(input);
+      return;
+    }
+
     if (!validateNsec(input)) {
       setLoginError(nsecRejectionMessage(input));
       return;
@@ -327,6 +378,9 @@ const KeyLoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, 
       const trimmedContent = content?.trim();
       if (trimmedContent && validateNsec(trimmedContent)) {
         executeLogin(trimmedContent);
+      } else if (trimmedContent && isNcryptsec(trimmedContent)) {
+        // A NIP-49 backup file: hand it to the form, which asks for its password.
+        setLoginInput(trimmedContent);
       } else if (trimmedContent) {
         setLoginError(t({ id: "loginScreen.fileInvalid", defaultMessage: "File does not contain a valid secret key." }));
       } else {
@@ -531,7 +585,7 @@ const KeyLoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, 
                       setLoginInput(e.target.value);
                       if (loginError) setLoginError('');
                     }}
-                    placeholder={intl.formatMessage({ id: "loginScreen.inputPlaceholder", defaultMessage: "nsec1… or bunker://…" })}
+                    placeholder={intl.formatMessage({ id: "loginScreen.inputPlaceholder", defaultMessage: "nsec1…, ncryptsec1… or bunker://…" })}
                     autoComplete='off'
                     className={`pr-12 clip-corner-lg bg-background border-transparent ${
                       loginError ? 'border-destructive focus-visible:ring-destructive' : ''
@@ -586,6 +640,40 @@ const KeyLoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, 
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
+                {encryptedBackup && (
+                  <div className='space-y-2 text-left'>
+                    <div className='relative'>
+                      <Lock className='pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
+                      <Input
+                        type='password'
+                        value={backupPassword}
+                        onChange={(e) => {
+                          setBackupPassword(e.target.value);
+                          if (loginError) setLoginError('');
+                        }}
+                        placeholder={intl.formatMessage({ id: "loginScreen.ncryptsecPassword", defaultMessage: "Password for this encrypted key" })}
+                        autoComplete='current-password'
+                        autoFocus
+                        aria-label={intl.formatMessage({ id: "loginScreen.ncryptsecPassword", defaultMessage: "Password for this encrypted key" })}
+                        className='pl-9 clip-corner-lg bg-background border-transparent'
+                      />
+                    </div>
+                    <p className='text-xs text-muted-foreground'>
+                      <FormattedMessage
+                        id="loginScreen.ncryptsecHint"
+                        defaultMessage="NIP-49 encrypted key. It's unlocked on this device; the password never leaves it."
+                      />
+                    </p>
+                    {backupHeader?.keySecurity === 'insecure' && (
+                      <p className='text-xs text-destructive'>
+                        <FormattedMessage
+                          id="loginScreen.ncryptsecInsecureHint"
+                          defaultMessage="This backup says its key was once stored unencrypted. If it has ever been somewhere you don't control, make a new key."
+                        />
+                      </p>
+                    )}
+                  </div>
+                )}
                 {loginError && <p className='text-sm text-destructive'>{loginError}</p>}
 
                 {/* Secondary so the screen has one primary action. */}
@@ -593,10 +681,20 @@ const KeyLoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, 
                   type='submit'
                   size='lg'
                   variant={joinMode ? 'secondary' : 'default'}
-                  disabled={isLoading || isFileLoading || !loginInput.trim()}
+                  disabled={isLoading || isFileLoading || !loginInput.trim() || (encryptedBackup && !backupPassword)}
                   className='w-full clip-corner-lg'
                 >
-                  {isLoading ? <FormattedMessage id="loginScreen.loggingIn" defaultMessage="Logging in…" /> : <FormattedMessage id="loginScreen.logIn" defaultMessage="Log in" />}
+                  {isLoading ? (
+                    encryptedBackup ? (
+                      <FormattedMessage id="loginScreen.unlocking" defaultMessage="Unlocking…" />
+                    ) : (
+                      <FormattedMessage id="loginScreen.loggingIn" defaultMessage="Logging in…" />
+                    )
+                  ) : encryptedBackup ? (
+                    <FormattedMessage id="loginScreen.unlockAndLogIn" defaultMessage="Unlock and log in" />
+                  ) : (
+                    <FormattedMessage id="loginScreen.logIn" defaultMessage="Log in" />
+                  )}
                 </Button>
               </form>
 
@@ -619,7 +717,10 @@ const KeyLoginScreen: React.FC<LoginScreenProps> = ({ isOpen, onClose, onLogin, 
  */
 const LoginScreen: React.FC<LoginScreenProps> = (props) => {
   const account = useAccountState();
-  if (!accountsEnabled() || accountReady(account) || useKeyInstead()) {
+  // Named `use…` but not a hook (a localStorage read), and called before the
+  // early return so the linter's hook-order rule stays satisfied.
+  const keyOnly = useKeyInstead();
+  if (!accountsEnabled() || accountReady(account) || keyOnly) {
     return <KeyLoginScreen {...props} accountExists={account !== null} />;
   }
   return (
